@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:TailorsBook/handle_cloud/login.dart';
+import 'package:TailorsBook/common/nav_drower.dart';
+import 'package:TailorsBook/test_screen.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -90,8 +92,46 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Scaffold buildAuthScreen(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text("Welcom! You are signed in."),
+      drawer: NavDrawer(),
+      appBar: AppBar(
+        title: Text("Join a team"),
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [
+              Theme.of(context).accentColor,
+              Theme.of(context).primaryColor
+            ],
+          ),
+        ),
+        alignment: Alignment.center,
+        child: Center(
+          child: SizedBox(
+            width: 180,
+            height: 50,
+            child: RaisedButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => TestScreen()));
+              },
+              child: Text(
+                "Join Team",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0),
+                side: BorderSide(color: Colors.white),
+              ),
+              color: Colors.red,
+            ),
+          ),
+        ),
       ),
     );
   }
