@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:TailorsBook/handle_cloud/login.dart';
 import 'package:TailorsBook/common/nav_drower.dart';
 import 'package:TailorsBook/test_screen.dart';
+import 'package:TailorsBook/screens/homepage.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -114,8 +115,10 @@ class _MyHomePageState extends State<MyHomePage> {
             height: 50,
             child: RaisedButton(
               onPressed: () {
+                // Navigator.push(context,
+                //     MaterialPageRoute(builder: (context) => TestScreen()));
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => TestScreen()));
+                    MaterialPageRoute(builder: (context) => HomePage()));
               },
               child: Text(
                 "Join Team",

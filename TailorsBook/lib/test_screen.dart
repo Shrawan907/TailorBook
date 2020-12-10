@@ -6,9 +6,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:TailorsBook/handle_cloud/login.dart';
+import 'package:TailorsBook/handle_cloud/data_file.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 
+DateTime timestamp = DateTime.now();
 /*
   Use this link to better understand how to use database on firestore
 
@@ -29,11 +31,34 @@ class _TestScreenState extends State<TestScreen> {
   String username;
 
   submit() {
-    try {
-      db.collection('books').doc('1').delete();
-    } catch (err) {
-      print("Error during deleting: $err");
-    }
+    fetchTodayData();
+
+    // db
+    //     .collection("companies/branchA/register")
+    //     .snapshots()
+    //     .listen((QuerySnapshot querySnapshot) {
+    //   querySnapshot.docs.forEach((element) {
+    //     print(element.id);
+    //     for (var ele in element.data().entries) {
+    //       if (ele.key == "return_date") {
+    //         print(ele.key +
+    //             " : " +
+    //             DateTime.parse(ele.value.toDate().toString()).toString());
+    //         print("Days Diffrence: " +
+    //             ((DateTime.parse(ele.value.toDate().toString())
+    //                                 .difference(timestamp) -
+    //                             Duration(hours: ele.value.toDate().hour) +
+    //                             Duration(hours: timestamp.hour))
+    //                         .inHours /
+    //                     24)
+    //                 .round()
+    //                 .toString());
+    //       } else
+    //         print(ele.key + " : " + ele.value.toString());
+    //     }
+    //   });
+    // });
+    // print("Today Date: " + timestamp.toString());
   }
 
   @override
