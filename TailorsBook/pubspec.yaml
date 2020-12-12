@@ -22,6 +22,8 @@ dependencies:
   firebase_storage: ^5.2.0
   geolocator: 5.0.1
 
+  flutter_svg: 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -34,6 +36,15 @@ flutter:
 
   assets:
     - assets/images/google_signin_button.png
+    - assets/images/achkan.svg
+    - assets/images/coat.svg
+    - assets/images/kurta.png
+    - assets/images/pajama.svg
+    - assets/images/trouser.svg
+    - assets/images/vest.svg
+    - assets/images/shirt_.png
+    - assets/images/others.svg
+    - assets/images/person.png 
 
 
   # fonts:

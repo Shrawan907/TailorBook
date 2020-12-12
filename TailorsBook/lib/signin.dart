@@ -21,7 +21,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-
     googleSignIn.onCurrentUserChanged.listen((account) async {
       currentUser = await _authenticate.handleSignIn(account);
       setState(() {

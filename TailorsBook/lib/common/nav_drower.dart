@@ -1,3 +1,4 @@
+import 'package:TailorsBook/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:TailorsBook/handle_cloud/login.dart';
@@ -55,6 +56,10 @@ class NavDrawer extends StatelessWidget {
             title: Text('Logout'),
             onTap: () {
               _authenticate.logout();
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyHomePage()),
+                  (route) => false);
             },
           ),
         ],

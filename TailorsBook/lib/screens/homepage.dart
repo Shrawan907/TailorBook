@@ -1,10 +1,9 @@
-import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:TailorsBook/test_screen.dart';
-import 'package:TailorsBook/screens/create_company.dart';
-import 'package:TailorsBook/common/nav_drower.dart';
 import 'package:TailorsBook/screens/data_today.dart';
+import 'package:TailorsBook/screens/day_data.dart';
+import 'package:TailorsBook/screens/shortcuts.dart';
+import 'package:TailorsBook/screens/teams.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -35,41 +34,36 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext parentContext) {
     return Scaffold(
-        body: PageView(
-          children: <Widget>[
-            //Timeline(),
-            DataToday(),
-            CreateCompany(),
-          ],
-          controller: pageController,
-          onPageChanged: onPageChanged,
-          physics: NeverScrollableScrollPhysics(),
-        ),
-        bottomNavigationBar: CupertinoTabBar(
-          currentIndex: pageIndex,
-          onTap: onTap,
-          activeColor: Theme.of(context).primaryColor,
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.whatshot),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.notifications_active),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.photo_camera, size: 35.0),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.search),
-            ),
-            // BottomNavigationBarItem(
-            //   icon: Icon(Icons.account_circle),
-            // ),
-          ],
-        ));
-//    return RaisedButton(
-//      child: Text('Logout'),
-//      onPressed: logout,
-//    );
+      body: PageView(
+        children: <Widget>[
+          DataToday(),
+          DayData(),
+          ShortCuts(),
+          TeamMembers(),
+        ],
+        controller: pageController,
+        onPageChanged: onPageChanged,
+        physics: NeverScrollableScrollPhysics(),
+      ),
+      bottomNavigationBar: CupertinoTabBar(
+        currentIndex: pageIndex,
+        onTap: onTap,
+        activeColor: Theme.of(context).primaryColor,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.whatshot),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.date_range),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.description),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.group),
+          ),
+        ],
+      ),
+    );
   }
 }
