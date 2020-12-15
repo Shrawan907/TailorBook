@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:TailorsBook/locale/app_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class CreateAccount extends StatefulWidget {
   @override
@@ -27,7 +29,6 @@ class _CreateAccountState extends State<CreateAccount> {
       });
     } else
       print("blaa blaa");
-    
   }
 
   @override
@@ -36,7 +37,7 @@ class _CreateAccountState extends State<CreateAccount> {
       key: _scaffoldKey,
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Create Account"),
+        title: Text(AppLocalizations.of(context).translate("create_account")),
       ),
       body: ListView(
         children: <Widget>[
@@ -47,7 +48,7 @@ class _CreateAccountState extends State<CreateAccount> {
                   padding: EdgeInsets.only(top: 25.0),
                   child: Center(
                     child: Text(
-                      'Create a username',
+                      AppLocalizations.of(context).translate("enter_username"),
                       style: TextStyle(fontSize: 25.0),
                     ),
                   ),
@@ -72,7 +73,8 @@ class _CreateAccountState extends State<CreateAccount> {
                         onSaved: (val) => username = val,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: "Username",
+                          labelText: AppLocalizations.of(context)
+                              .translate("username"),
                           labelStyle: TextStyle(fontSize: 15.0),
                           hintText: "Must be atleast 3 characters",
                         ),
@@ -91,7 +93,7 @@ class _CreateAccountState extends State<CreateAccount> {
                     ),
                     child: Center(
                       child: Text(
-                        "Submit",
+                        AppLocalizations.of(context).translate("submit"),
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16.0,

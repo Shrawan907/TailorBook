@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:TailorsBook/locale/app_localization.dart';
 import 'package:TailorsBook/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:TailorsBook/common/nav_drower.dart';
@@ -7,6 +8,7 @@ import 'package:TailorsBook/handle_cloud/data_file.dart';
 import 'package:TailorsBook/screens/register_new.dart';
 import 'package:flutter/services.dart';
 import 'package:TailorsBook/screens/on_working.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 List todayData = [];
 
@@ -23,8 +25,10 @@ class _ShortCutsState extends State<ShortCuts> {
   Widget build(BuildContext parentContext) {
     return Scaffold(
       backgroundColor: Colors.blue,
+      drawer: NavDrawer(),
       appBar: AppBar(
-        title: Text("Shortcuts"),
+        title: Text(AppLocalizations.of(context).translate("t_shortcuts")),
+        centerTitle: true,
       ),
       body: ListView(
         children: [
@@ -62,7 +66,7 @@ class _ShortCutsState extends State<ShortCuts> {
                 ),
                 Expanded(
                   child: Container(
-                    height: 70,
+                    height: 65,
                     margin: EdgeInsets.only(right: 10),
                     child: Form(
                       // here we associate a form key with our form with the help of key
@@ -70,11 +74,11 @@ class _ShortCutsState extends State<ShortCuts> {
                       autovalidate: true, // to immediate execute validator
                       // as soon as user typed
                       child: TextFormField(
+                        scrollPadding: EdgeInsets.all(5),
                         validator: (val) {
-                          if (val.trim().isEmpty)
-                            return "Must Not Empty";
-                          else if (val.trim().length > 6)
-                            return "Wrong Entry";
+                          if (val.trim().length > 6)
+                            return AppLocalizations.of(context)
+                                .translate("wrong_entry");
                           else
                             return null;
                         },
@@ -85,7 +89,8 @@ class _ShortCutsState extends State<ShortCuts> {
                           border: OutlineInputBorder(),
                           //labelText: "Reg. Number",
                           labelStyle: TextStyle(fontSize: 15.0),
-                          hintText: "Number",
+                          hintText:
+                              AppLocalizations.of(context).translate("reg_no"),
                         ),
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly
@@ -135,7 +140,7 @@ class _ShortCutsState extends State<ShortCuts> {
                 height: 100,
                 child: Center(
                   child: Text(
-                    "Register A",
+                    AppLocalizations.of(context).translate("register_A"),
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
                   ),
                 ),
@@ -153,7 +158,7 @@ class _ShortCutsState extends State<ShortCuts> {
                 height: 100,
                 child: Center(
                   child: Text(
-                    "Register B",
+                    AppLocalizations.of(context).translate("register_B"),
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
                   ),
                 ),
@@ -171,7 +176,7 @@ class _ShortCutsState extends State<ShortCuts> {
                 height: 100,
                 child: Center(
                   child: Text(
-                    "Coat",
+                    AppLocalizations.of(context).translate("coat"),
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
                   ),
                 ),
@@ -189,7 +194,7 @@ class _ShortCutsState extends State<ShortCuts> {
                 height: 100,
                 child: Center(
                   child: Text(
-                    "Jacket",
+                    AppLocalizations.of(context).translate("jacket"),
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
                   ),
                 ),

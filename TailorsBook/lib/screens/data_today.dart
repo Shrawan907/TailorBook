@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:TailorsBook/locale/app_localization.dart';
 import 'package:TailorsBook/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:TailorsBook/common/nav_drower.dart';
@@ -6,6 +7,7 @@ import 'package:TailorsBook/common/cardBox.dart';
 import 'package:TailorsBook/handle_cloud/data_file.dart';
 import 'package:TailorsBook/screens/register_new.dart';
 import 'package:TailorsBook/screens/on_working.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 List todayData = [];
 
@@ -56,7 +58,7 @@ class _DataTodayState extends State<DataToday> {
       backgroundColor: Colors.blue,
       drawer: NavDrawer(),
       appBar: AppBar(
-        title: Text("Return Today"),
+        title: Text(AppLocalizations.of(context).translate("t_return_today")),
         actions: <Widget>[
           Padding(
             padding: EdgeInsets.only(right: 30.0),
@@ -101,93 +103,41 @@ class _DataTodayState extends State<DataToday> {
           SizedBox(
             height: 2,
           ),
-          Container(
-            height: 20,
-            decoration: BoxDecoration(
-              color: Colors.cyan,
-              border: Border(
-                bottom: BorderSide(
-                  color: Colors.white,
-                  width: 1.0,
-                ),
-              ),
-            ),
-            padding: EdgeInsets.only(left: 30, right: 0),
-            child: Container(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Expanded(
-                      child: Text(
-                    "reg_no",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                        color: Colors.white),
-                  )),
-                  Expanded(
-                      child: Text(
-                    "coat",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                        color: Colors.white),
-                  )),
-                  Expanded(
-                      child: Text(
-                    "complete",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                        color: Colors.white),
-                  ))
-                ],
-              ),
-            ),
-          ),
           SizedBox(
             height: 2,
           ),
+          buildHeader("dailyInfo", context),
           Expanded(
             child: Container(
-                child: //todayData.isNotEmpty ?
-                    RefreshIndicator(
-              onRefresh: () async {
-                try {
-                  setState(() async {
-                    todayData = await fetchTodayData();
-                  });
-                  print(todayData.isEmpty);
-                } catch (err) {
-                  print("Refresh Bar Error: " + err);
-                }
-              },
-              child: Container(
-                child: ListView.builder(
-                  itemCount: todayData.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: openDetail,
-                      child: CardBox(
-                        reg_no: todayData[index]['reg_no'],
-                        is_complete: todayData[index]['is_complete'],
-                        coat: todayData[index]['coat'],
-                      ),
-                    );
-                  },
+              child: //todayData.isNotEmpty ?
+                  RefreshIndicator(
+                onRefresh: () async {
+                  try {
+                    setState(() async {
+                      todayData = await fetchTodayData();
+                    });
+                    print(todayData.isEmpty);
+                  } catch (err) {
+                    print("Refresh Bar Error: " + err);
+                  }
+                },
+                child: Container(
+                  child: ListView.builder(
+                    itemCount: todayData.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: openDetail,
+                        child: CardBox(
+                          reg_no: todayData[index]['reg_no'],
+                          is_complete: todayData[index]['is_complete'],
+                          coat: todayData[index]['coat'],
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
-            )
-                // : Container(
-                //     child: RaisedButton(
-                //       onPressed: () {
-                //         setState(() {});
-                //       },
-                //       child: Text("Refresh"),
-                //     ),
-                //   ),
-                ),
+            ),
           ),
           RaisedButton(
             onPressed: () {
@@ -195,7 +145,7 @@ class _DataTodayState extends State<DataToday> {
                 //fetchData();
               });
             },
-            child: Text("Refresh"),
+            child: Text(AppLocalizations.of(context).translate("refresh")),
           ),
         ],
       ),

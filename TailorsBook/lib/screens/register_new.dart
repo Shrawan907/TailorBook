@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:TailorsBook/common/buttons.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:easy_localization/easy_localization.dart';
+
+DateTime selectedDate = DateTime.now();
 
 class RegisterNewData extends StatefulWidget {
   @override
@@ -13,9 +16,11 @@ class RegisterNewData extends StatefulWidget {
 class _RegisterNewDataState extends State<RegisterNewData> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
-  int reg_no;
+  String showDate;
+  int regNo;
   int branch = 0;
   bool update = false;
+  bool dateSelected = false;
   bool value1 = false,
       value2 = false,
       value3 = false,
@@ -26,19 +31,50 @@ class _RegisterNewDataState extends State<RegisterNewData> {
       value8 = false,
       value9 = false,
       value10 = false;
-  int val1, val2, val3, val4, val5, val6, val7, val8, val9, val10;
+  int val1 = 0,
+      val2 = 0,
+      val3 = 0,
+      val4 = 0,
+      val5 = 0,
+      val6 = 0,
+      val7 = 0,
+      val8 = 0,
+      val9 = 0,
+      val10 = 0;
+
+  _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate, // Refer step 1
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2050),
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.light(), // This will change to light theme.
+          child: child,
+        );
+      },
+    );
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+        dateSelected = true;
+        showDate =
+            "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
+      });
+  }
 
   submit() {
-    print("REG NO. : $reg_no");
+    print("REG NO. : $regNo");
     final form = _formKey.currentState;
     if (form.validate()) {
       form.save();
       SnackBar snackBar = SnackBar(
-        content: Text("Saved Details of ${reg_no.toString()}"),
+        content: Text("Saved Details of ${regNo.toString()}"),
       );
       _scaffoldKey.currentState.showSnackBar(snackBar);
       Timer(Duration(seconds: 1), () {
-        Navigator.pop(context, reg_no.toString());
+        Navigator.pop(context, regNo.toString());
       });
     } else
       print("blaa blaa");
@@ -141,7 +177,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                                     else
                                       return null;
                                   },
-                                  onChanged: (val) => reg_no = int.parse(val),
+                                  onChanged: (val) => regNo = int.parse(val),
                                   decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                     labelText: "Reg. Number",
@@ -164,7 +200,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                 ),
                 Container(
                   color: Colors.grey,
-                  height: 5,
+                  height: 2,
                 ),
                 SizedBox(
                   height: 10,
@@ -762,7 +798,51 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                   height: 10,
                 ),
                 Container(
-                  height: 5,
+                  height: 2,
+                  color: Colors.grey,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: Text(
+                          "RETURN DATE:",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(right: 20),
+                      child: dateSelected == true
+                          ? Text(showDate,
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.deepPurple,
+                              ))
+                          : Container(),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 23),
+                      child: GestureDetector(
+                          onTap: () {
+                            _selectDate(context);
+                          },
+                          child: Icon(
+                            Icons.calendar_today_outlined,
+                            color: Colors.green,
+                          )),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  height: 2,
                   color: Colors.grey,
                 ),
                 SizedBox(
@@ -805,7 +885,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                     ),
                     child: Center(
                       child: Text(
-                        "Back",
+                        "Cancel",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16.0,

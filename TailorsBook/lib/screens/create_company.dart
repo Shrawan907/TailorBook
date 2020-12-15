@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:TailorsBook/locale/app_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class CreateCompany extends StatefulWidget {
   @override
@@ -45,7 +47,7 @@ class _CreateCompanyState extends State<CreateCompany> {
       key: _scaffoldKey,
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Create Account"),
+        title: Text(AppLocalizations.of(context).translate("create_company")),
       ),
       body: ListView(
         children: <Widget>[
@@ -56,7 +58,7 @@ class _CreateCompanyState extends State<CreateCompany> {
                   padding: EdgeInsets.only(top: 25.0),
                   child: Center(
                     child: Text(
-                      'Create a username',
+                      AppLocalizations.of(context).translate("enter_username"),
                       style: TextStyle(fontSize: 25.0),
                     ),
                   ),
@@ -82,7 +84,8 @@ class _CreateCompanyState extends State<CreateCompany> {
                         onSaved: (val) => username = val,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: "Username",
+                          labelText: AppLocalizations.of(context)
+                              .translate("username"),
                           labelStyle: TextStyle(fontSize: 15.0),
                           hintText: "Must be atleast 3 characters",
                         ),
@@ -101,7 +104,7 @@ class _CreateCompanyState extends State<CreateCompany> {
                     ),
                     child: Center(
                       child: Text(
-                        "Submit",
+                        AppLocalizations.of(context).translate("submit"),
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16.0,
@@ -135,7 +138,7 @@ class _CreateCompanyState extends State<CreateCompany> {
                   padding: EdgeInsets.only(top: 25.0),
                   child: Center(
                     child: Text(
-                      'Enter Password',
+                      AppLocalizations.of(context).translate("enter_pass"),
                       style: TextStyle(fontSize: 25.0),
                     ),
                   ),
@@ -186,7 +189,7 @@ class _CreateCompanyState extends State<CreateCompany> {
                     ),
                     child: Center(
                       child: Text(
-                        "Submit",
+                        AppLocalizations.of(context).translate("submit"),
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16.0,

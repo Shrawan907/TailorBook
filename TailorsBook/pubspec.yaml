@@ -20,31 +20,37 @@ dependencies:
   google_sign_in: ^4.5.6
   cloud_firestore: ^0.14.4
   firebase_storage: ^5.2.0
+  firebase_analytics: ^6.3.0
   geolocator: 5.0.1
 
   flutter_svg: 
+  sticky_headers: "^0.1.8"
+  easy_localization: ^2.3.3
+
+  intl: ^0.16.1
+  intl_translation: ^0.17.10+1
+  provider: ^4.3.2+3
+  shared_preferences: ^0.5.12+4
+
+  flutter_localizations:
+    sdk: flutter
+  
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+    
 
 
 # The following section is specific to Flutter.
 flutter:
 
   uses-material-design: true
-
+  generate: true
   assets:
-    - assets/images/google_signin_button.png
-    - assets/images/achkan.svg
-    - assets/images/coat.svg
-    - assets/images/kurta.png
-    - assets/images/pajama.svg
-    - assets/images/trouser.svg
-    - assets/images/vest.svg
-    - assets/images/shirt_.png
-    - assets/images/others.svg
-    - assets/images/person.png 
+    - assets/images/
+    - assets/resources/language/
 
 
   # fonts:

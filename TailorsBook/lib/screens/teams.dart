@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:TailorsBook/locale/app_localization.dart';
 import 'package:TailorsBook/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:TailorsBook/common/nav_drower.dart';
@@ -8,6 +9,8 @@ import 'package:TailorsBook/screens/register_new.dart';
 import 'package:flutter/services.dart';
 import 'package:TailorsBook/screens/on_working.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:TailorsBook/screens/profile.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 List teamA = [1, 1, 1, 1, 1, 1, 1];
 
@@ -18,7 +21,7 @@ class TeamMembers extends StatefulWidget {
 
 class _TeamMembersState extends State<TeamMembers> {
   profile() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => OnWork()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
   }
 
   cutterProfile() {}
@@ -29,8 +32,10 @@ class _TeamMembersState extends State<TeamMembers> {
   Widget build(BuildContext parentContext) {
     return Scaffold(
       backgroundColor: Colors.cyanAccent,
+      drawer: NavDrawer(),
       appBar: AppBar(
-        title: Text("Team Members"),
+        title: Text(AppLocalizations.of(context).translate("t_team_members")),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -43,7 +48,8 @@ class _TeamMembersState extends State<TeamMembers> {
                 text: TextSpan(children: [
                   WidgetSpan(child: Icon(Icons.content_cut)),
                   TextSpan(
-                      text: "  CUTTER",
+                      text: "  " +
+                          AppLocalizations.of(context).translate("cutter"),
                       style: TextStyle(fontSize: 25, color: Colors.black)),
                 ]),
               ),
@@ -84,7 +90,8 @@ class _TeamMembersState extends State<TeamMembers> {
                     height: 30,
                   )),
                   TextSpan(
-                      text: "  COAT MAKER",
+                      text: "  " +
+                          AppLocalizations.of(context).translate("coat_maker"),
                       style: TextStyle(fontSize: 25, color: Colors.black)),
                 ]),
               ),
@@ -119,7 +126,8 @@ class _TeamMembersState extends State<TeamMembers> {
                     height: 30,
                   )),
                   TextSpan(
-                      text: "  PENT MAKER",
+                      text: "  " +
+                          AppLocalizations.of(context).translate("pent_maker"),
                       style: TextStyle(fontSize: 25, color: Colors.black)),
                 ]),
               ),
@@ -160,7 +168,8 @@ class _TeamMembersState extends State<TeamMembers> {
                     height: 30,
                   )),
                   TextSpan(
-                      text: "  SHIRT MAKER",
+                      text: "  " +
+                          AppLocalizations.of(context).translate("shirt_maker"),
                       style: TextStyle(fontSize: 25, color: Colors.black)),
                 ]),
               ),
@@ -199,7 +208,8 @@ class _TeamMembersState extends State<TeamMembers> {
                     child: Icon(Icons.person),
                   ),
                   TextSpan(
-                      text: "  SALESMEN",
+                      text: "  " +
+                          AppLocalizations.of(context).translate("salesmen"),
                       style: TextStyle(fontSize: 25, color: Colors.black)),
                 ]),
               ),

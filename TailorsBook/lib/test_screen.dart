@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:TailorsBook/handle_cloud/login.dart';
 import 'package:TailorsBook/handle_cloud/data_file.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 

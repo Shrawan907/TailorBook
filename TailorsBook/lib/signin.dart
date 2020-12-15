@@ -1,3 +1,4 @@
+import 'package:TailorsBook/locale/app_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -5,10 +6,12 @@ import 'package:TailorsBook/handle_cloud/login.dart';
 import 'package:TailorsBook/common/nav_drower.dart';
 import 'package:TailorsBook/test_screen.dart';
 import 'package:TailorsBook/screens/homepage.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
   final String title;
+  MyHomePage({this.title});
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -53,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Welcome to Tailor Book"),
+        title: Text(AppLocalizations.of(context).translate("welcom_aap_name")),
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -94,7 +97,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       drawer: NavDrawer(),
       appBar: AppBar(
-        title: Text("Join a team"),
+        title: Text(
+            AppLocalizations.of(context).translate("t_create_join_company")),
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -120,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     MaterialPageRoute(builder: (context) => HomePage()));
               },
               child: Text(
-                "Join Team",
+                AppLocalizations.of(context).translate("join_company"),
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,

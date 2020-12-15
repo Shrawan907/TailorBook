@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:TailorsBook/locale/appLanguage.dart';
+import 'package:TailorsBook/locale/app_localization.dart';
 import 'package:TailorsBook/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:TailorsBook/common/nav_drower.dart';
@@ -6,6 +8,8 @@ import 'package:TailorsBook/common/cardBox.dart';
 import 'package:TailorsBook/handle_cloud/data_file.dart';
 import 'package:TailorsBook/screens/register_new.dart';
 import 'package:TailorsBook/screens/on_working.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:provider/provider.dart';
 
 List todayData = [];
 DateTime todayDate = DateTime.now();
@@ -128,15 +132,18 @@ class _DayDataState extends State<DayData> {
       body: Column(
         children: <Widget>[
           Container(
-            height: 50,
+            height: 35,
             decoration: BoxDecoration(
               color: Colors.deepPurple,
             ),
             child: Row(
               children: [
                 Expanded(
-                  child: GestureDetector(
-                    onTap: () {
+                  child: RaisedButton(
+                    color: selectedDate == tommorowDate
+                        ? Colors.transparent
+                        : Colors.deepPurple,
+                    onPressed: () {
                       setState(() {
                         if (selectedDate != tommorowDate) {
                           selectedDate = tommorowDate;
@@ -145,32 +152,24 @@ class _DayDataState extends State<DayData> {
                         }
                       });
                     },
-                    child: Container(
-                      margin: EdgeInsets.only(
-                          left: 10, right: 10, top: 5, bottom: 5),
-                      decoration: selectedDate == tommorowDate
-                          ? BoxDecoration(
-                              border: Border.all(width: 1, color: Colors.white),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20.0)),
-                            )
-                          : null,
-                      child: Center(
-                        child: Text(
-                          "Tommorow",
-                          style: TextStyle(
-                              fontSize: selectedDate == tommorowDate ? 20 : 15,
-                              color: selectedDate == tommorowDate
-                                  ? Colors.white
-                                  : Colors.lightBlueAccent),
-                        ),
+                    child: Center(
+                      child: Text(
+                        AppLocalizations.of(context).translate('tomorrow'),
+                        style: TextStyle(
+                            fontSize: selectedDate == tommorowDate ? 18 : 15,
+                            color: selectedDate == tommorowDate
+                                ? Colors.white
+                                : Colors.lightBlueAccent),
                       ),
                     ),
                   ),
                 ),
                 Expanded(
-                  child: GestureDetector(
-                    onTap: () {
+                  child: RaisedButton(
+                    color: selectedDate == overmorrowDate
+                        ? Colors.transparent
+                        : Colors.deepPurple,
+                    onPressed: () {
                       setState(() {
                         if (selectedDate != overmorrowDate) {
                           selectedDate = overmorrowDate;
@@ -179,41 +178,26 @@ class _DayDataState extends State<DayData> {
                         }
                       });
                     },
-                    child: Container(
-                      margin: EdgeInsets.only(
-                          left: 10, right: 10, top: 5, bottom: 5),
-                      decoration: selectedDate == overmorrowDate
-                          ? BoxDecoration(
-                              border: Border.all(width: 1, color: Colors.white),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20.0)),
-                            )
-                          : null,
-                      child: Center(
-                        child: Text(
-                          "Overmorrow",
-                          style: TextStyle(
-                              fontSize:
-                                  selectedDate == overmorrowDate ? 20 : 15,
-                              color: selectedDate == overmorrowDate
-                                  ? Colors.white
-                                  : Colors.lightBlueAccent),
-                        ),
+                    child: Center(
+                      child: Text(
+                        AppLocalizations.of(context).translate("overmorrow"),
+                        style: TextStyle(
+                            fontSize: selectedDate == overmorrowDate ? 18 : 15,
+                            color: selectedDate == overmorrowDate
+                                ? Colors.white
+                                : Colors.lightBlueAccent),
                       ),
                     ),
                   ),
                 ),
                 Container(
-                  width: 60,
-                  margin: EdgeInsets.only(right: 10, left: 50),
-                  child: Center(
-                    child: RaisedButton(
-                      onPressed: () {
-                        _selectDate(context);
-                      },
-                      child: Icon(Icons.calendar_today_outlined),
-                      color: Colors.greenAccent,
-                    ),
+                  width: 80,
+                  child: RaisedButton(
+                    onPressed: () {
+                      _selectDate(context);
+                    },
+                    child: Icon(Icons.calendar_today_outlined),
+                    color: Colors.greenAccent,
                   ),
                 ),
               ],
@@ -222,51 +206,7 @@ class _DayDataState extends State<DayData> {
           SizedBox(
             height: 2,
           ),
-          Container(
-            height: 20,
-            decoration: BoxDecoration(
-              color: Colors.cyan,
-              border: Border(
-                bottom: BorderSide(
-                  color: Colors.white,
-                  width: 1.0,
-                ),
-              ),
-            ),
-            padding: EdgeInsets.only(left: 30, right: 0),
-            child: Container(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Expanded(
-                      child: Text(
-                    "reg_no",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                        color: Colors.white),
-                  )),
-                  Expanded(
-                      child: Text(
-                    "coat",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                        color: Colors.white),
-                  )),
-                  Expanded(
-                      child: Text(
-                    "complete",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                        color: Colors.white),
-                  ))
-                ],
-              ),
-            ),
-          ),
+          buildHeader("dailyInfo", context),
           SizedBox(
             height: 2,
           ),
@@ -314,22 +254,10 @@ class _DayDataState extends State<DayData> {
                 //fetchData();
               });
             },
-            child: Text("Refresh"),
+            child: Text(AppLocalizations.of(context).translate("refresh")),
           ),
         ],
       ),
     );
   }
 }
-
-/*
-  const CardBox(
-      {Key key,
-      this.country,
-      this.flag,
-      this.confirmed,
-      this.active,
-      this.recovered,
-      this.deaths})
-      : super(key: key);
-*/

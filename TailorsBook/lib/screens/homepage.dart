@@ -45,24 +45,32 @@ class _HomePageState extends State<HomePage> {
         onPageChanged: onPageChanged,
         physics: NeverScrollableScrollPhysics(),
       ),
-      bottomNavigationBar: CupertinoTabBar(
-        currentIndex: pageIndex,
-        onTap: onTap,
-        activeColor: Theme.of(context).primaryColor,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.whatshot),
+      bottomNavigationBar: Container(
+        height: 50,
+        color: Colors.white,
+        child: CupertinoApp(
+          debugShowCheckedModeBanner: false,
+          home: CupertinoTabBar(
+            backgroundColor: Colors.white,
+            currentIndex: pageIndex,
+            onTap: onTap,
+            activeColor: Theme.of(context).primaryColor,
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.whatshot),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.date_range),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.description),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.group),
+              ),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.date_range),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.description),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.group),
-          ),
-        ],
+        ),
       ),
     );
   }
