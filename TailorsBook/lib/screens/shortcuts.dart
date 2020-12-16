@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:TailorsBook/locale/app_localization.dart';
+import 'package:TailorsBook/screens/book_screen.dart';
 import 'package:TailorsBook/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:TailorsBook/common/nav_drower.dart';
@@ -9,6 +10,8 @@ import 'package:TailorsBook/screens/register_new.dart';
 import 'package:flutter/services.dart';
 import 'package:TailorsBook/screens/on_working.dart';
 import 'package:easy_localization/easy_localization.dart';
+
+final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
 List todayData = [];
 
@@ -24,7 +27,8 @@ class _ShortCutsState extends State<ShortCuts> {
   @override
   Widget build(BuildContext parentContext) {
     return Scaffold(
-      backgroundColor: Colors.blue,
+      key: _scaffoldKey,
+      backgroundColor: Colors.black12,
       drawer: NavDrawer(),
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).translate("t_shortcuts")),
@@ -46,8 +50,9 @@ class _ShortCutsState extends State<ShortCuts> {
                           style: TextStyle(
                               fontSize: 35,
                               fontWeight: FontWeight.w500,
-                              color:
-                                  branch == 0 ? Colors.blue : Colors.blueGrey),
+                              color: branch == 0
+                                  ? Colors.deepPurple
+                                  : Colors.red[700]),
                         ),
                       ),
                       onPressed: () {
@@ -131,11 +136,11 @@ class _ShortCutsState extends State<ShortCuts> {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => OnWork()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => BookScreen()));
             },
             child: Card(
-              color: Colors.blue[100], // lightGreenAccent
+              color: Colors.amber[50], // lightGreenAccent
               child: Container(
                 height: 100,
                 child: Center(
@@ -149,11 +154,11 @@ class _ShortCutsState extends State<ShortCuts> {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => OnWork()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => BookScreen()));
             },
             child: Card(
-              color: Colors.blue[100], // lightGreenAccent
+              color: Colors.amber[50], // lightGreenAccent
               child: Container(
                 height: 100,
                 child: Center(
@@ -171,7 +176,7 @@ class _ShortCutsState extends State<ShortCuts> {
                   context, MaterialPageRoute(builder: (context) => OnWork()));
             },
             child: Card(
-              color: Colors.blue[100], // lightGreenAccent
+              color: Colors.amber[50], // lightGreenAccent
               child: Container(
                 height: 100,
                 child: Center(
@@ -189,7 +194,7 @@ class _ShortCutsState extends State<ShortCuts> {
                   context, MaterialPageRoute(builder: (context) => OnWork()));
             },
             child: Card(
-              color: Colors.blue[100], // lightGreenAccent
+              color: Colors.amber[50], // lightGreenAccent
               child: Container(
                 height: 100,
                 child: Center(

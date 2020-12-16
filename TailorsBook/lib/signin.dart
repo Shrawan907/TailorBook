@@ -25,7 +25,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     googleSignIn.onCurrentUserChanged.listen((account) async {
-      currentUser = await _authenticate.handleSignIn(account);
+      currentUser = await _authenticate.handleSignIn(account, context);
       setState(() {
         if (currentUser == null)
           isAuth = false;
@@ -34,19 +34,6 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     }, onError: (err) {
       print("Error signing in: $err");
-    });
-
-    googleSignIn.signInSilently(suppressErrors: false).then((account) async {
-      currentUser = await _authenticate.handleSignIn(account);
-
-      setState(() {
-        if (currentUser == null)
-          isAuth = false;
-        else
-          isAuth = true;
-      });
-    }).catchError((err) {
-      print("Error signing in silently: $err");
     });
 
     print("\n Current User $currentUser \n");
@@ -75,7 +62,9 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             GestureDetector(
-              onTap: _authenticate.login,
+              onTap: () {
+                _authenticate.login(context);
+              },
               child: Container(
                 width: 260.0,
                 height: 60.0,
@@ -134,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 borderRadius: BorderRadius.circular(5.0),
                 side: BorderSide(color: Colors.white),
               ),
-              color: Colors.red,
+              color: Colors.redAccent[100],
             ),
           ),
         ),

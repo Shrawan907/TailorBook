@@ -111,7 +111,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                 // shape: CircleBorder(
                 //   side: BorderSide(color: Colors.blue),
                 // ),
-                color: Colors.blueAccent,
+                color: Colors.black38,
               ),
             ),
           ),
@@ -141,8 +141,8 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                                           fontSize: 35,
                                           fontWeight: FontWeight.w500,
                                           color: branch == 0
-                                              ? Colors.blue
-                                              : Colors.blueGrey),
+                                              ? Colors.deepPurple
+                                              : Colors.red[700]),
                                     ),
                                   ),
                                   onPressed: () {
@@ -802,7 +802,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                   color: Colors.grey,
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 5,
                 ),
                 Row(
                   children: [
@@ -825,21 +825,26 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                               ))
                           : Container(),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 23),
-                      child: GestureDetector(
-                          onTap: () {
-                            _selectDate(context);
-                          },
-                          child: Icon(
-                            Icons.calendar_today_outlined,
-                            color: Colors.green,
-                          )),
+                    Container(
+                      padding: const EdgeInsets.all(0),
+                      margin: EdgeInsets.only(right: 10),
+                      width: 55,
+                      child: Center(
+                        child: RaisedButton(
+                            color: Colors.white,
+                            onPressed: () {
+                              _selectDate(context);
+                            },
+                            child: Icon(
+                              Icons.date_range,
+                              //color: Colors.amber,
+                            )),
+                      ),
                     ),
                   ],
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 5,
                 ),
                 Container(
                   height: 2,
@@ -854,7 +859,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                     height: 50.0,
                     width: 200.0,
                     decoration: BoxDecoration(
-                      color: branch == 0 ? Colors.blue : Colors.blueGrey,
+                      color: branch == 0 ? Colors.deepPurple : Colors.red[700],
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                     child: Center(

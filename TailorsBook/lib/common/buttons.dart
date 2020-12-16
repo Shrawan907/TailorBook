@@ -21,7 +21,7 @@ class UpdateValueButton extends StatelessWidget {
       ),
       child: Center(
         child: GestureDetector(
-          child: Icon(icon, color: Colors.green),
+          child: Icon(icon, color: Colors.amber),
           onTap: perform,
         ),
       ),

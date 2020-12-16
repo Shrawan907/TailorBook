@@ -1,8 +1,34 @@
 import 'package:flutter/material.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AppLanguage extends ChangeNotifier {
+class LocalInfo extends ChangeNotifier {
   Locale _appLocale = Locale('en');
+  bool loggedIn = false;
+
+  fetchLogDetail() async {
+    var prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool("logged_in") != null &&
+        prefs.getBool("logged_in") == true)
+      this.loggedIn = true;
+    else
+      this.loggedIn = false;
+    return Null;
+  }
+
+  changeStatustoLogin() async {
+    var prefs = await SharedPreferences.getInstance();
+    prefs.setBool("logged_in", true);
+    notifyListeners();
+  }
+
+  changeStatustoLogout() async {
+    var prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool("logged_in") != null) {
+      prefs.remove("logged_in");
+    }
+    notifyListeners();
+  }
 
   Locale get appLocal {
     if (this._appLocale == Locale('hi')) {

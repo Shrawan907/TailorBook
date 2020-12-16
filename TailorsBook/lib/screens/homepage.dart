@@ -47,14 +47,13 @@ class _HomePageState extends State<HomePage> {
       ),
       bottomNavigationBar: Container(
         height: 50,
-        color: Colors.white,
         child: CupertinoApp(
           debugShowCheckedModeBanner: false,
           home: CupertinoTabBar(
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.amber,
             currentIndex: pageIndex,
             onTap: onTap,
-            activeColor: Theme.of(context).primaryColor,
+            activeColor: Colors.black,
             items: [
               BottomNavigationBarItem(
                 icon: Icon(Icons.whatshot),

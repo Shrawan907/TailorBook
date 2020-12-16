@@ -79,7 +79,9 @@ class _ProfileState extends State<Profile> {
           child: Icon(
             Icons.note_add,
             size: 30,
+            color: Colors.white,
           ),
+          backgroundColor: Colors.amber,
         ),
       ),
       appBar: AppBar(

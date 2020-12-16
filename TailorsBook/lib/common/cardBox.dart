@@ -12,7 +12,7 @@ class CardBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.blue[50], // lightGreenAccent
+      color: Colors.grey[100], // lightGreenAccent
       child: Container(
         height: 40,
         margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -101,9 +101,57 @@ class DayCardBox extends StatelessWidget {
   }
 }
 
+class RegisterCard extends StatelessWidget {
+  final String reg_no;
+  final bool delivered;
+  final String coat;
+
+  const RegisterCard({this.reg_no, this.delivered, this.coat});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: Colors.amber[50], // lightGreenAccent
+      child: Container(
+        height: 40,
+        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            Expanded(
+              child: Text(
+                '$reg_no',
+                style: TextStyle(
+                    fontWeight: FontWeight.w900,
+                    fontSize: 30,
+                    color: delivered ? Colors.black : Colors.deepPurple),
+              ),
+            ),
+            Expanded(
+              child: Text(
+                coat == '0' ? " " : "    " + coat,
+                style: TextStyle(fontSize: 22),
+              ),
+            ),
+            Expanded(
+              child: delivered
+                  ? Icon(
+                      Icons.check,
+                      color: Colors.black,
+                    )
+                  : Text(""),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class PersonInfo extends StatelessWidget {
   final String name;
-  final Widget image;
+  final ImageProvider image;
   final Color color;
   final Function onPressed;
 
@@ -121,14 +169,21 @@ class PersonInfo extends StatelessWidget {
         height: 150,
         width: 150,
         child: RaisedButton(
-          color: Colors.tealAccent,
+          color: Colors.amber[50],
           padding: EdgeInsets.only(left: 0),
           onPressed: this.onPressed,
           child: Column(
             children: [
               Expanded(
+                  //this.image,
                   child: Container(
-                child: this.image,
+                // padding: EdgeInsets.only(top: 5),
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: image,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               )),
               Container(
                 color: this.color,
@@ -172,10 +227,11 @@ class InfoCard extends StatelessWidget {
               padding: const EdgeInsets.all(10.0),
               child: Container(
                 width: 135,
-                height: 140,
+                height: 135,
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black, width: 4),
-                  borderRadius: BorderRadius.circular(100),
+                  border: Border.all(color: Colors.black54, width: 2),
+                  shape: BoxShape.circle,
+                  color: Colors.amber[50],
                 ),
                 child: CircleAvatar(
                   radius: 20,
@@ -293,14 +349,6 @@ class ShirtCardBox extends StatelessWidget {
                     )
                   : Text(""),
             ),
-            Expanded(
-              child: this.isComplete
-                  ? Icon(
-                      Icons.check,
-                      color: Colors.green,
-                    )
-                  : Text(""),
-            ),
           ],
         ),
       ),
@@ -314,7 +362,7 @@ Card buildHeader(String headerType, BuildContext context) {
       child: Container(
         height: 20,
         decoration: BoxDecoration(
-          color: Colors.cyan,
+          color: Colors.black54,
           border: Border(
             bottom: BorderSide(
               color: Colors.white,
@@ -362,7 +410,7 @@ Card buildHeader(String headerType, BuildContext context) {
       child: Container(
         height: 20,
         decoration: BoxDecoration(
-          color: Colors.cyan,
+          color: Colors.black54,
         ),
         padding: EdgeInsets.only(left: 15, right: 15),
         child: Row(
@@ -412,14 +460,6 @@ Card buildHeader(String headerType, BuildContext context) {
                   fontSize: 15,
                   color: Colors.white),
             )),
-            Expanded(
-                child: Text(
-              AppLocalizations.of(context).translate("complete"),
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                  color: Colors.white),
-            ))
           ],
         ),
       ),

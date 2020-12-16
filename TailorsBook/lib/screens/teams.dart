@@ -31,7 +31,7 @@ class _TeamMembersState extends State<TeamMembers> {
   @override
   Widget build(BuildContext parentContext) {
     return Scaffold(
-      backgroundColor: Colors.cyanAccent,
+      backgroundColor: Colors.black12,
       drawer: NavDrawer(),
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).translate("t_team_members")),
@@ -61,19 +61,19 @@ class _TeamMembersState extends State<TeamMembers> {
                 children: [
                   PersonInfo(
                     name: "Amitabh Ji",
-                    image: Image.asset("assets/images/person.png"),
+                    image: AssetImage("assets/images/shrawan.png"),
                     onPressed: profile,
                     color: Colors.purple[100],
                   ),
                   PersonInfo(
                     name: "Amitabh Ji",
-                    image: Image.asset("assets/images/person.png"),
+                    image: AssetImage("assets/images/person.png"),
                     onPressed: profile,
                     color: Colors.purple[100],
                   ),
                   PersonInfo(
                     name: "Amitabh Ji",
-                    image: Image.asset("assets/images/person.png"),
+                    image: AssetImage("assets/images/person.png"),
                     onPressed: profile,
                     color: Colors.purple[100],
                   ),
@@ -103,13 +103,13 @@ class _TeamMembersState extends State<TeamMembers> {
                 children: [
                   PersonInfo(
                     name: "Amitabh Ji",
-                    image: Image.asset("assets/images/person.png"),
+                    image: AssetImage("assets/images/person.png"),
                     onPressed: profile,
                     color: Colors.purple[200],
                   ),
                   PersonInfo(
                     name: "Amitabh Ji",
-                    image: Image.asset("assets/images/person.png"),
+                    image: AssetImage("assets/images/person.png"),
                     onPressed: profile,
                     color: Colors.purple[200],
                   ),
@@ -139,19 +139,19 @@ class _TeamMembersState extends State<TeamMembers> {
                 children: [
                   PersonInfo(
                     name: "Amitabh Ji",
-                    image: Image.asset("assets/images/person.png"),
+                    image: AssetImage("assets/images/person.png"),
                     onPressed: profile,
                     color: Colors.purple[300],
                   ),
                   PersonInfo(
                     name: "Amitabh Ji",
-                    image: Image.asset("assets/images/person.png"),
+                    image: AssetImage("assets/images/person.png"),
                     onPressed: profile,
                     color: Colors.purple[300],
                   ),
                   PersonInfo(
                     name: "Amitabh Ji",
-                    image: Image.asset("assets/images/person.png"),
+                    image: AssetImage("assets/images/person.png"),
                     onPressed: profile,
                     color: Colors.purple[300],
                   ),
@@ -181,19 +181,19 @@ class _TeamMembersState extends State<TeamMembers> {
                 children: [
                   PersonInfo(
                     name: "Amitabh Ji",
-                    image: Image.asset("assets/images/person.png"),
+                    image: AssetImage("assets/images/raju_bhai.jpeg"),
                     onPressed: profile,
                     color: Colors.purple[400],
                   ),
                   PersonInfo(
                     name: "Amitabh Ji",
-                    image: Image.asset("assets/images/person.png"),
+                    image: AssetImage("assets/images/person.png"),
                     onPressed: profile,
                     color: Colors.purple[400],
                   ),
                   PersonInfo(
                     name: "Amitabh Ji",
-                    image: Image.asset("assets/images/person.png"),
+                    image: AssetImage("assets/images/person.png"),
                     onPressed: profile,
                     color: Colors.purple[400],
                   ),
@@ -221,25 +221,25 @@ class _TeamMembersState extends State<TeamMembers> {
                 children: [
                   PersonInfo(
                     name: "Amitabh Ji",
-                    image: Image.asset("assets/images/person.png"),
+                    image: AssetImage("assets/images/person.png"),
                     onPressed: profile,
                     color: Colors.purple[600],
                   ),
                   PersonInfo(
                     name: "Amitabh Ji",
-                    image: Image.asset("assets/images/person.png"),
+                    image: AssetImage("assets/images/person.png"),
                     onPressed: profile,
                     color: Colors.purple[600],
                   ),
                   PersonInfo(
                     name: "Amitabh Ji",
-                    image: Image.asset("assets/images/person.png"),
+                    image: AssetImage("assets/images/person.png"),
                     onPressed: profile,
                     color: Colors.purple[600],
                   ),
                   PersonInfo(
                     name: "Amitabh Ji",
-                    image: Image.asset("assets/images/person.png"),
+                    image: AssetImage("assets/images/person.png"),
                     onPressed: profile,
                     color: Colors.purple[600],
                   ),

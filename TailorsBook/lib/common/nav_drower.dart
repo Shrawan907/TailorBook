@@ -1,4 +1,4 @@
-import 'package:TailorsBook/locale/appLanguage.dart';
+import 'package:TailorsBook/locale/localInfo.dart';
 import 'package:TailorsBook/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,14 +22,14 @@ class _NavDrawerState extends State<NavDrawer> {
   // void initState() {
   //   super.initState();
   //   setState(() {
-  //     //_radioValue = AppLanguage().appLocal.toString() == "en" ? 0 : 1;
+  //     //_radioValue = localData().appLocal.toString() == "en" ? 0 : 1;
   //   });
   // }
 
   @override
   Widget build(BuildContext context) {
-    var appLanguage = Provider.of<AppLanguage>(context);
-    _radioValue = appLanguage.appLocal.languageCode == "en" ? 0 : 1;
+    var localData = Provider.of<LocalInfo>(context);
+    _radioValue = localData.appLocal.languageCode == "en" ? 0 : 1;
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -39,12 +39,11 @@ class _NavDrawerState extends State<NavDrawer> {
               AppLocalizations.of(context).translate("n_menu"),
               style: TextStyle(color: Colors.white, fontSize: 25),
             ),
-            decoration: BoxDecoration(
-              color: Colors.green,
-              // image: DecorationImage(
-              //     fit: BoxFit.fill,
-              //     image: AssetImage('assets/images/cover.jpg'))
-            ),
+            decoration: BoxDecoration(color: Colors.amber
+                // image: DecorationImage(
+                //     fit: BoxFit.fill,
+                //     image: AssetImage('assets/images/cover.jpg'))
+                ),
           ),
           ListTile(
             leading: Icon(Icons.input),
@@ -88,10 +87,11 @@ class _NavDrawerState extends State<NavDrawer> {
                         leading: Radio(
                           value: 0,
                           groupValue: _radioValue,
+                          activeColor: Colors.amber,
                           onChanged: (value) {
                             setState(() {
                               _radioValue = value;
-                              appLanguage.changeLanguage(Locale("en"));
+                              localData.changeLanguage(Locale("en"));
                             });
                           },
                         ),
@@ -101,10 +101,11 @@ class _NavDrawerState extends State<NavDrawer> {
                         leading: Radio(
                             value: 1,
                             groupValue: _radioValue,
+                            activeColor: Colors.amber,
                             onChanged: (value) {
                               setState(() {
                                 _radioValue = value;
-                                appLanguage.changeLanguage(Locale("hi"));
+                                localData.changeLanguage(Locale("hi"));
                               });
                             }),
                         title: Text("हिंदी"),
@@ -134,7 +135,7 @@ class _NavDrawerState extends State<NavDrawer> {
             leading: Icon(Icons.exit_to_app),
             title: Text(AppLocalizations.of(context).translate("n_logout")),
             onTap: () {
-              _authenticate.logout();
+              _authenticate.logout(context);
               Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => MyHomePage()),

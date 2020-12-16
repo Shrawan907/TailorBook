@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:TailorsBook/locale/appLanguage.dart';
+import 'package:TailorsBook/locale/localInfo.dart';
 import 'package:TailorsBook/locale/app_localization.dart';
 import 'package:TailorsBook/signin.dart';
 import 'package:flutter/material.dart';
@@ -80,11 +80,12 @@ class _DayDataState extends State<DayData> {
           child: Icon(
             Icons.add,
             size: 40,
+            color: Colors.white,
           ),
-          backgroundColor: branch == 0 ? Colors.blueAccent : Colors.blueGrey,
+          backgroundColor: branch == 0 ? Colors.deepPurple : Colors.red[700],
         ),
       ),
-      backgroundColor: Colors.blue,
+      backgroundColor: Colors.black12,
       drawer: NavDrawer(),
       appBar: AppBar(
         title: Text(
@@ -110,9 +111,9 @@ class _DayDataState extends State<DayData> {
                 });
               },
               shape: CircleBorder(
-                side: BorderSide(color: Colors.blue),
+                side: BorderSide(color: Colors.transparent),
               ),
-              color: branch == 0 ? Colors.blueAccent : Colors.blueGrey,
+              color: branch == 0 ? Colors.deepPurple : Colors.red[700],
             ),
           ),
           Padding(
@@ -141,8 +142,8 @@ class _DayDataState extends State<DayData> {
                 Expanded(
                   child: RaisedButton(
                     color: selectedDate == tommorowDate
-                        ? Colors.transparent
-                        : Colors.deepPurple,
+                        ? Colors.black
+                        : Colors.cyan,
                     onPressed: () {
                       setState(() {
                         if (selectedDate != tommorowDate) {
@@ -159,7 +160,7 @@ class _DayDataState extends State<DayData> {
                             fontSize: selectedDate == tommorowDate ? 18 : 15,
                             color: selectedDate == tommorowDate
                                 ? Colors.white
-                                : Colors.lightBlueAccent),
+                                : Colors.black45),
                       ),
                     ),
                   ),
@@ -167,8 +168,8 @@ class _DayDataState extends State<DayData> {
                 Expanded(
                   child: RaisedButton(
                     color: selectedDate == overmorrowDate
-                        ? Colors.transparent
-                        : Colors.deepPurple,
+                        ? Colors.black
+                        : Colors.cyan,
                     onPressed: () {
                       setState(() {
                         if (selectedDate != overmorrowDate) {
@@ -185,7 +186,7 @@ class _DayDataState extends State<DayData> {
                             fontSize: selectedDate == overmorrowDate ? 18 : 15,
                             color: selectedDate == overmorrowDate
                                 ? Colors.white
-                                : Colors.lightBlueAccent),
+                                : Colors.black45),
                       ),
                     ),
                   ),

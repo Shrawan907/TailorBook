@@ -51,11 +51,12 @@ class _DataTodayState extends State<DataToday> {
           child: Icon(
             Icons.add,
             size: 40,
+            color: Colors.white,
           ),
-          backgroundColor: branch == 0 ? Colors.blueAccent : Colors.blueGrey,
+          backgroundColor: branch == 0 ? Colors.deepPurple : Colors.red[700],
         ),
       ),
-      backgroundColor: Colors.blue,
+      backgroundColor: Colors.black12,
       drawer: NavDrawer(),
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).translate("t_return_today")),
@@ -79,9 +80,9 @@ class _DataTodayState extends State<DataToday> {
                 });
               },
               shape: CircleBorder(
-                side: BorderSide(color: Colors.blue),
+                side: BorderSide(color: Colors.transparent),
               ),
-              color: branch == 0 ? Colors.blueAccent : Colors.blueGrey,
+              color: branch == 0 ? Colors.deepPurple : Colors.red[700],
             ),
           ),
           Padding(

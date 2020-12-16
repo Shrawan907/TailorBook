@@ -32,7 +32,7 @@ Future<List> fetchTodayData() async {
               24)
           .round());
       print("Difference: " + dif.toString());
-      if (dif == 2) {
+      if (dif == 0) {
         todayData.addAll([
           {
             'reg_no': temp['reg_no'].toString(),

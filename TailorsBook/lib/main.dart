@@ -1,4 +1,5 @@
-import 'package:TailorsBook/locale/appLanguage.dart';
+import 'package:TailorsBook/locale/localInfo.dart';
+import 'package:TailorsBook/screens/homepage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:TailorsBook/signin.dart';
@@ -12,20 +13,27 @@ import 'package:intl/intl.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  AppLanguage appLanguage = AppLanguage();
-  await appLanguage.fetchLocale();
-  runApp(MyApp(appLanguage: appLanguage));
+  LocalInfo localData = LocalInfo();
+  await localData.fetchLocale();
+
+  await localData.fetchLogDetail();
+  print(" XXXX " + localData.loggedIn.toString());
+  runApp(MyApp(
+    localData: localData,
+    loggedIn: localData.loggedIn,
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  final AppLanguage appLanguage;
-  MyApp({this.appLanguage});
+  final LocalInfo localData;
+  final bool loggedIn;
+  MyApp({this.localData, this.loggedIn});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<AppLanguage>(
-      create: (_) => appLanguage,
-      child: Consumer<AppLanguage>(builder: (context, model, child) {
+    return ChangeNotifierProvider<LocalInfo>(
+      create: (_) => localData,
+      child: Consumer<LocalInfo>(builder: (context, model, child) {
         return MaterialApp(
           locale: model.appLocal,
           debugShowCheckedModeBanner: false,
@@ -40,13 +48,15 @@ class MyApp extends StatelessWidget {
           ],
           title: 'Flutter Demo',
           theme: ThemeData(
-              primarySwatch: Colors.deepPurple,
+              primarySwatch: Colors.amber,
               visualDensity: VisualDensity.adaptivePlatformDensity,
-              accentColor: Colors.teal),
-          home: MyHomePage(
-            title:
-                "Welcome to Tailors Book", //AppLocalizations.of(context).translate("welcom_aap_name"),
-          ),
+              accentColor: Colors.grey),
+          home: loggedIn == false
+              ? MyHomePage(
+                  title:
+                      "I AM TAILOR", //AppLocalizations.of(context).translate("welcom_aap_name"),
+                )
+              : HomePage(),
         );
       }),
     );
