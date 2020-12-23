@@ -48,5 +48,7 @@
     "create_company"        :   "कंपनी बनाये",
     "username"              :   "यूजर नेम",
     "enter_username"        :   "यूजर नेम डाले",
-    "wrong_entry"           :   "गलत फॉर्मेट"
+    "wrong_entry"           :   "गलत फॉर्मेट",
+    "type"                  :   "प्रकार",
+    "count"                 :   "संख्या"
 }

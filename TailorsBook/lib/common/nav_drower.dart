@@ -1,5 +1,5 @@
 import 'package:TailorsBook/locale/localInfo.dart';
-import 'package:TailorsBook/signin.dart';
+import 'package:TailorsBook/screens/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:TailorsBook/handle_cloud/login.dart';

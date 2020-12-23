@@ -48,5 +48,7 @@
     "create_company"        :   "Create Company",
     "username"              :   "Username",
     "enter_username"        :   "Enter Username",
-    "wrong_entry"           :   "Wrong Entry"
+    "wrong_entry"           :   "Wrong Entry",
+    "type"                  :   "TYPE",
+    "count"                 :   "COUNT"
 }

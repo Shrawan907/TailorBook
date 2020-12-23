@@ -1,12 +1,16 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:TailorsBook/common/buttons.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-DateTime selectedDate = DateTime.now();
+DateTime bookingDate = DateTime.now();
+DateTime selectedDate = bookingDate;
+
+FirebaseFirestore db = FirebaseFirestore.instance;
 
 class RegisterNewData extends StatefulWidget {
   @override
@@ -18,7 +22,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
   final _formKey = GlobalKey<FormState>();
   String showDate;
   int regNo;
-  int branch = 0;
+  int branch = 0; // 0 -> A , 1 -> B
   bool update = false;
   bool dateSelected = false;
   bool value1 = false,
@@ -64,11 +68,81 @@ class _RegisterNewDataState extends State<RegisterNewData> {
       });
   }
 
-  submit() {
+  addProduct(bool value, var path, int count) {
+    if (value) {
+      path.doc("$regNo").get().then((snapShot) => {
+            if (snapShot.exists)
+              {}
+            else
+              {
+                path.doc("$regNo").set({
+                  "reg_no": regNo,
+                  "count": count,
+                  "is_complete": false,
+                  "status": [
+                    for (int i = 0; i < count; i++) "uncut",
+                  ],
+                }),
+              }
+          });
+    }
+  }
+
+  submit() async {
     print("REG NO. : $regNo");
+    if (regNo == null || regNo < 0 || regNo > 100000) return;
     final form = _formKey.currentState;
     if (form.validate()) {
       form.save();
+      var regPath = db
+          .collection("company")
+          .doc(branch == 0 ? "branchA" : "branchB")
+          .collection("register");
+      var products = db
+          .collection("company")
+          .doc(branch == 0 ? "branchA" : "branchB")
+          .collection("products")
+          .doc("products");
+      var coatPath = products.collection("coat");
+      var pentPath = products.collection("pent");
+      var shirtPath = products.collection("shirt");
+      var achkanPath = products.collection("achkan");
+      var jacketPath = products.collection("jacket");
+      var kurtaPath = products.collection("kurta");
+      var pajamaPath = products.collection("pajama");
+      var otherPath = products.collection("others");
+
+      await regPath.doc("$regNo").get().then((snapShot) => {
+            if (snapShot.exists)
+              {print("doc already exists")}
+            else
+              {
+                regPath.doc("$regNo").set({
+                  "reg_no": regNo,
+                  "booking_date": bookingDate,
+                  "return_date": selectedDate,
+                  if (value1) "coat": val1,
+                  if (value2) "pent": val2,
+                  if (value3) "shirt": val3,
+                  if (value4) "jacket": val4,
+                  if (value5) "kurta": val5,
+                  if (value6) "pajama": val6,
+                  if (value7) "achkan": val7,
+                  if (value8) "others": val8,
+                  "is_complete": false
+                }),
+                addProduct(value1, coatPath, val1),
+                addProduct(value2, pentPath, val2),
+                addProduct(value3, shirtPath, val3),
+                addProduct(value4, jacketPath, val4),
+                addProduct(value5, kurtaPath, val5),
+                addProduct(value6, pajamaPath, val6),
+                addProduct(value7, achkanPath, val7),
+                addProduct(value8, otherPath, val8),
+                print("done")
+              }
+          });
+
       SnackBar snackBar = SnackBar(
         content: Text("Saved Details of ${regNo.toString()}"),
       );

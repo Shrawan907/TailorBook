@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:TailorsBook/locale/app_localization.dart';
 import 'package:TailorsBook/screens/day_data.dart';
-import 'package:TailorsBook/signin.dart';
+import 'package:TailorsBook/screens/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:TailorsBook/common/nav_drower.dart';
 import 'package:TailorsBook/common/cardBox.dart';
@@ -12,6 +12,7 @@ import 'package:TailorsBook/screens/on_working.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:TailorsBook/screens/assign_work.dart';
 
 List items = [
   {"regNo": "123", "type": "pajama", "isComplete": true},
@@ -63,7 +64,8 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   onPressed() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => OnWork()));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => AssignWork()));
   }
 
   @override

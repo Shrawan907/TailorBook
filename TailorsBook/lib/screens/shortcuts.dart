@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:TailorsBook/locale/app_localization.dart';
 import 'package:TailorsBook/screens/book_screen.dart';
-import 'package:TailorsBook/signin.dart';
+import 'package:TailorsBook/screens/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:TailorsBook/common/nav_drower.dart';
 import 'package:TailorsBook/common/cardBox.dart';

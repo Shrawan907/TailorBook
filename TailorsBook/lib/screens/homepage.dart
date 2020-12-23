@@ -1,3 +1,4 @@
+import 'package:TailorsBook/test_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:TailorsBook/screens/data_today.dart';
@@ -40,6 +41,7 @@ class _HomePageState extends State<HomePage> {
           DayData(),
           ShortCuts(),
           TeamMembers(),
+          TestScreen(),
         ],
         controller: pageController,
         onPageChanged: onPageChanged,
@@ -63,6 +65,9 @@ class _HomePageState extends State<HomePage> {
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.description),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.group),
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.group),

@@ -2,7 +2,7 @@ import 'package:TailorsBook/locale/localInfo.dart';
 import 'package:TailorsBook/screens/homepage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:TailorsBook/signin.dart';
+import 'package:TailorsBook/screens/signin.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:TailorsBook/locale/app_localization.dart';

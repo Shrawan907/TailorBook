@@ -177,7 +177,6 @@ class PersonInfo extends StatelessWidget {
               Expanded(
                   //this.image,
                   child: Container(
-                // padding: EdgeInsets.only(top: 5),
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: image,
@@ -461,6 +460,60 @@ Card buildHeader(String headerType, BuildContext context) {
                   color: Colors.white),
             )),
           ],
+        ),
+      ),
+    );
+  } else if (headerType == "add_shirt") {
+    return Card(
+      child: Container(
+        height: 20,
+        decoration: BoxDecoration(
+          color: Colors.black54,
+          border: Border(
+            bottom: BorderSide(
+              color: Colors.white,
+              width: 1.0,
+            ),
+          ),
+        ),
+        //padding: EdgeInsets.only(left: 30, right: 0),
+        child: Container(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Expanded(
+                  child: Center(
+                child: Text(
+                  AppLocalizations.of(context).translate("reg_no"),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                      color: Colors.white),
+                ),
+              )),
+              Expanded(
+                  child: Center(
+                child: Text(
+                  AppLocalizations.of(context).translate("count"),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                      color: Colors.white),
+                ),
+              )),
+              Expanded(
+                  child: Center(
+                child: Text(
+                  AppLocalizations.of(context).translate("type"),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                      color: Colors.white),
+                ),
+              ))
+            ],
+          ),
         ),
       ),
     );

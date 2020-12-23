@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:TailorsBook/locale/app_localization.dart';
-import 'package:TailorsBook/signin.dart';
+import 'package:TailorsBook/screens/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:TailorsBook/common/nav_drower.dart';
 import 'package:TailorsBook/common/cardBox.dart';
@@ -61,7 +61,7 @@ class _TeamMembersState extends State<TeamMembers> {
                 children: [
                   PersonInfo(
                     name: "Amitabh Ji",
-                    image: AssetImage("assets/images/shrawan.png"),
+                    image: AssetImage("assets/images/person.png"),
                     onPressed: profile,
                     color: Colors.purple[100],
                   ),

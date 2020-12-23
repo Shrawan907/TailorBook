@@ -31,35 +31,42 @@ class _TestScreenState extends State<TestScreen> {
   //  the current state of our form
   String username;
 
-  submit() {
-    fetchTodayData();
-
-    // db
-    //     .collection("companies/branchA/register")
-    //     .snapshots()
-    //     .listen((QuerySnapshot querySnapshot) {
-    //   querySnapshot.docs.forEach((element) {
-    //     print(element.id);
-    //     for (var ele in element.data().entries) {
-    //       if (ele.key == "return_date") {
-    //         print(ele.key +
-    //             " : " +
-    //             DateTime.parse(ele.value.toDate().toString()).toString());
-    //         print("Days Diffrence: " +
-    //             ((DateTime.parse(ele.value.toDate().toString())
-    //                                 .difference(timestamp) -
-    //                             Duration(hours: ele.value.toDate().hour) +
-    //                             Duration(hours: timestamp.hour))
-    //                         .inHours /
-    //                     24)
-    //                 .round()
-    //                 .toString());
-    //       } else
-    //         print(ele.key + " : " + ele.value.toString());
-    //     }
-    //   });
-    // });
-    // print("Today Date: " + timestamp.toString());
+  submit() async {
+    //fetchTodayData();
+// set({'title': 'master * ji', 'description': 'kuch bhi'});
+    {
+      // adding with specified id
+      print(username);
+      await db.collection("books").doc(username).get().then((snapShot) => {
+            // if (snapShot.exists)
+            //   {
+            //     db
+            //         .collection("books")
+            //         .doc(username)
+            //         .update({"rating": "5 Star"})
+            //   }
+            // else
+            if (username == "3")
+              {
+                db
+                    .collection("books")
+                    .doc(username)
+                    .set({'title': ' * ji', 'description': 'bhi'})
+              }
+            else
+              {
+                print(username),
+                db
+                    .collection("books")
+                    .doc(username)
+                    .collection("vijay")
+                    .doc("102")
+                    .collection("or8ange")
+                    .doc("101")
+                    .set({"data": "564"})
+              }
+          });
+    }
   }
 
   @override
