@@ -13,16 +13,21 @@ DateTime selectedDate = bookingDate;
 FirebaseFirestore db = FirebaseFirestore.instance;
 
 class RegisterNewData extends StatefulWidget {
+  final int branch;
+  RegisterNewData({this.branch});
   @override
-  _RegisterNewDataState createState() => _RegisterNewDataState();
+  _RegisterNewDataState createState() =>
+      _RegisterNewDataState(branch: this.branch);
 }
 
 class _RegisterNewDataState extends State<RegisterNewData> {
+  int branch;
+  _RegisterNewDataState({this.branch});
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
   String showDate;
   int regNo;
-  int branch = 0; // 0 -> A , 1 -> B
+  //int branch = 0; // 0 -> A , 1 -> B
   bool update = false;
   bool dateSelected = false;
   bool value1 = false,
@@ -59,7 +64,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
         );
       },
     );
-    if (picked != null && picked != selectedDate)
+    if (picked != null)
       setState(() {
         selectedDate = picked;
         dateSelected = true;
@@ -361,7 +366,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                       child: Container(
                         width: 30,
                         child: SvgPicture.asset(
-                          'assets/images/trouser.svg',
+                          'assets/images/pent.svg',
                           height: 27,
                           width: 30,
                           color: Colors.black,
@@ -434,9 +439,11 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                       padding: const EdgeInsets.only(left: 10.0, right: 11),
                       child: Container(
                         width: 30,
-                        child: Image.asset(
-                          "assets/images/shirt_.png",
-                          height: 20,
+                        child: SvgPicture.asset(
+                          'assets/images/shirt.svg',
+                          height: 30,
+                          width: 30,
+                          color: Colors.black,
                         ),
                       ),
                     ),
@@ -507,7 +514,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                       child: Container(
                         width: 30,
                         child: SvgPicture.asset(
-                          'assets/images/vest.svg',
+                          'assets/images/jacket.svg',
                           height: 30,
                           width: 30,
                           color: Colors.black,
@@ -580,9 +587,11 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                       padding: const EdgeInsets.only(left: 15, right: 14),
                       child: Container(
                         width: 20,
-                        child: Image.asset(
-                          "assets/images/kurta.png",
+                        child: SvgPicture.asset(
+                          'assets/images/kurta.svg',
                           height: 30,
+                          width: 30,
+                          color: Colors.black,
                         ),
                       ),
                     ),

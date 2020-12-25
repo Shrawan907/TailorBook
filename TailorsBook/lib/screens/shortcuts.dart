@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:TailorsBook/locale/app_localization.dart';
 import 'package:TailorsBook/screens/book_screen.dart';
+import 'package:TailorsBook/screens/search_result.dart';
 import 'package:TailorsBook/screens/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:TailorsBook/common/nav_drower.dart';
@@ -112,8 +113,12 @@ class _ShortCutsState extends State<ShortCuts> {
                   margin: EdgeInsets.only(right: 10),
                   child: RaisedButton(
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => OnWork()));
+                      if (reg_no == null || reg_no <= 0) return;
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SearchResult(
+                                  regNo: this.reg_no, branch: this.branch)));
                     },
                     child: Container(
                       height: 65,
@@ -136,8 +141,10 @@ class _ShortCutsState extends State<ShortCuts> {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => BookScreen()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => BookScreen(branch: 0)));
             },
             child: Card(
               color: Colors.amber[50], // lightGreenAccent
@@ -154,8 +161,10 @@ class _ShortCutsState extends State<ShortCuts> {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => BookScreen()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => BookScreen(branch: 1)));
             },
             child: Card(
               color: Colors.amber[50], // lightGreenAccent

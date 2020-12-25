@@ -8,36 +8,54 @@ import 'package:TailorsBook/handle_cloud/data_file.dart';
 import 'package:TailorsBook/screens/register_new.dart';
 import 'package:TailorsBook/screens/on_working.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/services.dart';
 
-List todayData = [];
+List register = [];
+List duplicateRegister = [];
 
 class BookScreen extends StatefulWidget {
+  final int branch;
+  BookScreen({this.branch});
   @override
-  _BookScreenState createState() => _BookScreenState();
+  _BookScreenState createState() => _BookScreenState(branch: this.branch);
 }
 
 class _BookScreenState extends State<BookScreen> {
-  int branch = 0;
+  final int branch;
+  _BookScreenState({this.branch});
+  TextEditingController editingController = TextEditingController();
   @override
   void initState() {
     super.initState();
     fetchData();
-    print("\n  CALLED  \n");
   }
 
   void fetchData() async {
-    todayData = await fetchTodayData();
+    register = await fetchRegisterData(this.branch);
+    //duplicateRegister.addAll(register);
+    duplicateRegister = [...register];
   }
 
-  openDetail() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => OnWork()));
-  }
-
-  addNewData() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => RegisterNewData()),
-    );
+  void filterSearchResults(String query) {
+    if (query.isNotEmpty) {
+      List dummyListData = [];
+      duplicateRegister.forEach((item) {
+        if (item["reg_no"].toString().contains(query)) {
+          dummyListData.add(item);
+        }
+      });
+      setState(() {
+        print(duplicateRegister.length);
+        register.clear();
+        register.addAll(dummyListData);
+      });
+      return;
+    } else {
+      setState(() {
+        print(duplicateRegister.length);
+        register = [...duplicateRegister];
+      });
+    }
   }
 
   @override
@@ -45,25 +63,81 @@ class _BookScreenState extends State<BookScreen> {
     return Scaffold(
       backgroundColor: Colors.black54,
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).translate("t_return_today")),
+        title: Text(
+            "Register"), //Text(AppLocalizations.of(context).translate("t_return_today")),
         actions: <Widget>[
-          Padding(
-              padding: EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => OnWork()));
-                },
-                child: Icon(
+          Container(
+            width: 150,
+            height: 20,
+            margin: EdgeInsets.only(right: 50, bottom: 5, top: 5),
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(width: 2)),
+            ),
+            child: TextField(
+              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+              onChanged: (value) {
+                filterSearchResults(value);
+                print(value);
+              },
+              controller: editingController,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                hintText: "Search",
+                hintStyle: TextStyle(
+                    fontSize: 20,
+                    color: Colors.black,
+                    fontWeight: FontWeight.normal),
+                prefixIcon: Icon(
                   Icons.search,
-                  size: 26.0,
+                  color: Colors.black,
                 ),
-              )),
+              ),
+            ),
+          ),
         ],
       ),
       body: Column(
         children: <Widget>[
-          buildHeader("dailyInfo", context),
+          buildHeader("register", context),
+          RaisedButton(onPressed: () {
+            setState(() {
+              duplicateRegister = [...register];
+            });
+          }),
+          Expanded(
+            child: Container(
+              child: //register.isNotEmpty ?
+                  RefreshIndicator(
+                onRefresh: () async {
+                  try {
+                    setState(() async {
+                      register = await fetchRegisterData(this.branch);
+                      register.forEach((element) {
+                        duplicateRegister.add(element);
+                      });
+                    });
+                    print(register.isEmpty);
+                  } catch (err) {
+                    print("Refresh Bar Error: " + err);
+                  }
+                },
+                child: Container(
+                  child: ListView.builder(
+                    itemCount: register.length,
+                    itemBuilder: (context, index) {
+                      return RegCardBox(
+                        regNo: register[index]['reg_no'],
+                        isComplete: register[index]['is_complete'],
+                        date: register[index]['return_date'].toDate(),
+                        branch: this.branch,
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

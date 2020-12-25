@@ -1,17 +1,14 @@
 import 'dart:async';
-import 'package:TailorsBook/locale/localInfo.dart';
 import 'package:TailorsBook/locale/app_localization.dart';
-import 'package:TailorsBook/screens/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:TailorsBook/common/nav_drower.dart';
 import 'package:TailorsBook/common/cardBox.dart';
 import 'package:TailorsBook/handle_cloud/data_file.dart';
 import 'package:TailorsBook/screens/register_new.dart';
 import 'package:TailorsBook/screens/on_working.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:provider/provider.dart';
 
-List todayData = [];
+List displayData = [];
+List data = [];
 DateTime todayDate = DateTime.now();
 var tommorowDate = todayDate.add(Duration(days: 1));
 var overmorrowDate = todayDate.add(Duration(days: 2));
@@ -29,22 +26,35 @@ class _DayDataState extends State<DayData> {
   @override
   void initState() {
     super.initState();
-    fetchData();
-    print("\n  CALLED  \n");
+    fetchInitalData();
   }
 
-  void fetchData() async {
-    todayData = await fetchTodayData();
+  void fetchInitalData() async {
+    await fetchTomData();
+    setState(() {});
   }
 
-  openDetail() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => OnWork()));
+  Future fetchTomData() async {
+    displayData.clear();
+    displayData.addAll(await tommdata());
+    print(displayData);
+  }
+
+  Future fetchOverData() async {
+    displayData.clear();
+    displayData.addAll(await overmdata());
+  }
+
+  Future fetchData() async {
+    displayData.clear();
+    displayData.addAll(await fetchTodayData(selectedDate));
   }
 
   addNewData() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => RegisterNewData()),
+      MaterialPageRoute(
+          builder: (context) => RegisterNewData(branch: this.branch)),
     );
   }
 
@@ -61,12 +71,14 @@ class _DayDataState extends State<DayData> {
         );
       },
     );
-    if (picked != null && picked != selectedDate)
+    if (picked != null) {
+      selectedDate = picked;
+      await fetchData();
       setState(() {
-        selectedDate = picked;
         showDate =
             "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
       });
+    }
   }
 
   @override
@@ -144,14 +156,15 @@ class _DayDataState extends State<DayData> {
                     color: selectedDate == tommorowDate
                         ? Colors.black
                         : Colors.cyan,
-                    onPressed: () {
-                      setState(() {
-                        if (selectedDate != tommorowDate) {
-                          selectedDate = tommorowDate;
+                    onPressed: () async {
+                      if (selectedDate != tommorowDate) {
+                        selectedDate = tommorowDate;
+                        await fetchTomData();
+                        setState(() {
                           showDate =
                               "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
-                        }
-                      });
+                        });
+                      }
                     },
                     child: Center(
                       child: Text(
@@ -170,14 +183,15 @@ class _DayDataState extends State<DayData> {
                     color: selectedDate == overmorrowDate
                         ? Colors.black
                         : Colors.cyan,
-                    onPressed: () {
-                      setState(() {
-                        if (selectedDate != overmorrowDate) {
-                          selectedDate = overmorrowDate;
+                    onPressed: () async {
+                      if (selectedDate != overmorrowDate) {
+                        selectedDate = overmorrowDate;
+                        await fetchOverData();
+                        setState(() {
                           showDate =
                               "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
-                        }
-                      });
+                        });
+                      }
                     },
                     child: Center(
                       child: Text(
@@ -213,47 +227,40 @@ class _DayDataState extends State<DayData> {
           ),
           Expanded(
             child: Container(
-                child: //todayData.isNotEmpty ?
+                child: //displayData.isNotEmpty ?
                     RefreshIndicator(
               onRefresh: () async {
                 try {
-                  setState(() async {
-                    todayData = await fetchTodayData();
-                  });
-                  print(todayData.isEmpty);
+                  if (selectedDate == timestamp.add(Duration(days: 1))) {
+                    clearTomData();
+                    await fetchTomData();
+                  } else if (selectedDate == timestamp.add(Duration(days: 2))) {
+                    clearOverData();
+                    await fetchOverData();
+                  } else
+                    await fetchData();
+                  setState(() {});
+                  print(displayData.isEmpty);
                 } catch (err) {
                   print("Refresh Bar Error: " + err);
                 }
               },
               child: ListView.builder(
-                itemCount: todayData.length,
+                itemCount: displayData.isEmpty ? 0 : displayData[branch].length,
                 itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: openDetail,
-                    child: DayCardBox(
-                      reg_no: todayData[index]['reg_no'],
-                      is_complete: todayData[index]['is_complete'],
-                      coat: todayData[index]['coat'],
-                    ),
+                  return DayCardBox(
+                    regNo: displayData[branch][index]['reg_no'],
+                    isComplete: displayData[branch][index]['is_complete'],
+                    coat: displayData[branch][index]['coat'],
+                    branch: this.branch,
                   );
                 },
               ),
-            )
-                // : Container(
-                //     child: RaisedButton(
-                //       onPressed: () {
-                //         setState(() {});
-                //       },
-                //       child: Text("Refresh"),
-                //     ),
-                //   ),
-                ),
+            )),
           ),
           RaisedButton(
             onPressed: () {
-              setState(() {
-                //fetchData();
-              });
+              setState(() {});
             },
             child: Text(AppLocalizations.of(context).translate("refresh")),
           ),

@@ -122,7 +122,7 @@ class _TeamMembersState extends State<TeamMembers> {
                 text: TextSpan(children: [
                   WidgetSpan(
                       child: SvgPicture.asset(
-                    "assets/images/trouser.svg",
+                    "assets/images/pent.svg",
                     height: 30,
                   )),
                   TextSpan(
@@ -163,8 +163,8 @@ class _TeamMembersState extends State<TeamMembers> {
               child: RichText(
                 text: TextSpan(children: [
                   WidgetSpan(
-                      child: Image.asset(
-                    "assets/images/shirt_.png",
+                      child: SvgPicture.asset(
+                    "assets/images/shirt.svg",
                     height: 30,
                   )),
                   TextSpan(

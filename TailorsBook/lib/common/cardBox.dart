@@ -1,52 +1,65 @@
 import 'package:TailorsBook/locale/app_localization.dart';
+import 'package:TailorsBook/screens/search_result.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class CardBox extends StatelessWidget {
-  final String reg_no;
-  final bool is_complete;
-  final String coat;
+  final int regNo;
+  final bool isComplete;
+  final int coat;
+  final int branch;
 
-  const CardBox({this.reg_no, this.is_complete, this.coat});
+  const CardBox({this.regNo, this.isComplete, this.coat, this.branch});
 
   @override
   Widget build(BuildContext context) {
     return Card(
       color: Colors.grey[100], // lightGreenAccent
-      child: Container(
-        height: 40,
-        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Expanded(
-              child: Text(
-                '$reg_no',
-                style: TextStyle(
-                    fontWeight: FontWeight.w900,
-                    fontSize: 30,
-                    color: Colors.deepPurple),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => SearchResult(
+                        regNo: this.regNo,
+                        branch: this.branch,
+                      )));
+        },
+        child: Container(
+          height: 40,
+          margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Expanded(
+                child: Text(
+                  '$regNo',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 30,
+                      color: Colors.deepPurple),
+                ),
               ),
-            ),
-            Expanded(
-              child: Text(
-                coat == '0' ? " " : "    " + coat,
-                style: TextStyle(fontSize: 22),
+              Expanded(
+                child: Text(
+                  coat == null ? " " : "    $coat",
+                  style: TextStyle(fontSize: 22),
+                ),
               ),
-            ),
-            Expanded(
-              child: is_complete
-                  ? Icon(
-                      Icons.check,
-                      color: Colors.green,
-                    )
-                  : Icon(
-                      Icons.close,
-                      color: Colors.red,
-                    ),
-            ),
-          ],
+              Expanded(
+                child: isComplete
+                    ? Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      )
+                    : Icon(
+                        Icons.close,
+                        color: Colors.red,
+                      ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -54,47 +67,59 @@ class CardBox extends StatelessWidget {
 }
 
 class DayCardBox extends StatelessWidget {
-  final String reg_no;
-  final bool is_complete;
-  final String coat;
+  final int regNo;
+  final bool isComplete;
+  final int coat;
+  final int branch;
 
-  const DayCardBox({this.reg_no, this.is_complete, this.coat});
+  const DayCardBox({this.regNo, this.isComplete, this.coat, this.branch});
 
   @override
   Widget build(BuildContext context) {
     return Card(
       color: Colors.blue[50], // lightGreenAccent
-      child: Container(
-        height: 40,
-        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Expanded(
-              child: Text(
-                '$reg_no',
-                style: TextStyle(
-                    fontWeight: FontWeight.w900,
-                    fontSize: 30,
-                    color: Colors.deepPurple),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => SearchResult(
+                        regNo: this.regNo,
+                        branch: this.branch,
+                      )));
+        },
+        child: Container(
+          height: 40,
+          margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Expanded(
+                child: Text(
+                  '$regNo',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 30,
+                      color: Colors.deepPurple),
+                ),
               ),
-            ),
-            Expanded(
-              child: Text(
-                coat == '0' ? " " : "    " + coat,
-                style: TextStyle(fontSize: 22),
+              Expanded(
+                child: Text(
+                  coat == null ? " " : "    $coat",
+                  style: TextStyle(fontSize: 22),
+                ),
               ),
-            ),
-            Expanded(
-              child: is_complete
-                  ? Icon(
-                      Icons.check,
-                      color: Colors.green,
-                    )
-                  : Text(""),
-            ),
-          ],
+              Expanded(
+                child: isComplete
+                    ? Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      )
+                    : Text(""),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -355,6 +380,57 @@ class ShirtCardBox extends StatelessWidget {
   }
 }
 
+class RegCardBox extends StatelessWidget {
+  final int regNo;
+  final bool isComplete;
+  final DateTime date;
+  final int branch;
+  const RegCardBox({this.regNo, this.isComplete, this.date, this.branch});
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => SearchResult(
+                      regNo: regNo,
+                      branch: branch,
+                    )));
+      },
+      child: Container(
+        height: 40,
+        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: EdgeInsets.only(bottom: 10, left: 10),
+        decoration: BoxDecoration(
+          border: Border(bottom: BorderSide(width: 1, color: Colors.amber)),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            Expanded(
+              child: Text(
+                '$regNo',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30,
+                    color: isComplete ? Colors.amber : Colors.blue),
+              ),
+            ),
+            Expanded(
+              child: Text(
+                "${date.day}-${date.month}-${date.year}",
+                style: TextStyle(fontSize: 20, color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 Card buildHeader(String headerType, BuildContext context) {
   if (headerType == "dailyInfo") {
     return Card(
@@ -512,6 +588,47 @@ Card buildHeader(String headerType, BuildContext context) {
                       color: Colors.white),
                 ),
               ))
+            ],
+          ),
+        ),
+      ),
+    );
+  } else if (headerType == "register") {
+    return Card(
+      child: Container(
+        height: 20,
+        decoration: BoxDecoration(
+          color: Colors.black54,
+          border: Border(
+            bottom: BorderSide(
+              color: Colors.white,
+              width: 1.0,
+            ),
+          ),
+        ),
+        padding: EdgeInsets.only(left: 30, right: 0),
+        child: Container(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Expanded(
+                  child: Text(
+                AppLocalizations.of(context).translate("reg_no"),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                    color: Colors.white),
+              )),
+              Expanded(
+                  child: Text(
+                "DATE",
+                //AppLocalizations.of(context).translate(""),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                    color: Colors.white),
+              )),
             ],
           ),
         ),

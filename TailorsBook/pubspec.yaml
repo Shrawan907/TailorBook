@@ -24,6 +24,7 @@ dependencies:
   geolocator: 5.0.1
 
   flutter_svg: 
+  flutter_spinkit: ^4.1.2+1
   sticky_headers: "^0.1.8"
   easy_localization: ^2.3.3
 

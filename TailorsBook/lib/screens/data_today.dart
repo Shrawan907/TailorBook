@@ -9,7 +9,9 @@ import 'package:TailorsBook/screens/register_new.dart';
 import 'package:TailorsBook/screens/on_working.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-List todayData = [];
+List displayData = [];
+
+DateTime date = DateTime.now();
 
 class DataToday extends StatefulWidget {
   @override
@@ -21,22 +23,23 @@ class _DataTodayState extends State<DataToday> {
   @override
   void initState() {
     super.initState();
-    fetchData();
-    print("\n  CALLED  \n");
+    initalData();
   }
 
-  void fetchData() async {
-    todayData = await fetchTodayData();
+  void initalData() async {
+    await fetchData();
+    setState(() {});
   }
 
-  openDetail() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => OnWork()));
+  Future fetchData() async {
+    displayData = [...(await todaydata())];
   }
 
   addNewData() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => RegisterNewData()),
+      MaterialPageRoute(
+          builder: (context) => RegisterNewData(branch: this.branch)),
     );
   }
 
@@ -110,30 +113,28 @@ class _DataTodayState extends State<DataToday> {
           buildHeader("dailyInfo", context),
           Expanded(
             child: Container(
-              child: //todayData.isNotEmpty ?
+              child: //displayData.isNotEmpty ?
                   RefreshIndicator(
                 onRefresh: () async {
                   try {
-                    setState(() async {
-                      todayData = await fetchTodayData();
-                    });
-                    print(todayData.isEmpty);
+                    clearTodayData();
+                    await fetchData();
+                    setState(() {});
+                    print(displayData.isEmpty);
                   } catch (err) {
                     print("Refresh Bar Error: " + err);
                   }
                 },
                 child: Container(
                   child: ListView.builder(
-                    itemCount: todayData.length,
+                    itemCount:
+                        displayData.isEmpty ? 0 : displayData[branch].length,
                     itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: openDetail,
-                        child: CardBox(
-                          reg_no: todayData[index]['reg_no'],
-                          is_complete: todayData[index]['is_complete'],
-                          coat: todayData[index]['coat'],
-                        ),
-                      );
+                      return CardBox(
+                          regNo: displayData[branch][index]['reg_no'],
+                          isComplete: displayData[branch][index]['is_complete'],
+                          coat: displayData[branch][index]['coat'],
+                          branch: this.branch);
                     },
                   ),
                 ),
