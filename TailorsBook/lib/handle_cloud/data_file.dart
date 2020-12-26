@@ -16,13 +16,13 @@ Map info = {};
 List todayData = [];
 List tommData = [];
 List overmData = [];
-List data = [[], []];
+List tempData = [];
 List registerAdata = [];
 List registerBdata = [];
 
 Future<List> fetchTodayData(DateTime date) async {
-  data.clear();
-  data = [[], []];
+  tempData.clear();
+  tempData = [[], []];
   db
       .collection("company/branchA/register")
       .snapshots()
@@ -34,7 +34,7 @@ Future<List> fetchTodayData(DateTime date) async {
           date.month == dt.month &&
           date.year == dt.year) {
         print(temp);
-        data[0].addAll([
+        tempData[0].addAll([
           {
             'reg_no': temp['reg_no'],
             'is_complete': temp['is_complete'],
@@ -54,7 +54,7 @@ Future<List> fetchTodayData(DateTime date) async {
       if (date.day == dt.day &&
           date.month == dt.month &&
           date.year == dt.year) {
-        data[1].addAll([
+        tempData[1].addAll([
           {
             'reg_no': temp['reg_no'],
             'is_complete': temp['is_complete'],
@@ -65,7 +65,7 @@ Future<List> fetchTodayData(DateTime date) async {
     });
   });
   await Future.delayed(Duration(seconds: 2));
-  return data;
+  return tempData;
 }
 
 void clearTomData() {
@@ -114,7 +114,8 @@ Future<List> overmdata() async {
 }
 
 Future<List> fetchRegisterData(int branch) async {
-  branch == 0 ? registerAdata = [] : registerBdata = [];
+  tempData.clear();
+  tempData = [];
   String path =
       "company/" + (branch == 0 ? "branchA" : "branchB") + "/register";
   Map temp;
@@ -122,10 +123,29 @@ Future<List> fetchRegisterData(int branch) async {
     querySnapshot.docs.forEach((element) {
       temp = element.data();
       print(temp);
-      branch == 0 ? registerAdata.addAll([temp]) : registerBdata.addAll([temp]);
+      tempData.addAll([temp]);
     });
   });
-  return branch == 0 ? registerAdata : registerBdata;
+  await Future.delayed(Duration(seconds: 2));
+  return tempData;
+}
+
+Future<List> getRegister(int branch) async {
+  if (branch == 0) {
+    if (registerAdata.isEmpty || registerAdata == null) {
+      print("Empty register");
+      registerAdata = [...(await fetchRegisterData(branch))];
+      return registerAdata;
+    }
+    return registerAdata;
+  } else {
+    if (registerBdata.isEmpty || registerBdata == null) {
+      print("Empty register");
+      registerBdata = [...(await fetchRegisterData(branch))];
+      return registerBdata;
+    }
+    return registerBdata;
+  }
 }
 
 see(String path, var temp, String key, int regNo) {
@@ -169,6 +189,9 @@ Future<Map> fetchDetail(int regNo, int branch) async {
     see(path, temp, "achkan", regNo);
     see(path, temp, "others", regNo);
   });
-  Future.delayed(Duration(seconds: 2));
+  await Future.delayed(Duration(seconds: 2));
+  if (info.isEmpty) {
+    info["no_detail"] = true;
+  }
   return info;
 }

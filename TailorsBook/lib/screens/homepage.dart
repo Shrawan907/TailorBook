@@ -28,10 +28,10 @@ class _HomePageState extends State<HomePage> {
   void initalData() async {
     await todaydata();
     await tommdata();
-    await overmdata();
     setState(() {
       loading = false;
     });
+    await overmdata();
   }
 
   onPageChanged(int pageIndex) {
@@ -57,8 +57,8 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.blueAccent,
                 size: 25,
               ),
-              Text("Check all cases at one place",
-                  style: TextStyle(color: Colors.blue)),
+              Text("CHOUDHARY TAILORS", style: TextStyle(color: Colors.blue)),
+              Text("SUN INDIA SHOWROOM", style: TextStyle(color: Colors.blue)),
             ],
           ))
         : Scaffold(

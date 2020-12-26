@@ -36,9 +36,11 @@ class CardBox extends StatelessWidget {
                 child: Text(
                   '$regNo',
                   style: TextStyle(
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.w500,
                       fontSize: 30,
-                      color: Colors.deepPurple),
+                      color: this.branch == 0
+                          ? Colors.deepPurple
+                          : Colors.red[700]),
                 ),
               ),
               Expanded(
@@ -99,9 +101,11 @@ class DayCardBox extends StatelessWidget {
                 child: Text(
                   '$regNo',
                   style: TextStyle(
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.w500,
                       fontSize: 30,
-                      color: Colors.deepPurple),
+                      color: this.branch == 0
+                          ? Colors.deepPurple
+                          : Colors.red[700]),
                 ),
               ),
               Expanded(
@@ -415,8 +419,11 @@ class RegCardBox extends StatelessWidget {
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 30,
-                    color: isComplete ? Colors.amber : Colors.blue),
+                    color: branch == 0 ? Colors.blue : Colors.blue[200]),
               ),
+            ),
+            Expanded(
+              child: isComplete ? Icon(Icons.check) : Container(),
             ),
             Expanded(
               child: Text(
@@ -622,12 +629,23 @@ Card buildHeader(String headerType, BuildContext context) {
               )),
               Expanded(
                   child: Text(
-                "DATE",
+                "COMPLETE",
                 //AppLocalizations.of(context).translate(""),
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 15,
                     color: Colors.white),
+              )),
+              Expanded(
+                  child: Center(
+                child: Text(
+                  "DATE",
+                  //AppLocalizations.of(context).translate(""),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                      color: Colors.white),
+                ),
               )),
             ],
           ),

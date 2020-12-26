@@ -48,52 +48,62 @@ class _SearchResultState extends State<SearchResult> {
       appBar: AppBar(
         title: Text(
             "Search Result"), //Text(AppLocalizations.of(context).translate("t_return_today")),
+        actions: [
+          GestureDetector(
+            onTap: () {
+              setState(() {});
+            },
+            child: Container(
+                margin: EdgeInsets.only(right: 20), child: Icon(Icons.refresh)),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              RaisedButton(onPressed: () {
-                setState(() {});
-              }),
-              Container(
-                height: 40,
-                decoration: BoxDecoration(
-                  border:
-                      Border(bottom: BorderSide(width: 2, color: Colors.amber)),
-                ),
-                child: Row(
+          child: info.isEmpty || info.containsKey("no_detail")
+              ? Center(
+                  child: Container(
+                    margin: EdgeInsets.all(20),
+                    child: Text(info.isEmpty
+                        ? "Please Wait"
+                        : "Entry with given Register Number is not exist!"),
+                  ),
+                )
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Expanded(
-                        child: Text("RegNo.: $regNo",
-                            style: TextStyle(fontSize: 25))),
-                    Expanded(
-                      child: info.containsKey("return_date")
-                          ? Text('${info["return_date"]}',
-                              style: TextStyle(fontSize: 20))
-                          : null,
+                    Container(
+                      height: 40,
+                      decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(width: 2, color: Colors.amber)),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                              child: Text("RegNo.: $regNo",
+                                  style: TextStyle(fontSize: 25))),
+                          Expanded(
+                            child: info.containsKey("return_date")
+                                ? Text('${info["return_date"]}',
+                                    style: TextStyle(fontSize: 20))
+                                : null,
+                          ),
+                        ],
+                      ),
                     ),
+                    if (info.containsKey("coat")) dataContainer("coat"),
+                    if (info.containsKey("jacket")) dataContainer("jacket"),
+                    if (info.containsKey("pent")) dataContainer("pent"),
+                    if (info.containsKey("shirt")) dataContainer("shirt"),
+                    if (info.containsKey("kurta")) dataContainer("kurta"),
+                    if (info.containsKey("pajama")) dataContainer("pajama"),
+                    if (info.containsKey("achkan")) dataContainer("achkan"),
+                    if (info.containsKey("others")) dataContainer("others"),
                   ],
                 ),
-              ),
-              if (info.containsKey("coat")) dataContainer("coat"),
-              if (info.containsKey("jacket")) dataContainer("jacket"),
-              if (info.containsKey("pent")) dataContainer("pent"),
-              if (info.containsKey("shirt")) dataContainer("shirt"),
-              if (info.containsKey("kurta")) dataContainer("kurta"),
-              if (info.containsKey("pajama")) dataContainer("pajama"),
-              if (info.containsKey("achkan")) dataContainer("achkan"),
-              if (info.containsKey("others")) dataContainer("others"),
-              if (info.isEmpty)
-                Container(
-                  margin: EdgeInsets.all(20),
-                  child: Text("Entry with given Register Number is not exist!"),
-                )
-            ],
-          ),
         ),
       ),
     );

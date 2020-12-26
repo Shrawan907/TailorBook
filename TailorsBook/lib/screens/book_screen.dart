@@ -27,12 +27,18 @@ class _BookScreenState extends State<BookScreen> {
   @override
   void initState() {
     super.initState();
-    fetchData();
+    fetchInitalData();
   }
 
-  void fetchData() async {
-    register = await fetchRegisterData(this.branch);
-    //duplicateRegister.addAll(register);
+  void fetchInitalData() async {
+    await fetchData();
+    setState(() {});
+  }
+
+  Future fetchData() async {
+    register.clear();
+    register = [...(await getRegister(this.branch))];
+    duplicateRegister.clear();
     duplicateRegister = [...register];
   }
 
@@ -63,8 +69,10 @@ class _BookScreenState extends State<BookScreen> {
     return Scaffold(
       backgroundColor: Colors.black54,
       appBar: AppBar(
-        title: Text(
-            "Register"), //Text(AppLocalizations.of(context).translate("t_return_today")),
+        title: Text("Register " +
+            (this.branch == 0
+                ? "A"
+                : "B")), //Text(AppLocalizations.of(context).translate("t_return_today")),
         actions: <Widget>[
           Container(
             width: 150,

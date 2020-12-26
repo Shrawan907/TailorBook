@@ -6,6 +6,7 @@ import 'package:TailorsBook/common/cardBox.dart';
 import 'package:TailorsBook/handle_cloud/data_file.dart';
 import 'package:TailorsBook/screens/register_new.dart';
 import 'package:TailorsBook/screens/on_working.dart';
+import 'package:TailorsBook/screens/book_screen.dart';
 
 List displayData = [];
 List data = [];
@@ -132,8 +133,12 @@ class _DayDataState extends State<DayData> {
               padding: EdgeInsets.only(right: 20.0),
               child: GestureDetector(
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => OnWork()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => BookScreen(
+                                branch: this.branch,
+                              )));
                 },
                 child: Icon(
                   Icons.search,
