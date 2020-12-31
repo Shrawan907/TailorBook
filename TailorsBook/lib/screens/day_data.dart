@@ -240,7 +240,7 @@ class _DayDataState extends State<DayData> {
                     RefreshIndicator(
               onRefresh: () async {
                 try {
-                  initConnectivity(_scaffoldKey);
+                  initConnectivity(_scaffoldKey,context);
                   if (selectedDate == timestamp.add(Duration(days: 1))) {
                     clearTomData();
                     await fetchTomData();
@@ -271,7 +271,7 @@ class _DayDataState extends State<DayData> {
           RaisedButton(
             onPressed: () async{
               try {
-                initConnectivity(_scaffoldKey);
+                initConnectivity(_scaffoldKey,context);
                 clearTodayData();
                 await fetchData();
                 setState(() {});

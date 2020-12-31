@@ -127,7 +127,7 @@ class _DataTodayState extends State<DataToday> {
                   RefreshIndicator(
                 onRefresh: () async {
                   try {
-                    initConnectivity(_scaffoldKey);
+                    initConnectivity(_scaffoldKey,context);
                     clearTodayData();
                     await fetchData();
                     setState(() {});
@@ -155,7 +155,7 @@ class _DataTodayState extends State<DataToday> {
           RaisedButton(
             onPressed: () async{
               try {
-                initConnectivity(_scaffoldKey);
+                initConnectivity(_scaffoldKey,context);
                 clearTodayData();
                 await fetchData();
                 setState(() {});
