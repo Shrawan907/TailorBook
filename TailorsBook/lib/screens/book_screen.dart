@@ -137,7 +137,7 @@ class _BookScreenState extends State<BookScreen> {
                   child: ListView.builder(
                     itemCount: register.length,
                     // itemCount:
-                        // register.isEmpty ? 0 : register[branch].length,     //solved error here length value error
+                    // register.isEmpty ? 0 : register[branch].length,     //solved error here length value error
                     itemBuilder: (context, index) {
                       return RegCardBox(
                         regNo: register[index]['reg_no'],

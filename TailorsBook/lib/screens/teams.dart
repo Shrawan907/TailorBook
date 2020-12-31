@@ -24,9 +24,18 @@ class _TeamMembersState extends State<TeamMembers> {
     Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
   }
 
-  cutterProfile() {}
-  tailorProfile() {}
-  salesmanProfile() {}
+  @override
+  void initState() {
+    super.initState();
+    initialData();
+  }
+
+  void initialData() {
+    getData();
+    setState(() {});
+  }
+
+  Future getData() async {}
 
   @override
   Widget build(BuildContext parentContext) {

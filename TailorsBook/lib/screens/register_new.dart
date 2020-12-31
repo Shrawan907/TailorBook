@@ -29,9 +29,8 @@ class _RegisterNewDataState extends State<RegisterNewData> {
   final _formKey = GlobalKey<FormState>();
   String showDate;
   int regNo;
-  //int branch = 0; // 0 -> A , 1 -> B
-  bool update = false;
   bool dateSelected = false;
+  bool update = false;
   bool value1 = false,
       value2 = false,
       value3 = false,
@@ -97,7 +96,24 @@ class _RegisterNewDataState extends State<RegisterNewData> {
 
   submit() async {
     print("REG NO. : $regNo");
-    if (regNo == null || regNo < 0 || regNo > 100000) return;
+    if (regNo == null ||
+        regNo < 0 ||
+        regNo > 100000 ||
+        (value1 == false &&
+            value2 == false &&
+            value3 == false &&
+            value4 == false &&
+            value5 == false &&
+            value6 == false &&
+            value7 == false &&
+            value8 == false)) {
+      SnackBar snackBar = SnackBar(
+        content: Text("Entry format is not correct!"),
+      );
+      _scaffoldKey.currentState.showSnackBar(snackBar);
+      Timer(Duration(seconds: 1), () {});
+      return;
+    }
     final form = _formKey.currentState;
     if (form.validate()) {
       form.save();
@@ -118,7 +134,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
       var kurtaPath = products.collection("kurta");
       var pajamaPath = products.collection("pajama");
       var otherPath = products.collection("others");
-      int check=0;  //to check duplicity of register number
+      int check = 0; //to check duplicity of register number
       await regPath.doc("$regNo").get().then((snapShot) => {
             if (snapShot.exists)
               {
@@ -152,21 +168,22 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                 print("done")
               }
           });
-      if(check==0){
+      if (check == 0) {
         SnackBar snackBar = SnackBar(
-          content: Text(AppLocalizations.of(context).translate("save_detail_of") +
-              " ${regNo.toString()}"),
+          content: Text(
+              AppLocalizations.of(context).translate("save_detail_of") +
+                  " ${regNo.toString()}"),
         );
         _scaffoldKey.currentState.showSnackBar(snackBar);
         Timer(Duration(seconds: 1), () {
           Navigator.pop(context, regNo.toString());
         });
+      } else {
+        Toast.show(
+            AppLocalizations.of(context).translate("reg_no_exist"), context,
+            duration: Toast.LENGTH_SHORT, gravity: Toast.CENTER);
       }
-      else{
-        Toast.show(AppLocalizations.of(context).translate("reg_no_exist"), context, duration: Toast.LENGTH_SHORT, gravity:  Toast.CENTER);
-      }
-    } else
-      print("blaa blaa");
+    }
   }
 
   @override
@@ -175,7 +192,8 @@ class _RegisterNewDataState extends State<RegisterNewData> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context).translate("t_register"),
+          AppLocalizations.of(context).translate("t_register") +
+              (branch == 0 ? "A" : "B"),
         ),
         actions: <Widget>[
           Padding(

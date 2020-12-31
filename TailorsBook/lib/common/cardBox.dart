@@ -2,6 +2,7 @@ import 'package:TailorsBook/locale/app_localization.dart';
 import 'package:TailorsBook/screens/search_result.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:TailorsBook/handle_cloud/data_file.dart';
 
 class CardBox extends StatelessWidget {
   final int regNo;
@@ -431,6 +432,185 @@ class RegCardBox extends StatelessWidget {
                 style: TextStyle(fontSize: 20, color: Colors.white),
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class RequestCard extends StatelessWidget {
+  final String phoneNo;
+  final String profile;
+  final String name;
+  final Function function;
+
+  const RequestCard({this.name, this.phoneNo, this.profile, this.function});
+
+  acceptRequest(BuildContext context) async {
+    await requestAccept(this.phoneNo);
+    function();
+    Navigator.pop(context);
+  }
+
+  declineRequest(BuildContext context) async {
+    await requestDecline(this.phoneNo);
+    function();
+    Navigator.pop(context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 130,
+      margin: EdgeInsets.all(10),
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        border: Border.all(width: 2, color: Colors.amber),
+      ),
+      child: GestureDetector(
+        onTap: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  content: Container(
+                    height: 300,
+                    width: 200,
+                    padding: EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          child: RaisedButton(
+                              onPressed: () {
+                                acceptRequest(context);
+                              },
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "Accept  ",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Icon(
+                                    Icons.check,
+                                    color: Colors.white,
+                                    size: 25,
+                                  )
+                                ],
+                              ),
+                              color: Colors.deepPurple),
+                        ),
+                        Container(
+                          child: RaisedButton(
+                              onPressed: () {
+                                declineRequest(context);
+                              },
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "Decline  ",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Icon(
+                                    Icons.close,
+                                    color: Colors.white,
+                                    size: 25,
+                                  )
+                                ],
+                              ),
+                              color: Colors.red),
+                        ),
+                        Container(
+                          child: RaisedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              "Back",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            color: Colors.amber,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              });
+        },
+        child: Column(
+          children: [
+            Expanded(
+                child: Container(
+              child: Row(
+                children: [
+                  Container(
+                      width: 100,
+                      child: Text(
+                        "Name",
+                        style: TextStyle(fontSize: 20),
+                      )),
+                  Expanded(
+                    child: Container(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Text(
+                          name,
+                          style:
+                              TextStyle(fontSize: 20, color: Colors.deepPurple),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            )),
+            Expanded(
+                child: Container(
+              child: Row(
+                children: [
+                  Container(
+                      width: 100,
+                      child: Text(
+                        "Phone",
+                        style: TextStyle(fontSize: 20),
+                      )),
+                  Expanded(
+                      child: Container(
+                          child: Text(
+                    phoneNo,
+                    style: TextStyle(fontSize: 20, color: Colors.deepPurple),
+                  )))
+                ],
+              ),
+            )),
+            Expanded(
+                child: Container(
+              child: Row(
+                children: [
+                  Container(
+                      width: 100,
+                      child: Text(
+                        "Profile",
+                        style: TextStyle(fontSize: 20),
+                      )),
+                  Expanded(
+                      child: Container(
+                          child: Text(
+                    profile,
+                    style: TextStyle(fontSize: 20, color: Colors.deepPurple),
+                  )))
+                ],
+              ),
+            )),
           ],
         ),
       ),

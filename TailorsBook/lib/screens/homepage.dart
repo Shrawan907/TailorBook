@@ -32,6 +32,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       loading = false;
     });
+    await getRequestData();
     await overmdata();
   }
 

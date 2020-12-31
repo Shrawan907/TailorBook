@@ -1,4 +1,6 @@
+import 'package:TailorsBook/handle_cloud/data_file.dart';
 import 'package:TailorsBook/locale/localInfo.dart';
+import 'package:TailorsBook/screens/requestPage.dart';
 import 'package:TailorsBook/screens/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,6 +9,8 @@ import 'package:TailorsBook/screens/create_company.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
 import 'package:TailorsBook/locale/app_localization.dart';
+
+int reqCount = 0;
 
 class NavDrawer extends StatefulWidget {
   @override
@@ -18,13 +22,16 @@ class _NavDrawerState extends State<NavDrawer> {
   bool _isVisible = false;
   int _radioValue;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   setState(() {
-  //     //_radioValue = localData().appLocal.toString() == "en" ? 0 : 1;
-  //   });
-  // }
+  @override
+  void initState() {
+    super.initState();
+    initialData();
+  }
+
+  void initialData() {
+    reqCount = getRequestCount();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -130,11 +137,26 @@ class _NavDrawerState extends State<NavDrawer> {
           //   title: Text('Settings'),
           //   onTap: () => {Navigator.of(context).pop()},
           // ),
-          // ListTile(
-          //   leading: Icon(Icons.border_color),
-          //   title: Text('Feedback'),
-          //   onTap: () => {Navigator.of(context).pop()},
-          // ),
+          ListTile(
+            leading: Icon(Icons.group_add),
+            title: Row(
+              children: [
+                Text("Requests"),
+                SizedBox(width: 5),
+                if (reqCount > 0)
+                  Text(
+                    "$reqCount",
+                    style: TextStyle(
+                        color: Colors.amber, fontWeight: FontWeight.bold),
+                  )
+              ],
+            ),
+            onTap: () => {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => RequestPage())),
+              initialData(),
+            },
+          ),
           ListTile(
             leading: Icon(Icons.exit_to_app),
             title: Text(AppLocalizations.of(context).translate("n_logout")),

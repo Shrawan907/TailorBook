@@ -19,6 +19,8 @@ List overmData = [];
 List tempData = [];
 List registerAdata = [];
 List registerBdata = [];
+List requestData = [];
+int requestCount = -1;
 
 Future<List> fetchTodayData(DateTime date) async {
   tempData.clear();
@@ -194,4 +196,115 @@ Future<Map> fetchDetail(int regNo, int branch) async {
     info["no_detail"] = true;
   }
   return info;
+}
+
+Future<List> fetchRequestData() async {
+  tempData.clear();
+  var requestPath = db.collection("company/requests/requests");
+  db.collection("company").doc("requests").get().then((element) => {
+        if (element.data().containsKey("total") && element.data()["total"] > 0)
+          {
+            requestCount = element.data()["total"],
+            requestPath.snapshots().listen((QuerySnapshot querySnapshot) {
+              querySnapshot.docs.forEach((element) {
+                Map temp = element.data();
+                tempData.addAll([
+                  {
+                    "phoneNo": temp["phoneNo"],
+                    "username": temp["username"],
+                    "requestProfile": temp["requestProfile"]
+                  }
+                ]);
+              });
+            }),
+          }
+      });
+  await Future.delayed(Duration(seconds: 2));
+  return tempData;
+}
+
+void clearRequestData() {
+  requestData.clear();
+  requestCount = -1;
+}
+
+Future<List> getRequestData() async {
+  if (requestCount == -1) {
+    requestData.clear();
+    requestData = [...(await fetchRequestData())];
+  }
+  print(requestData);
+  return requestData;
+}
+
+int getRequestCount() {
+  return requestCount;
+}
+
+Future requestAccept(String phone) async {
+  print(phone);
+  var requestPath = db.collection("company/requests/requests");
+  var userPath = db.collection("company/team/members");
+  requestPath.doc(phone).get().then((snapShot) => {
+        if (snapShot.exists)
+          {
+            requestPath.doc(phone).delete(),
+            requestData.remove(requestData
+                .where((element) => element["phoneNo"] == phone)
+                .first),
+            db.collection("company").doc("requests").update(
+              {"total": FieldValue.increment(-1)},
+            ),
+          }
+        else
+          {print("snapShot doesn't exists!")}
+      });
+  userPath.doc(phone).get().then((snapShot) => {
+        if (snapShot.exists)
+          {
+            userPath.doc(phone).update({
+              "requestAccepted": true,
+            })
+          }
+        else
+          {
+            print(
+                "Check Needed, no user saved on cloud but request is deleted"),
+          }
+      });
+  await Future.delayed(Duration(seconds: 1));
+}
+
+Future requestDecline(String phone) async {
+  print(phone);
+  var requestPath = db.collection("company/requests/requests");
+  var userPath = db.collection("company/team/members");
+  requestPath.doc("phone").get().then((snapShot) => {
+        if (snapShot.exists)
+          {
+            requestPath.doc(phone).delete(),
+            requestData.remove(requestData
+                .where((element) => element["phoneNo"] == phone)
+                .first),
+            db.collection("company").doc("requests").update(
+              {"total": FieldValue.increment(-1)},
+            ),
+          }
+      });
+  userPath.doc(phone).get().then((snapShot) => {
+        if (snapShot.exists)
+          {
+            userPath.doc(phone).update({
+              "name": "",
+              "profile": "",
+              "requestMade": false,
+            })
+          }
+        else
+          {
+            print(
+                "Check Needed, no user saved on cloud but request is deleted"),
+          }
+      });
+  await Future.delayed(Duration(seconds: 1));
 }
