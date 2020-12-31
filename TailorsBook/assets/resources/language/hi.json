@@ -40,7 +40,7 @@
     "update"                :   "अपडेट करें",
     "reg_no"                :   "रजि. नं.",
     "reg_no_full"           :   "रजिस्टर नंबर",
-    "must_not_empty"        :   "खाली नहीं रहना चाहिए",
+    "must_not_empty"        :   "यह खाली नहीं रहना चाहिए",
     "complete"              :   "कम्पलीट",
     "t_admin_page"          :   "एडमिन पेज",
     "enter_pass"            :   "पासवर्ड डाले",
@@ -50,5 +50,16 @@
     "enter_username"        :   "यूजर नेम डाले",
     "wrong_entry"           :   "गलत फॉर्मेट",
     "type"                  :   "प्रकार",
-    "count"                 :   "संख्या"
+    "count"                 :   "संख्या",
+    "search_result"         :   "परिणाम खोजें",
+    "please_wait"           :   "कृपया प्रतीक्षा करें...",
+    "save_detail_of"        :   "विवरण सहेजें:",
+    "reg_no_exist"          :   "रजि. नं. पहले से मौजूद है",
+    "date"                  :   "दिनांक",
+    "search"                :   "खोजें",
+    "english"               :   "अंग्रेजी",
+    "hindi"                 :   "हिंदी",
+    "choudhary_tailors"     :   "चौधरी टेलर्स",
+    "sunindiashowroom"      :   "सन इंडिया शोरूम",
+    "no_internet"           :   "इंटरनेट कनेक्शन नहीं मिल रहा है।"
 }
