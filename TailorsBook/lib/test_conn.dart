@@ -12,8 +12,8 @@ String connState = "";
 final _key = "";
 
 @override
-void initState() {
-  initConnectivity(_key);
+void initState(BuildContext ctx) {
+  initConnectivity(_key,ctx);
 }
 
 @override
@@ -22,7 +22,7 @@ void dispose() {
 }
 
 // Platform messages are asynchronous, so we initialize in an async method.
-Future<void> initConnectivity(final _key) async {
+Future<void> initConnectivity(final _key, BuildContext ctx) async {
   ConnectivityResult result;
   // Platform messages may fail, so we use a try/catch PlatformException.
   try {
@@ -31,15 +31,11 @@ Future<void> initConnectivity(final _key) async {
     print(e.toString());
   }
 
-  // If the widget was removed from the tree while the asynchronous platform
-  // message was in flight, we want to discard the reply rather than calling
-  // setState to update our non-existent appearance.
-
-  return _updateConnectionStatus(result, _key);
+  return _updateConnectionStatus(result, _key,ctx);
 }
 
 Future<void> _updateConnectionStatus(
-    ConnectivityResult result, final _key) async {
+    ConnectivityResult result, final _key, BuildContext ctx) async {
   switch (result) {
     case ConnectivityResult.wifi:
     case ConnectivityResult.mobile:
@@ -49,7 +45,7 @@ Future<void> _updateConnectionStatus(
       if (connState == "ConnectivityResult.none") {
         SnackBar snackBar = SnackBar(
           content: Text(
-            "No Internet Found!!!"
+              AppLocalizations.of(ctx).translate("no_internet"),
           ),
         );
         _key.currentState.showSnackBar(snackBar);
