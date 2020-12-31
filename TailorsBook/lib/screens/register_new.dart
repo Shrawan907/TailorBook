@@ -1,11 +1,13 @@
 import 'dart:async';
 
+import 'package:TailorsBook/locale/app_localization.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:TailorsBook/common/buttons.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:toast/toast.dart';
 
 DateTime bookingDate = DateTime.now();
 DateTime selectedDate = bookingDate;
@@ -116,10 +118,13 @@ class _RegisterNewDataState extends State<RegisterNewData> {
       var kurtaPath = products.collection("kurta");
       var pajamaPath = products.collection("pajama");
       var otherPath = products.collection("others");
-
+      int check=0;  //to check duplicity of register number
       await regPath.doc("$regNo").get().then((snapShot) => {
             if (snapShot.exists)
-              {print("doc already exists")}
+              {
+                check++,
+                print("doc already exists"),
+              }
             else
               {
                 regPath.doc("$regNo").set({
@@ -147,14 +152,19 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                 print("done")
               }
           });
-
-      SnackBar snackBar = SnackBar(
-        content: Text("Saved Details of ${regNo.toString()}"),
-      );
-      _scaffoldKey.currentState.showSnackBar(snackBar);
-      Timer(Duration(seconds: 1), () {
-        Navigator.pop(context, regNo.toString());
-      });
+      if(check==0){
+        SnackBar snackBar = SnackBar(
+          content: Text(AppLocalizations.of(context).translate("save_detail_of") +
+              " ${regNo.toString()}"),
+        );
+        _scaffoldKey.currentState.showSnackBar(snackBar);
+        Timer(Duration(seconds: 1), () {
+          Navigator.pop(context, regNo.toString());
+        });
+      }
+      else{
+        Toast.show(AppLocalizations.of(context).translate("reg_no_exist"), context, duration: Toast.LENGTH_SHORT, gravity:  Toast.CENTER);
+      }
     } else
       print("blaa blaa");
   }
@@ -164,7 +174,9 @@ class _RegisterNewDataState extends State<RegisterNewData> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text("Register"),
+        title: Text(
+          AppLocalizations.of(context).translate("t_register"),
+        ),
         actions: <Widget>[
           Padding(
             padding: EdgeInsets.only(right: 30.0, top: 10, bottom: 10),
@@ -172,11 +184,13 @@ class _RegisterNewDataState extends State<RegisterNewData> {
               width: 120,
               child: RaisedButton(
                 child: Text(
-                  update == true ? "Update" : "New",
+                  update == true
+                      ? AppLocalizations.of(context).translate("update")
+                      : AppLocalizations.of(context).translate("new"),
                   style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w700,
-                      fontSize: 25),
+                      fontSize: 16),
                 ),
                 onPressed: () {
                   setState(() {
@@ -250,18 +264,22 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                               child: TextFormField(
                                   validator: (val) {
                                     if (val.trim().isEmpty)
-                                      return "Must Not Empty";
+                                      return AppLocalizations.of(context)
+                                          .translate("must_not_empty");
                                     else if (val.trim().length > 6)
-                                      return "Wrong Entry";
+                                      return AppLocalizations.of(context)
+                                          .translate("wrong_entry");
                                     else
                                       return null;
                                   },
                                   onChanged: (val) => regNo = int.parse(val),
                                   decoration: InputDecoration(
                                     border: OutlineInputBorder(),
-                                    labelText: "Reg. Number",
+                                    labelText: AppLocalizations.of(context)
+                                        .translate("reg_no"),
                                     labelStyle: TextStyle(fontSize: 15.0),
-                                    hintText: "Register Number",
+                                    hintText: AppLocalizations.of(context)
+                                        .translate("reg_no_full"),
                                   ),
                                   inputFormatters: [
                                     FilteringTextInputFormatter.digitsOnly
@@ -300,7 +318,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                     ),
                     Expanded(
                         child: Text(
-                      "COAT",
+                      AppLocalizations.of(context).translate("coat"),
                       style: TextStyle(fontSize: 20),
                     )),
                     Expanded(
@@ -375,7 +393,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                     ),
                     Expanded(
                         child: Text(
-                      "PENT",
+                      AppLocalizations.of(context).translate("pent"),
                       style: TextStyle(fontSize: 20),
                     )),
                     Expanded(
@@ -449,7 +467,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                     ),
                     Expanded(
                         child: Text(
-                      "SHIRT",
+                      AppLocalizations.of(context).translate("shirt"),
                       style: TextStyle(fontSize: 20),
                     )),
                     Expanded(
@@ -523,7 +541,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                     ),
                     Expanded(
                         child: Text(
-                      "JACKET",
+                      AppLocalizations.of(context).translate("jacket"),
                       style: TextStyle(fontSize: 20),
                     )),
                     Expanded(
@@ -597,7 +615,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                     ),
                     Expanded(
                         child: Text(
-                      "KURTA",
+                      AppLocalizations.of(context).translate("kurta"),
                       style: TextStyle(fontSize: 20),
                     )),
                     Expanded(
@@ -671,7 +689,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                     ),
                     Expanded(
                         child: Text(
-                      "PAJAMA",
+                      AppLocalizations.of(context).translate("pajama"),
                       style: TextStyle(fontSize: 20),
                     )),
                     Expanded(
@@ -745,7 +763,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                     ),
                     Expanded(
                         child: Text(
-                      "ACHKAN",
+                      AppLocalizations.of(context).translate("achkan"),
                       style: TextStyle(fontSize: 20),
                     )),
                     Expanded(
@@ -819,7 +837,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                     ),
                     Expanded(
                         child: Text(
-                      "Other",
+                      AppLocalizations.of(context).translate("other"),
                       style: TextStyle(fontSize: 20),
                     )),
                     Expanded(
@@ -893,7 +911,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 20),
                         child: Text(
-                          "RETURN DATE:",
+                          AppLocalizations.of(context).translate("return_date"),
                           style: TextStyle(fontSize: 20),
                         ),
                       ),
@@ -947,7 +965,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                     ),
                     child: Center(
                       child: Text(
-                        "SAVE",
+                        AppLocalizations.of(context).translate("save"),
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 20.0,
@@ -973,7 +991,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                     ),
                     child: Center(
                       child: Text(
-                        "Cancel",
+                        AppLocalizations.of(context).translate("cancel"),
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16.0,

@@ -7,6 +7,7 @@ import 'package:TailorsBook/handle_cloud/data_file.dart';
 import 'package:TailorsBook/screens/register_new.dart';
 import 'package:TailorsBook/screens/on_working.dart';
 import 'package:TailorsBook/screens/book_screen.dart';
+import 'package:TailorsBook/test_conn.dart';
 
 List displayData = [];
 List data = [];
@@ -24,6 +25,8 @@ class DayData extends StatefulWidget {
 
 class _DayDataState extends State<DayData> {
   int branch = 0;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();
@@ -85,6 +88,7 @@ class _DayDataState extends State<DayData> {
   @override
   Widget build(BuildContext parentContext) {
     return Scaffold(
+      key: _scaffoldKey,
       floatingActionButton: Container(
         height: 90,
         width: 70,
@@ -236,6 +240,7 @@ class _DayDataState extends State<DayData> {
                     RefreshIndicator(
               onRefresh: () async {
                 try {
+                  initConnectivity(_scaffoldKey);
                   if (selectedDate == timestamp.add(Duration(days: 1))) {
                     clearTomData();
                     await fetchTomData();
@@ -264,8 +269,16 @@ class _DayDataState extends State<DayData> {
             )),
           ),
           RaisedButton(
-            onPressed: () {
-              setState(() {});
+            onPressed: () async{
+              try {
+                initConnectivity(_scaffoldKey);
+                clearTodayData();
+                await fetchData();
+                setState(() {});
+                print(displayData.isEmpty);
+              } catch (err) {
+                print("Refresh Bar Error: " + err);
+              }
             },
             child: Text(AppLocalizations.of(context).translate("refresh")),
           ),

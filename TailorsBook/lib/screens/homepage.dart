@@ -1,4 +1,5 @@
 import 'package:TailorsBook/handle_cloud/data_file.dart';
+import 'package:TailorsBook/locale/app_localization.dart';
 import 'package:TailorsBook/test_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -57,8 +58,8 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.blueAccent,
                 size: 25,
               ),
-              Text("CHOUDHARY TAILORS", style: TextStyle(color: Colors.blue)),
-              Text("SUN INDIA SHOWROOM", style: TextStyle(color: Colors.blue)),
+              Text(AppLocalizations.of(context).translate("choudhary_tailors"), style: TextStyle(color: Colors.blue)),
+              Text(AppLocalizations.of(context).translate("sunindiashowroom"), style: TextStyle(color: Colors.blue)),
             ],
           ))
         : Scaffold(
