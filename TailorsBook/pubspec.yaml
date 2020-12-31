@@ -33,6 +33,9 @@ dependencies:
   provider: ^4.3.2+3
   shared_preferences: ^0.5.12+4
 
+  connectivity: ^2.0.2
+  toast: ^0.1.5
+
   flutter_localizations:
     sdk: flutter
   

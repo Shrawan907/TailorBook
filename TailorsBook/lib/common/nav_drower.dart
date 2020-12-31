@@ -95,7 +95,9 @@ class _NavDrawerState extends State<NavDrawer> {
                             });
                           },
                         ),
-                        title: Text("English"),
+                        title: Text(
+                          AppLocalizations.of(context).translate("english"),
+                        ),
                       ),
                       ListTile(
                         leading: Radio(
@@ -108,7 +110,9 @@ class _NavDrawerState extends State<NavDrawer> {
                                 localData.changeLanguage(Locale("hi"));
                               });
                             }),
-                        title: Text("हिंदी"),
+                        title: Text(
+                          AppLocalizations.of(context).translate("hindi"),
+                        ),
                       ),
                     ],
                   ),

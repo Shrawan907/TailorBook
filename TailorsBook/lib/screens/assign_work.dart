@@ -120,7 +120,7 @@ class _AssignWorkState extends State<AssignWork> {
                                 controller: _textController,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(),
-                                  hintText: 'Reg. No.',
+                                  hintText: AppLocalizations.of(context).translate("reg_no"),
                                   fillColor: Colors.white,
                                   contentPadding: EdgeInsets.only(
                                       bottom: 0, left: 10, right: 10),

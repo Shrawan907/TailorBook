@@ -629,7 +629,7 @@ Card buildHeader(String headerType, BuildContext context) {
               )),
               Expanded(
                   child: Text(
-                "COMPLETE",
+                AppLocalizations.of(context).translate("complete"),
                 //AppLocalizations.of(context).translate(""),
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
@@ -639,7 +639,7 @@ Card buildHeader(String headerType, BuildContext context) {
               Expanded(
                   child: Center(
                 child: Text(
-                  "DATE",
+                  AppLocalizations.of(context).translate("date"),
                   //AppLocalizations.of(context).translate(""),
                   style: TextStyle(
                       fontWeight: FontWeight.bold,

@@ -47,7 +47,8 @@ class _SearchResultState extends State<SearchResult> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            "Search Result"), //Text(AppLocalizations.of(context).translate("t_return_today")),
+          AppLocalizations.of(context).translate("search_result"),
+        ), //Text(AppLocalizations.of(context).translate("t_return_today")),
         actions: [
           GestureDetector(
             onTap: () {
@@ -66,7 +67,8 @@ class _SearchResultState extends State<SearchResult> {
                   child: Container(
                     margin: EdgeInsets.all(20),
                     child: Text(info.isEmpty
-                        ? "Please Wait"
+                        ? AppLocalizations.of(context)
+                            .translate("please_wait")
                         : "Entry with given Register Number is not exist!"),
                   ),
                 )

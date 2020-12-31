@@ -9,6 +9,8 @@ import 'package:TailorsBook/screens/register_new.dart';
 import 'package:TailorsBook/screens/on_working.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:TailorsBook/screens/book_screen.dart';
+import 'package:TailorsBook/test_conn.dart';
+import 'package:connectivity/connectivity.dart';
 
 List displayData = [];
 
@@ -21,6 +23,8 @@ class DataToday extends StatefulWidget {
 
 class _DataTodayState extends State<DataToday> {
   int branch = 0;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();
@@ -47,6 +51,7 @@ class _DataTodayState extends State<DataToday> {
   @override
   Widget build(BuildContext parentContext) {
     return Scaffold(
+      key: _scaffoldKey,
       floatingActionButton: Container(
         height: 90,
         width: 70,
@@ -122,6 +127,7 @@ class _DataTodayState extends State<DataToday> {
                   RefreshIndicator(
                 onRefresh: () async {
                   try {
+                    initConnectivity(_scaffoldKey);
                     clearTodayData();
                     await fetchData();
                     setState(() {});
@@ -147,10 +153,16 @@ class _DataTodayState extends State<DataToday> {
             ),
           ),
           RaisedButton(
-            onPressed: () {
-              setState(() {
-                //fetchData();
-              });
+            onPressed: () async{
+              try {
+                initConnectivity(_scaffoldKey);
+                clearTodayData();
+                await fetchData();
+                setState(() {});
+                print(displayData.isEmpty);
+              } catch (err) {
+                print("Refresh Bar Error: " + err);
+              }
             },
             child: Text(AppLocalizations.of(context).translate("refresh")),
           ),

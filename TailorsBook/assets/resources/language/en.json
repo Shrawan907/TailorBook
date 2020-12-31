@@ -50,5 +50,16 @@
     "enter_username"        :   "Enter Username",
     "wrong_entry"           :   "Wrong Entry",
     "type"                  :   "TYPE",
-    "count"                 :   "COUNT"
+    "count"                 :   "COUNT",
+    "search_result"         :   "Search Result",
+    "please_wait"           :   "Please Wait...",
+    "save_detail_of"        :   "Saved Details of",
+    "reg_no_exist"          :   "Register no. already exists",
+    "date"                  :   "Date",
+    "search"                :   "Search",
+    "english"               :   "English",
+    "hindi"                 :   "Hindi",
+    "choudhary_tailors"     :   "CHOUDHARY TAILORS",
+    "sunindiashowroom"      :   "SUN INDIA SHOWROOM",
+    "no_internet"           :   "No Internet Found"
 }

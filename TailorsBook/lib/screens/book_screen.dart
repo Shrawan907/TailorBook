@@ -69,7 +69,8 @@ class _BookScreenState extends State<BookScreen> {
     return Scaffold(
       backgroundColor: Colors.black54,
       appBar: AppBar(
-        title: Text("Register " +
+        title: Text(AppLocalizations.of(context).translate("t_register") +
+            " " +
             (this.branch == 0
                 ? "A"
                 : "B")), //Text(AppLocalizations.of(context).translate("t_return_today")),
@@ -91,7 +92,7 @@ class _BookScreenState extends State<BookScreen> {
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                hintText: "Search",
+                hintText: AppLocalizations.of(context).translate("search"),
                 hintStyle: TextStyle(
                     fontSize: 20,
                     color: Colors.black,
@@ -118,6 +119,8 @@ class _BookScreenState extends State<BookScreen> {
               child: //register.isNotEmpty ?
                   RefreshIndicator(
                 onRefresh: () async {
+                  print("/////////////////////////////////////register.length");
+                  print(register.length);
                   try {
                     setState(() async {
                       register = await fetchRegisterData(this.branch);
@@ -133,6 +136,8 @@ class _BookScreenState extends State<BookScreen> {
                 child: Container(
                   child: ListView.builder(
                     itemCount: register.length,
+                    // itemCount:
+                        // register.isEmpty ? 0 : register[branch].length,     //solved error here length value error
                     itemBuilder: (context, index) {
                       return RegCardBox(
                         regNo: register[index]['reg_no'],
