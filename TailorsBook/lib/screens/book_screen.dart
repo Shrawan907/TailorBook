@@ -119,15 +119,12 @@ class _BookScreenState extends State<BookScreen> {
               child: //register.isNotEmpty ?
                   RefreshIndicator(
                 onRefresh: () async {
-                  print("/////////////////////////////////////register.length");
-                  print(register.length);
+                  // print("/////////////////////////////////////register.length");
+                  // print(register.length);
                   try {
-                    setState(() async {
-                      register = await fetchRegisterData(this.branch);
-                      register.forEach((element) {
-                        duplicateRegister.add(element);
-                      });
-                    });
+                    // register.clear();
+                    await fetchData();
+                    setState(() {  });
                     print(register.isEmpty);
                   } catch (err) {
                     print("Refresh Bar Error: " + err);
