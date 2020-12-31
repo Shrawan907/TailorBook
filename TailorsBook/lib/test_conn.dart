@@ -48,9 +48,7 @@ Future<void> _updateConnectionStatus(
       // print(connState);
       if (connState == "ConnectivityResult.none") {
         SnackBar snackBar = SnackBar(
-          content: Text(
-            "No Internet Found!!!"
-          ),
+          content: Text("No Internet Found!!!"),
         );
         _key.currentState.showSnackBar(snackBar);
       }
