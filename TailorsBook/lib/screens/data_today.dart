@@ -126,7 +126,7 @@ class _DataTodayState extends State<DataToday> {
                   RefreshIndicator(
                 onRefresh: () async {
                   try {
-                    initConnectivity(_scaffoldKey);
+                    initConnectivity(_scaffoldKey,context);
                     clearTodayData();
                     await fetchData();
                     print(displayData.isEmpty);
