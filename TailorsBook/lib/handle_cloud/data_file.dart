@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:io';
 
+import 'package:TailorsBook/screens/data_today.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,19 @@ List tempData = [];
 List registerAdata = [];
 List registerBdata = [];
 List requestData = [];
+List itemRegister = [];
 int requestCount = -1;
+List teamA = []; // Coat Maker
+List teamB = []; // Pent Maker
+List teamC = []; // Shirt Maker
+List coatR = [];
+List pentR = [];
+List shirtR = [];
+List jacketR = [];
+List kurtaR = [];
+List pajamaR = [];
+List achkanR = [];
+List othersR = [];
 
 Future<List> fetchTodayData(DateTime date) async {
   tempData.clear();
@@ -31,15 +44,15 @@ Future<List> fetchTodayData(DateTime date) async {
       .listen((QuerySnapshot querySnapshot) {
     querySnapshot.docs.forEach((element) {
       Map temp = element.data();
-      DateTime dt = temp["return_date"].toDate();
+      DateTime dt = temp["returnDate"].toDate();
       if (date.day == dt.day &&
           date.month == dt.month &&
           date.year == dt.year) {
         print(temp);
         tempData[0].addAll([
           {
-            'reg_no': temp['reg_no'],
-            'is_complete': temp['is_complete'],
+            'regNo': temp['regNo'],
+            'isComplete': temp['isComplete'],
             'coat': temp['coat']
           }
         ]);
@@ -52,14 +65,14 @@ Future<List> fetchTodayData(DateTime date) async {
       .listen((QuerySnapshot querySnapshot) {
     querySnapshot.docs.forEach((element) {
       Map temp = element.data();
-      DateTime dt = temp["return_date"].toDate();
+      DateTime dt = temp["returnDate"].toDate();
       if (date.day == dt.day &&
           date.month == dt.month &&
           date.year == dt.year) {
         tempData[1].addAll([
           {
-            'reg_no': temp['reg_no'],
-            'is_complete': temp['is_complete'],
+            'regNo': temp['regNo'],
+            'isComplete': temp['isComplete'],
             'coat': temp['coat']
           }
         ]);
@@ -121,7 +134,11 @@ Future<List> fetchRegisterData(int branch) async {
   String path =
       "company/" + (branch == 0 ? "branchA" : "branchB") + "/register";
   Map temp;
-  db.collection(path).snapshots().listen((QuerySnapshot querySnapshot) {
+  db
+      .collection(path)
+      .orderBy("regNo", descending: true)
+      .snapshots()
+      .listen((QuerySnapshot querySnapshot) {
     querySnapshot.docs.forEach((element) {
       temp = element.data();
       print(temp);
@@ -130,6 +147,14 @@ Future<List> fetchRegisterData(int branch) async {
   });
   await Future.delayed(Duration(seconds: 2));
   return tempData;
+}
+
+void cleanRegister(int branch) {
+  if (branch == 0) {
+    registerAdata.clear();
+  } else {
+    registerBdata.clear();
+  }
 }
 
 Future<List> getRegister(int branch) async {
@@ -154,14 +179,14 @@ see(String path, var temp, String key, int regNo) {
   if (temp.containsKey("$key")) {
     db
         .collection(path + "/products/products/$key")
-        .where("reg_no", isEqualTo: regNo)
+        .where("regNo", isEqualTo: regNo)
         .snapshots()
         .listen((QuerySnapshot querySnapshot) {
       var tmp = querySnapshot.docs.first.data();
       //print(temp);
       info["$key"] = {
         "count": tmp["count"],
-        "is_complete": tmp["is_complete"],
+        "isComplete": tmp["isComplete"],
         "status": tmp["status"]
       };
     });
@@ -173,15 +198,15 @@ Future<Map> fetchDetail(int regNo, int branch) async {
   info = {};
   db
       .collection(path + "/register")
-      .where("reg_no", isEqualTo: regNo)
+      .where("regNo", isEqualTo: regNo)
       .snapshots()
       .listen((QuerySnapshot querySnapshot) {
     var temp = querySnapshot.docs.first.data();
     //print(temp);
-    info["reg_no"] = temp["reg_no"];
-    info["is_complete"] = temp["is_complete"];
-    DateTime date = temp["return_date"].toDate();
-    info["return_date"] = "${date.day}-${date.month}-${date.year}";
+    info["regNo"] = temp["regNo"];
+    info["isComplete"] = temp["isComplete"];
+    DateTime date = temp["returnDate"].toDate();
+    info["returnDate"] = "${date.day}-${date.month}-${date.year}";
     see(path, temp, "coat", regNo);
     see(path, temp, "pent", regNo);
     see(path, temp, "shirt", regNo);
@@ -307,4 +332,251 @@ Future requestDecline(String phone) async {
           }
       });
   await Future.delayed(Duration(seconds: 1));
+}
+
+void cleanTeams() {
+  teamA.clear();
+  teamB.clear();
+  teamC.clear();
+}
+
+Future fetchMembers() async {
+  teamA.clear();
+  teamB.clear();
+  teamC.clear();
+
+  var membersPath = db.collection("company/team/members");
+  membersPath.snapshots().listen((QuerySnapshot querySnapshot) {
+    querySnapshot.docs.forEach((element) {
+      Map temp = element.data();
+      print(temp);
+      if (temp.containsKey("requestAccepted") &&
+          temp["requestAccepted"] &&
+          temp.containsKey("profile")) {
+        if (temp["profile"] == "COAT MAKER") {
+          teamA.addAll([
+            {"name": temp["name"], "profile": temp["profile"]}
+          ]);
+        } else if (temp["profile"] == "PENT MAKER") {
+          teamB.addAll([
+            {"name": temp["name"], "profile": temp["profile"]}
+          ]);
+        } else if (temp["profile"] == "SHIRT MAKER") {
+          teamC.addAll([
+            {"name": temp["name"], "profile": temp["profile"]}
+          ]);
+        }
+      }
+    });
+  });
+
+  await Future.delayed(Duration(seconds: 2));
+}
+
+Future<List> getTeamA() async {
+  if (teamA == null || teamA.isEmpty) {
+    await fetchMembers();
+  }
+  return teamA;
+}
+
+Future<List> getTeamB() async {
+  if (teamB == null || teamB.isEmpty) {
+    await fetchMembers();
+  }
+  return teamB;
+}
+
+Future<List> getTeamC() async {
+  if (teamC == null || teamC.isEmpty) {
+    await fetchMembers();
+  }
+  return teamC;
+}
+
+Future fetchItemRegister(String item) async {
+  itemRegister = [];
+  var itemPath = db.collection("company/branchA/products/products/$item");
+  itemPath
+      .orderBy("regNo", descending: true)
+      .snapshots()
+      .listen((QuerySnapshot querySnapshot) {
+    querySnapshot.docs.forEach((element) {
+      Map temp = element.data();
+      if (temp.containsKey("isComplete") && temp["isComplete"] == false) {
+        itemRegister.addAll([
+          {
+            "regNo": temp["regNo"],
+            "count": temp["count"],
+            "branch": 0,
+            "returnDate": temp["return"]
+          }
+        ]);
+      }
+    });
+  });
+  itemPath = db.collection("company/branchB/products/products/$item");
+  itemPath
+      .orderBy("regNo", descending: true)
+      .snapshots()
+      .listen((QuerySnapshot querySnapshot) {
+    querySnapshot.docs.forEach((element) {
+      Map temp = element.data();
+      if (temp.containsKey("isComplete") && temp["isComplete"] == false) {
+        itemRegister.addAll([
+          {
+            "regNo": temp["regNo"],
+            "count": temp["count"],
+            "branch": 1,
+            "returnDate": temp["return"]
+          }
+        ]);
+      }
+    });
+  });
+
+  await Future.delayed(Duration(seconds: 2));
+  print(itemRegister);
+}
+
+void cleanItemRegister() {
+  itemRegister.clear();
+}
+
+Future getItemRegister(String item) async {
+  if (itemRegister == null || itemRegister.isEmpty) {
+    await fetchItemRegister(item);
+  }
+  return itemRegister;
+}
+
+Future<List> fetchCuttingRegister(String item) async {
+  tempData.clear();
+  tempData = [];
+  int cnt = 0;
+  var itemPath = db.collection("company/branchA/products/products/$item");
+  itemPath.snapshots().listen((QuerySnapshot querySnapshot) {
+    querySnapshot.docs.forEach((element) {
+      Map temp = element.data();
+      if (temp.containsKey("isComplete") && temp['isComplete'] == false) {
+        cnt = 0;
+        for (int i = 0; i < temp['count']; i++) {
+          if (temp['status'][i] == 'uncut') {
+            cnt++;
+          }
+        }
+        if (cnt > 0) {
+          tempData.addAll([
+            {
+              "regNo": temp["regNo"],
+              "count": cnt,
+              "returnDate": temp['return'],
+              "branch": 0,
+            }
+          ]);
+        }
+      }
+    });
+  });
+  itemPath = db.collection("company/branchB/products/products/$item");
+  itemPath.snapshots().listen((QuerySnapshot querySnapshot) {
+    querySnapshot.docs.forEach((element) {
+      Map temp = element.data();
+      if (temp.containsKey("isComplete") && temp['isComplete'] == false) {
+        cnt = 0;
+        for (int i = 0; i < temp['count']; i++) {
+          if (temp['status'][i] == 'uncut') {
+            cnt++;
+          }
+        }
+        if (cnt > 0) {
+          tempData.addAll([
+            {
+              "regNo": temp["regNo"],
+              "count": cnt,
+              "returnDate": temp['return'],
+              "branch": 1,
+            }
+          ]);
+        }
+      }
+    });
+  });
+
+  tempData.sort((a, b) => (a['returnDate']).compareTo(b['returnDate']));
+
+  await Future.delayed(Duration(seconds: 2));
+  print(tempData);
+  return tempData;
+}
+
+void cleanCuttingRegister(String item) {
+  if (item == "coat")
+    coatR.clear();
+  else if (item == "pent")
+    pentR.clear();
+  else if (item == "shirt")
+    shirtR.clear();
+  else if (item == "jacket")
+    jacketR.clear();
+  else if (item == "kurta")
+    kurtaR.clear();
+  else if (item == "pajama")
+    pajamaR.clear();
+  else if (item == "achkan")
+    achkanR.clear();
+  else if (item == "others") othersR.clear();
+}
+
+Future getCuttingRegister(String item) async {
+  if (item == "coat") {
+    if (coatR == null || coatR.isEmpty) {
+      coatR.clear();
+      coatR = [...(await fetchCuttingRegister(item))];
+    }
+    print(coatR);
+    return coatR;
+  } else if (item == "pent") {
+    if (pentR == null || pentR.isEmpty) {
+      pentR.clear();
+      pentR = [...(await fetchCuttingRegister(item))];
+    }
+    return pentR;
+  } else if (item == "shirt") {
+    if (shirtR == null || shirtR.isEmpty) {
+      shirtR.clear();
+      shirtR = [...(await fetchCuttingRegister(item))];
+    }
+    return shirtR;
+  } else if (item == "jacket") {
+    if (jacketR == null || jacketR.isEmpty) {
+      jacketR.clear();
+      jacketR = [...(await fetchCuttingRegister(item))];
+    }
+    return jacketR;
+  } else if (item == "kurta") {
+    if (kurtaR == null || kurtaR.isEmpty) {
+      kurtaR.clear();
+      kurtaR = [...(await fetchCuttingRegister(item))];
+    }
+    return kurtaR;
+  } else if (item == "pajama") {
+    if (pajamaR == null || pajamaR.isEmpty) {
+      pajamaR.clear();
+      pajamaR = [...(await fetchCuttingRegister(item))];
+    }
+    return pajamaR;
+  } else if (item == "achkan") {
+    if (achkanR == null || achkanR.isEmpty) {
+      achkanR.clear();
+      achkanR = [...(await fetchCuttingRegister(item))];
+    }
+    return achkanR;
+  } else if (item == "others") {
+    if (othersR == null || othersR.isEmpty) {
+      othersR.clear();
+      othersR = [...(await fetchCuttingRegister(item))];
+    }
+    return othersR;
+  }
 }

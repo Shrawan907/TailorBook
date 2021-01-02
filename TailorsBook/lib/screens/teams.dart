@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:TailorsBook/locale/app_localization.dart';
+import 'package:TailorsBook/screens/cut_home.dart';
 import 'package:TailorsBook/screens/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:TailorsBook/common/nav_drower.dart';
@@ -12,7 +13,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:TailorsBook/screens/profile.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-List teamA = [1, 1, 1, 1, 1, 1, 1];
+List teamA = []; // Cutter
+List teamB = []; // Coat Maker
+List teamC = []; // Pent Maker
+List teamD = []; // Shirt Maker
 
 class TeamMembers extends StatefulWidget {
   @override
@@ -20,22 +24,33 @@ class TeamMembers extends StatefulWidget {
 }
 
 class _TeamMembersState extends State<TeamMembers> {
-  profile() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
-  }
-
   @override
   void initState() {
     super.initState();
     initialData();
   }
 
-  void initialData() {
-    getData();
+  void initialData() async {
+    await getData();
     setState(() {});
   }
 
-  Future getData() async {}
+  Future getData() async {
+    teamA.clear();
+    teamB.clear();
+    teamC.clear();
+    teamA = [...(await getTeamA())];
+    teamB = [...(await getTeamB())];
+    teamC = [...(await getTeamC())];
+  }
+
+  onPressed() {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
+  }
+
+  cutFunc() {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => CutHome()));
+  }
 
   @override
   Widget build(BuildContext parentContext) {
@@ -46,10 +61,17 @@ class _TeamMembersState extends State<TeamMembers> {
         title: Text(AppLocalizations.of(context).translate("t_team_members")),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+      body: RefreshIndicator(
+        onRefresh: () async {
+          try {
+            cleanTeams();
+            await getData();
+            setState(() {});
+          } catch (err) {
+            print("Error occure while refreshing: " + err);
+          }
+        },
+        child: ListView(
           children: [
             Padding(
               padding: EdgeInsets.only(left: 20, top: 20, bottom: 10),
@@ -64,6 +86,7 @@ class _TeamMembersState extends State<TeamMembers> {
               ),
             ),
             Container(
+              // cutter card
               height: 150,
               child: ListView(
                 scrollDirection: Axis.horizontal,
@@ -71,19 +94,7 @@ class _TeamMembersState extends State<TeamMembers> {
                   PersonInfo(
                     name: "Amitabh Ji",
                     image: AssetImage("assets/images/person.png"),
-                    onPressed: profile,
-                    color: Colors.purple[100],
-                  ),
-                  PersonInfo(
-                    name: "Amitabh Ji",
-                    image: AssetImage("assets/images/person.png"),
-                    onPressed: profile,
-                    color: Colors.purple[100],
-                  ),
-                  PersonInfo(
-                    name: "Amitabh Ji",
-                    image: AssetImage("assets/images/person.png"),
-                    onPressed: profile,
+                    onPressed: cutFunc,
                     color: Colors.purple[100],
                   ),
                 ],
@@ -107,23 +118,17 @@ class _TeamMembersState extends State<TeamMembers> {
             ),
             Container(
               height: 150,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  PersonInfo(
-                    name: "Amitabh Ji",
-                    image: AssetImage("assets/images/person.png"),
-                    onPressed: profile,
-                    color: Colors.purple[200],
-                  ),
-                  PersonInfo(
-                    name: "Amitabh Ji",
-                    image: AssetImage("assets/images/person.png"),
-                    onPressed: profile,
-                    color: Colors.purple[200],
-                  ),
-                ],
-              ),
+              child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: teamA.length,
+                  itemBuilder: (context, index) {
+                    return PersonInfo(
+                      name: teamA[index]['name'],
+                      image: AssetImage("assets/images/person.png"),
+                      onPressed: onPressed,
+                      color: Colors.purple[200],
+                    );
+                  }),
             ),
             Padding(
               padding: EdgeInsets.only(left: 20, top: 30, bottom: 10),
@@ -143,29 +148,17 @@ class _TeamMembersState extends State<TeamMembers> {
             ),
             Container(
               height: 150,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  PersonInfo(
-                    name: "Amitabh Ji",
-                    image: AssetImage("assets/images/person.png"),
-                    onPressed: profile,
-                    color: Colors.purple[300],
-                  ),
-                  PersonInfo(
-                    name: "Amitabh Ji",
-                    image: AssetImage("assets/images/person.png"),
-                    onPressed: profile,
-                    color: Colors.purple[300],
-                  ),
-                  PersonInfo(
-                    name: "Amitabh Ji",
-                    image: AssetImage("assets/images/person.png"),
-                    onPressed: profile,
-                    color: Colors.purple[300],
-                  ),
-                ],
-              ),
+              child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: teamB.length,
+                  itemBuilder: (context, index) {
+                    return PersonInfo(
+                      name: teamB[index]['name'],
+                      image: AssetImage("assets/images/person.png"),
+                      onPressed: onPressed,
+                      color: Colors.purple[300],
+                    );
+                  }),
             ),
             Padding(
               padding: EdgeInsets.only(left: 20, top: 30, bottom: 10),
@@ -185,75 +178,17 @@ class _TeamMembersState extends State<TeamMembers> {
             ),
             Container(
               height: 150,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  PersonInfo(
-                    name: "Amitabh Ji",
-                    image: AssetImage("assets/images/raju_bhai.jpeg"),
-                    onPressed: profile,
-                    color: Colors.purple[400],
-                  ),
-                  PersonInfo(
-                    name: "Amitabh Ji",
-                    image: AssetImage("assets/images/person.png"),
-                    onPressed: profile,
-                    color: Colors.purple[400],
-                  ),
-                  PersonInfo(
-                    name: "Amitabh Ji",
-                    image: AssetImage("assets/images/person.png"),
-                    onPressed: profile,
-                    color: Colors.purple[400],
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 20, top: 30, bottom: 10),
-              child: RichText(
-                text: TextSpan(children: [
-                  WidgetSpan(
-                    child: Icon(Icons.person),
-                  ),
-                  TextSpan(
-                      text: "  " +
-                          AppLocalizations.of(context).translate("salesmen"),
-                      style: TextStyle(fontSize: 25, color: Colors.black)),
-                ]),
-              ),
-            ),
-            Container(
-              height: 150,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  PersonInfo(
-                    name: "Amitabh Ji",
-                    image: AssetImage("assets/images/person.png"),
-                    onPressed: profile,
-                    color: Colors.purple[600],
-                  ),
-                  PersonInfo(
-                    name: "Amitabh Ji",
-                    image: AssetImage("assets/images/person.png"),
-                    onPressed: profile,
-                    color: Colors.purple[600],
-                  ),
-                  PersonInfo(
-                    name: "Amitabh Ji",
-                    image: AssetImage("assets/images/person.png"),
-                    onPressed: profile,
-                    color: Colors.purple[600],
-                  ),
-                  PersonInfo(
-                    name: "Amitabh Ji",
-                    image: AssetImage("assets/images/person.png"),
-                    onPressed: profile,
-                    color: Colors.purple[600],
-                  ),
-                ],
-              ),
+              child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: teamC.length,
+                  itemBuilder: (context, index) {
+                    return PersonInfo(
+                      name: teamC[index]['name'],
+                      image: AssetImage("assets/images/person.png"),
+                      onPressed: onPressed,
+                      color: Colors.purple[400],
+                    );
+                  }),
             ),
             SizedBox(
               height: 30,

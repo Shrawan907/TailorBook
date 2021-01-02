@@ -10,60 +10,58 @@ import 'package:TailorsBook/screens/on_working.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
 
-List register = [];
+List itemRegister = [];
 List duplicateRegister = [];
 
-class BookScreen extends StatefulWidget {
-  final int branch;
-  BookScreen({this.branch});
+class ItemBook extends StatefulWidget {
+  final String item;
+  ItemBook({this.item});
   @override
-  _BookScreenState createState() => _BookScreenState(branch: this.branch);
+  _ItemBookState createState() => _ItemBookState(item: this.item);
 }
 
-class _BookScreenState extends State<BookScreen> {
-  final int branch;
-  _BookScreenState({this.branch});
-  TextEditingController editingController = TextEditingController();
+class _ItemBookState extends State<ItemBook> {
+  final String item;
+  _ItemBookState({this.item});
   bool searchBar = false;
-
+  TextEditingController editingController = TextEditingController();
   @override
   void initState() {
     super.initState();
-    fetchInitalData();
+    getInitalData();
   }
 
-  void fetchInitalData() async {
-    await fetchData();
+  void getInitalData() async {
+    await getData();
     setState(() {});
   }
 
-  Future fetchData() async {
-    register.clear();
-    register = [...(await getRegister(this.branch))];
-    print(register);
+  Future getData() async {
+    itemRegister.clear();
+    itemRegister = [...(await getItemRegister(item))];
     duplicateRegister.clear();
-    duplicateRegister = [...register];
-    searchBar = register.isNotEmpty;
+    duplicateRegister = [...itemRegister];
+    searchBar = itemRegister.isNotEmpty;
   }
 
   void filterSearchResults(String query) {
     if (query.isNotEmpty) {
       List dummyListData = [];
-      duplicateRegister.forEach((item) {
-        if (item["regNo"].toString().contains(query)) {
-          dummyListData.add(item);
+      duplicateRegister.forEach((element) {
+        if (element["regNo"].toString().contains(query)) {
+          dummyListData.add(element);
         }
       });
       setState(() {
         print(duplicateRegister.length);
-        register.clear();
-        register.addAll(dummyListData);
+        itemRegister.clear();
+        itemRegister.addAll(dummyListData);
       });
       return;
     } else {
       setState(() {
         print(duplicateRegister.length);
-        register = [...duplicateRegister];
+        itemRegister = [...duplicateRegister];
       });
     }
   }
@@ -73,11 +71,7 @@ class _BookScreenState extends State<BookScreen> {
     return Scaffold(
       backgroundColor: Colors.black54,
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).translate("t_register") +
-            " " +
-            (this.branch == 0
-                ? "A"
-                : "B")), //Text(AppLocalizations.of(context).translate("t_return_today")),
+        title: Text(item),
         actions: <Widget>[
           searchBar
               ? Container(
@@ -115,33 +109,34 @@ class _BookScreenState extends State<BookScreen> {
       ),
       body: Column(
         children: <Widget>[
-          buildHeader("register", context),
+          buildHeader("itemRegister", context),
+          SizedBox(height: 20),
           Expanded(
             child: Container(
               child: //register.isNotEmpty ?
                   RefreshIndicator(
                 onRefresh: () async {
-                  print("Register Length:  ${register.length}");
                   try {
-                    cleanRegister(this.branch);
-                    await fetchData();
+                    cleanItemRegister();
+                    await getData();
                     setState(() {});
-                    print(register.isEmpty);
                   } catch (err) {
-                    print("Refresh Bar Error: " + err.toString());
+                    print("Refresh Bar Error: " + err);
                   }
                 },
                 child: Container(
                   child: ListView.builder(
-                    itemCount: register.length,
+                    itemCount: itemRegister.length,
+                    // itemCount:
+                    // itemRegister.isEmpty ? 0 : itemRegister[branch].length,     //solved error here length value error
                     itemBuilder: (context, index) {
-                      return RegCardBox(
-                        regNo: register[index]['regNo'],
-                        isComplete: register[index]['isComplete'],
-                        date: (register[index]['returnDate'] != null)
-                            ? register[index]['returnDate'].toDate()
+                      return ItemCardBox(
+                        regNo: itemRegister[index]['regNo'],
+                        count: itemRegister[index]['count'],
+                        branch: itemRegister[index]['branch'],
+                        returnDate: itemRegister[index]['returnDate'] != null
+                            ? itemRegister[index]['returnDate'].toDate()
                             : null,
-                        branch: this.branch,
                       );
                     },
                   ),

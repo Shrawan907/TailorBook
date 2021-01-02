@@ -10,60 +10,62 @@ import 'package:TailorsBook/screens/on_working.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
 
-List register = [];
+List cuttingRegister = [];
 List duplicateRegister = [];
 
-class BookScreen extends StatefulWidget {
-  final int branch;
-  BookScreen({this.branch});
+class Cutting extends StatefulWidget {
+  final String item;
+  Cutting({this.item});
   @override
-  _BookScreenState createState() => _BookScreenState(branch: this.branch);
+  _CuttingState createState() => _CuttingState(item: this.item);
 }
 
-class _BookScreenState extends State<BookScreen> {
-  final int branch;
-  _BookScreenState({this.branch});
-  TextEditingController editingController = TextEditingController();
+class _CuttingState extends State<Cutting> {
+  final String item;
+  _CuttingState({this.item});
   bool searchBar = false;
-
+  TextEditingController editingController = TextEditingController();
   @override
   void initState() {
     super.initState();
-    fetchInitalData();
+    print(item);
+    getInitalData();
+    print(item);
   }
 
-  void fetchInitalData() async {
-    await fetchData();
+  void getInitalData() async {
+    await getData();
     setState(() {});
   }
 
-  Future fetchData() async {
-    register.clear();
-    register = [...(await getRegister(this.branch))];
-    print(register);
+  Future getData() async {
+    cuttingRegister.clear();
+    print(cuttingRegister);
+    cuttingRegister = [...(await getCuttingRegister(item))];
     duplicateRegister.clear();
-    duplicateRegister = [...register];
-    searchBar = register.isNotEmpty;
+    duplicateRegister = [...cuttingRegister];
+    searchBar = cuttingRegister.isNotEmpty;
+    print(cuttingRegister);
   }
 
   void filterSearchResults(String query) {
     if (query.isNotEmpty) {
       List dummyListData = [];
-      duplicateRegister.forEach((item) {
-        if (item["regNo"].toString().contains(query)) {
-          dummyListData.add(item);
+      duplicateRegister.forEach((element) {
+        if (element["regNo"].toString().contains(query)) {
+          dummyListData.add(element);
         }
       });
       setState(() {
         print(duplicateRegister.length);
-        register.clear();
-        register.addAll(dummyListData);
+        cuttingRegister.clear();
+        cuttingRegister.addAll(dummyListData);
       });
       return;
     } else {
       setState(() {
         print(duplicateRegister.length);
-        register = [...duplicateRegister];
+        cuttingRegister = [...duplicateRegister];
       });
     }
   }
@@ -71,13 +73,9 @@ class _BookScreenState extends State<BookScreen> {
   @override
   Widget build(BuildContext parentContext) {
     return Scaffold(
-      backgroundColor: Colors.black54,
+      backgroundColor: Colors.grey[300],
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).translate("t_register") +
-            " " +
-            (this.branch == 0
-                ? "A"
-                : "B")), //Text(AppLocalizations.of(context).translate("t_return_today")),
+        title: Text(item),
         actions: <Widget>[
           searchBar
               ? Container(
@@ -115,33 +113,31 @@ class _BookScreenState extends State<BookScreen> {
       ),
       body: Column(
         children: <Widget>[
-          buildHeader("register", context),
+          buildHeader("cuttingRegister", context),
           Expanded(
             child: Container(
               child: //register.isNotEmpty ?
                   RefreshIndicator(
                 onRefresh: () async {
-                  print("Register Length:  ${register.length}");
                   try {
-                    cleanRegister(this.branch);
-                    await fetchData();
+                    cleanCuttingRegister(this.item);
+                    await getData();
                     setState(() {});
-                    print(register.isEmpty);
                   } catch (err) {
-                    print("Refresh Bar Error: " + err.toString());
+                    print("Refresh Bar Error: " + err);
                   }
                 },
                 child: Container(
                   child: ListView.builder(
-                    itemCount: register.length,
+                    itemCount: cuttingRegister.length,
                     itemBuilder: (context, index) {
-                      return RegCardBox(
-                        regNo: register[index]['regNo'],
-                        isComplete: register[index]['isComplete'],
-                        date: (register[index]['returnDate'] != null)
-                            ? register[index]['returnDate'].toDate()
+                      return CuttingCardBox(
+                        regNo: cuttingRegister[index]['regNo'],
+                        count: cuttingRegister[index]['count'],
+                        branch: cuttingRegister[index]['branch'],
+                        returnDate: cuttingRegister[index]['returnDate'] != null
+                            ? cuttingRegister[index]['returnDate'].toDate()
                             : null,
-                        branch: this.branch,
                       );
                     },
                   ),

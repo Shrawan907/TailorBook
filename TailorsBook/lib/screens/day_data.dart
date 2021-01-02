@@ -17,6 +17,7 @@ var overmorrowDate = todayDate.add(Duration(days: 2));
 DateTime selectedDate = tommorowDate;
 String showDate =
     "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
+int branch = 0;
 
 class DayData extends StatefulWidget {
   @override
@@ -24,7 +25,6 @@ class DayData extends StatefulWidget {
 }
 
 class _DayDataState extends State<DayData> {
-  int branch = 0;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -34,7 +34,17 @@ class _DayDataState extends State<DayData> {
   }
 
   void fetchInitalData() async {
-    await fetchTomData();
+    if (selectedDate.day == tommorowDate.day &&
+        selectedDate.month == tommorowDate.month &&
+        selectedDate.year == tommorowDate.year) {
+      await fetchTomData();
+    } else if (selectedDate.day == overmorrowDate.day &&
+        selectedDate.month == overmorrowDate.month &&
+        selectedDate.year == overmorrowDate.year) {
+      await fetchOverData();
+    } else {
+      await fetchData();
+    }
     setState(() {});
   }
 
@@ -57,8 +67,7 @@ class _DayDataState extends State<DayData> {
   addNewData() {
     Navigator.push(
       context,
-      MaterialPageRoute(
-          builder: (context) => RegisterNewData(branch: this.branch)),
+      MaterialPageRoute(builder: (context) => RegisterNewData(branch: branch)),
     );
   }
 
@@ -141,7 +150,7 @@ class _DayDataState extends State<DayData> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => BookScreen(
-                                branch: this.branch,
+                                branch: branch,
                               )));
                 },
                 child: Icon(
@@ -241,10 +250,14 @@ class _DayDataState extends State<DayData> {
               onRefresh: () async {
                 try {
                   initConnectivity(_scaffoldKey);
-                  if (selectedDate == timestamp.add(Duration(days: 1))) {
+                  if (selectedDate.day == tommorowDate.day &&
+                      selectedDate.month == tommorowDate.month &&
+                      selectedDate.year == tommorowDate.year) {
                     clearTomData();
                     await fetchTomData();
-                  } else if (selectedDate == timestamp.add(Duration(days: 2))) {
+                  } else if (selectedDate.day == overmorrowDate.day &&
+                      selectedDate.month == overmorrowDate.month &&
+                      selectedDate.year == overmorrowDate.year) {
                     clearOverData();
                     await fetchOverData();
                   } else
@@ -259,28 +272,14 @@ class _DayDataState extends State<DayData> {
                 itemCount: displayData.isEmpty ? 0 : displayData[branch].length,
                 itemBuilder: (context, index) {
                   return DayCardBox(
-                    regNo: displayData[branch][index]['reg_no'],
-                    isComplete: displayData[branch][index]['is_complete'],
+                    regNo: displayData[branch][index]['regNo'],
+                    isComplete: displayData[branch][index]['isComplete'],
                     coat: displayData[branch][index]['coat'],
-                    branch: this.branch,
+                    branch: branch,
                   );
                 },
               ),
             )),
-          ),
-          RaisedButton(
-            onPressed: () async{
-              try {
-                initConnectivity(_scaffoldKey);
-                clearTodayData();
-                await fetchData();
-                setState(() {});
-                print(displayData.isEmpty);
-              } catch (err) {
-                print("Refresh Bar Error: " + err);
-              }
-            },
-            child: Text(AppLocalizations.of(context).translate("refresh")),
           ),
         ],
       ),

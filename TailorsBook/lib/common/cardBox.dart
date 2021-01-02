@@ -192,12 +192,12 @@ class PersonInfo extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 10.0, right: 10),
       child: Container(
+        height: 150,
+        width: 150,
         decoration: BoxDecoration(
           border: Border.all(color: this.color, width: 2),
           color: Colors.transparent,
         ),
-        height: 150,
-        width: 150,
         child: RaisedButton(
           color: Colors.amber[50],
           padding: EdgeInsets.only(left: 0),
@@ -391,6 +391,7 @@ class RegCardBox extends StatelessWidget {
   final DateTime date;
   final int branch;
   const RegCardBox({this.regNo, this.isComplete, this.date, this.branch});
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -618,6 +619,104 @@ class RequestCard extends StatelessWidget {
   }
 }
 
+class ItemCardBox extends StatelessWidget {
+  final int regNo;
+  final int count;
+  final int branch;
+  final DateTime returnDate;
+  const ItemCardBox({this.regNo, this.count, this.branch, this.returnDate});
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => SearchResult(
+                      regNo: regNo,
+                      branch: branch,
+                    )));
+      },
+      child: Container(
+        height: 40,
+        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: EdgeInsets.only(bottom: 10, left: 10),
+        decoration: BoxDecoration(
+          border: Border(bottom: BorderSide(width: 1, color: Colors.amber)),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            Expanded(
+              child: Text(
+                "$regNo",
+                style: TextStyle(
+                    fontSize: 30,
+                    color: branch == 0 ? Colors.blue : Colors.blue[100]),
+              ),
+            ),
+            Expanded(
+              child: Text(
+                '$count',
+                style: TextStyle(fontSize: 25, color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CuttingCardBox extends StatelessWidget {
+  final int regNo;
+  final int count;
+  final int branch;
+  final DateTime returnDate;
+  const CuttingCardBox({this.regNo, this.count, this.branch, this.returnDate});
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {},
+      child: Card(
+        color: Colors.red[50],
+        child: Container(
+          height: 40,
+          margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                child: Text(
+                  "$regNo",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                      color: branch == 0 ? Colors.deepPurple : Colors.red[800]),
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  '$count',
+                  style: TextStyle(fontSize: 25),
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  '${returnDate.day} - ${returnDate.month}',
+                  style: TextStyle(fontSize: 25),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 Card buildHeader(String headerType, BuildContext context) {
   if (headerType == "dailyInfo") {
     return Card(
@@ -826,6 +925,97 @@ Card buildHeader(String headerType, BuildContext context) {
                       fontSize: 15,
                       color: Colors.white),
                 ),
+              )),
+            ],
+          ),
+        ),
+      ),
+    );
+  } else if (headerType == "itemRegister") {
+    return Card(
+      child: Container(
+        height: 20,
+        decoration: BoxDecoration(
+          color: Colors.black54,
+          border: Border(
+            bottom: BorderSide(
+              color: Colors.white,
+              width: 1.0,
+            ),
+          ),
+        ),
+        padding: EdgeInsets.only(left: 30, right: 0),
+        child: Container(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Expanded(
+                  child: Text(
+                AppLocalizations.of(context).translate("reg_no"),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                    color: Colors.white),
+              )),
+              Expanded(
+                  child: Text(
+                "COUNT",
+                //AppLocalizations.of(context).translate(""),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                    color: Colors.white),
+              )),
+            ],
+          ),
+        ),
+      ),
+    );
+  } else if (headerType == "cuttingRegister") {
+    return Card(
+      child: Container(
+        height: 20,
+        decoration: BoxDecoration(
+          color: Colors.black54,
+          border: Border(
+            bottom: BorderSide(
+              color: Colors.white,
+              width: 1.0,
+            ),
+          ),
+        ),
+        padding: EdgeInsets.only(left: 30, right: 0),
+        child: Container(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Expanded(
+                  child: Text(
+                AppLocalizations.of(context).translate("reg_no"),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                    color: Colors.white),
+              )),
+              Expanded(
+                  child: Text(
+                "COUNT",
+                //AppLocalizations.of(context).translate(""),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                    color: Colors.white),
+              )),
+              Expanded(
+                  child: Text(
+                "RETURN",
+                //AppLocalizations.of(context).translate(""),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                    color: Colors.white),
               )),
             ],
           ),

@@ -47,7 +47,8 @@ class _SearchResultState extends State<SearchResult> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context).translate("search_result"),
+          AppLocalizations.of(context).translate("search_result") +
+              (branch == 0 ? " [ A ]" : " [ B ]"),
         ), //Text(AppLocalizations.of(context).translate("t_return_today")),
         actions: [
           GestureDetector(
@@ -67,8 +68,7 @@ class _SearchResultState extends State<SearchResult> {
                   child: Container(
                     margin: EdgeInsets.all(20),
                     child: Text(info.isEmpty
-                        ? AppLocalizations.of(context)
-                            .translate("please_wait")
+                        ? AppLocalizations.of(context).translate("please_wait")
                         : "Entry with given Register Number is not exist!"),
                   ),
                 )
@@ -88,10 +88,10 @@ class _SearchResultState extends State<SearchResult> {
                               child: Text("RegNo.: $regNo",
                                   style: TextStyle(fontSize: 25))),
                           Expanded(
-                            child: info.containsKey("return_date")
-                                ? Text('${info["return_date"]}',
+                            child: info.containsKey("returnDate")
+                                ? Text('${info["returnDate"]}',
                                     style: TextStyle(fontSize: 20))
-                                : null,
+                                : Container(),
                           ),
                         ],
                       ),

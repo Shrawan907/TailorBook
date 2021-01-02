@@ -15,6 +15,7 @@ import 'package:connectivity/connectivity.dart';
 List displayData = [];
 
 DateTime date = DateTime.now();
+int branch = 0;
 
 class DataToday extends StatefulWidget {
   @override
@@ -22,7 +23,6 @@ class DataToday extends StatefulWidget {
 }
 
 class _DataTodayState extends State<DataToday> {
-  int branch = 0;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -43,8 +43,7 @@ class _DataTodayState extends State<DataToday> {
   addNewData() {
     Navigator.push(
       context,
-      MaterialPageRoute(
-          builder: (context) => RegisterNewData(branch: this.branch)),
+      MaterialPageRoute(builder: (context) => RegisterNewData(branch: branch)),
     );
   }
 
@@ -102,7 +101,7 @@ class _DataTodayState extends State<DataToday> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => BookScreen(
-                                branch: this.branch,
+                                branch: branch,
                               )));
                 },
                 child: Icon(
@@ -130,8 +129,8 @@ class _DataTodayState extends State<DataToday> {
                     initConnectivity(_scaffoldKey);
                     clearTodayData();
                     await fetchData();
-                    setState(() {});
                     print(displayData.isEmpty);
+                    setState(() {});
                   } catch (err) {
                     print("Refresh Bar Error: " + err);
                   }
@@ -142,29 +141,15 @@ class _DataTodayState extends State<DataToday> {
                         displayData.isEmpty ? 0 : displayData[branch].length,
                     itemBuilder: (context, index) {
                       return CardBox(
-                          regNo: displayData[branch][index]['reg_no'],
-                          isComplete: displayData[branch][index]['is_complete'],
+                          regNo: displayData[branch][index]['regNo'],
+                          isComplete: displayData[branch][index]['isComplete'],
                           coat: displayData[branch][index]['coat'],
-                          branch: this.branch);
+                          branch: branch);
                     },
                   ),
                 ),
               ),
             ),
-          ),
-          RaisedButton(
-            onPressed: () async{
-              try {
-                initConnectivity(_scaffoldKey);
-                clearTodayData();
-                await fetchData();
-                setState(() {});
-                print(displayData.isEmpty);
-              } catch (err) {
-                print("Refresh Bar Error: " + err);
-              }
-            },
-            child: Text(AppLocalizations.of(context).translate("refresh")),
           ),
         ],
       ),

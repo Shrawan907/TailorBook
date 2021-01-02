@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:TailorsBook/common/buttons.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:toast/toast.dart';
 
 DateTime bookingDate = DateTime.now();
@@ -82,9 +81,10 @@ class _RegisterNewDataState extends State<RegisterNewData> {
             else
               {
                 path.doc("$regNo").set({
-                  "reg_no": regNo,
+                  "regNo": regNo,
                   "count": count,
-                  "is_complete": false,
+                  "isComplete": false,
+                  "return": selectedDate,
                   "status": [
                     for (int i = 0; i < count; i++) "uncut",
                   ],
@@ -144,9 +144,9 @@ class _RegisterNewDataState extends State<RegisterNewData> {
             else
               {
                 regPath.doc("$regNo").set({
-                  "reg_no": regNo,
-                  "booking_date": bookingDate,
-                  "return_date": selectedDate,
+                  "regNo": regNo,
+                  "bookingDate": bookingDate,
+                  "returnDate": selectedDate,
                   if (value1) "coat": val1,
                   if (value2) "pent": val2,
                   if (value3) "shirt": val3,
@@ -155,7 +155,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                   if (value6) "pajama": val6,
                   if (value7) "achkan": val7,
                   if (value8) "others": val8,
-                  "is_complete": false
+                  "isComplete": false
                 }),
                 addProduct(value1, coatPath, val1),
                 addProduct(value2, pentPath, val2),
@@ -180,7 +180,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
         });
       } else {
         Toast.show(
-            AppLocalizations.of(context).translate("reg_no_exist"), context,
+            AppLocalizations.of(context).translate("regNo_exist"), context,
             duration: Toast.LENGTH_SHORT, gravity: Toast.CENTER);
       }
     }

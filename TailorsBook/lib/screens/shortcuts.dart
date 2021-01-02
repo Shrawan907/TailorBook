@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:TailorsBook/locale/app_localization.dart';
 import 'package:TailorsBook/screens/book_screen.dart';
+import 'package:TailorsBook/screens/item_register.dart';
 import 'package:TailorsBook/screens/search_result.dart';
 import 'package:TailorsBook/screens/signin.dart';
 import 'package:flutter/material.dart';
@@ -81,7 +82,11 @@ class _ShortCutsState extends State<ShortCuts> {
           GestureDetector(
             onTap: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => OnWork()));
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ItemBook(
+                            item: "coat",
+                          )));
             },
             child: Card(
               color: Colors.amber[50], // lightGreenAccent
@@ -90,24 +95,6 @@ class _ShortCutsState extends State<ShortCuts> {
                 child: Center(
                   child: Text(
                     AppLocalizations.of(context).translate("coat"),
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => OnWork()));
-            },
-            child: Card(
-              color: Colors.amber[50], // lightGreenAccent
-              child: Container(
-                height: 100,
-                child: Center(
-                  child: Text(
-                    AppLocalizations.of(context).translate("jacket"),
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
                   ),
                 ),
