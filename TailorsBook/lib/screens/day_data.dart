@@ -249,7 +249,7 @@ class _DayDataState extends State<DayData> {
                     RefreshIndicator(
               onRefresh: () async {
                 try {
-                  initConnectivity(_scaffoldKey);
+                  initConnectivity(_scaffoldKey,context);
                   if (selectedDate.day == tommorowDate.day &&
                       selectedDate.month == tommorowDate.month &&
                       selectedDate.year == tommorowDate.year) {
