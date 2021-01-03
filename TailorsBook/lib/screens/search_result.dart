@@ -85,7 +85,7 @@ class _SearchResultState extends State<SearchResult> {
                       child: Row(
                         children: [
                           Expanded(
-                              child: Text("RegNo.: $regNo",
+                              child: Text(AppLocalizations.of(context).translate("reg_no")+".:"+"$regNo",
                                   style: TextStyle(fontSize: 25))),
                           Expanded(
                             child: info.containsKey("returnDate")
@@ -133,7 +133,7 @@ class _SearchResultState extends State<SearchResult> {
                 width: 10,
               ),
               Text(
-                "$key" + " ( " + info["$key"]["count"].toString() + " )",
+                AppLocalizations.of(context).translate("$key") + " ( " + info["$key"]["count"].toString() + " )",
                 style: TextStyle(fontSize: 25, color: Colors.amber),
               ),
             ],
@@ -148,7 +148,7 @@ class _SearchResultState extends State<SearchResult> {
                   child: Icon(Icons.arrow_right_alt),
                 ),
                 Expanded(
-                    child: Text(info["$key"]["status"][i],
+                    child: Text(AppLocalizations.of(context).translate(info["$key"]["status"][i]),
                         style: TextStyle(fontSize: 20))),
               ],
             ),
