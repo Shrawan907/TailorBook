@@ -36,6 +36,7 @@ List achkanR = [];
 List othersR = [];
 List assignedData = [];
 
+// fetch data Date-wise
 Future<List> fetchTodayData(DateTime date) async {
   tempData.clear();
   tempData = [[], []];
@@ -85,18 +86,22 @@ Future<List> fetchTodayData(DateTime date) async {
   return tempData;
 }
 
+// clear tommorow data
 void clearTomData() {
   tommData.clear();
 }
 
+// clear overmorrow data
 void clearOverData() {
   overmData.clear();
 }
 
+// clear today data
 void clearTodayData() {
   todayData.clear();
 }
 
+// return today data
 Future<List> todaydata() async {
   if (todayData.isEmpty || todayData == null) {
     todayData.clear();
@@ -107,6 +112,7 @@ Future<List> todaydata() async {
   return todayData;
 }
 
+// return tommorow data
 Future<List> tommdata() async {
   if (tommData.isEmpty || tommData == null) {
     tommData.clear();
@@ -120,6 +126,7 @@ Future<List> tommdata() async {
   return tommData;
 }
 
+// return overmorrow data
 Future<List> overmdata() async {
   if (overmData.isEmpty || overmData == null) {
     overmData.clear();
@@ -130,6 +137,7 @@ Future<List> overmdata() async {
   return overmData;
 }
 
+// fetch data for register A or B
 Future<List> fetchRegisterData(int branch) async {
   tempData.clear();
   tempData = [];
@@ -151,6 +159,7 @@ Future<List> fetchRegisterData(int branch) async {
   return tempData;
 }
 
+// clean the register
 void cleanRegister(int branch) {
   if (branch == 0) {
     registerAdata.clear();
@@ -159,6 +168,7 @@ void cleanRegister(int branch) {
   }
 }
 
+// return the register
 Future<List> getRegister(int branch) async {
   if (branch == 0) {
     if (registerAdata.isEmpty || registerAdata == null) {
@@ -177,6 +187,7 @@ Future<List> getRegister(int branch) async {
   }
 }
 
+// function to fetch the detail of item if exits ( support function for fetchDetail() )
 see(String path, var temp, String key, int regNo) {
   if (temp.containsKey("$key")) {
     db
@@ -195,6 +206,7 @@ see(String path, var temp, String key, int regNo) {
   }
 }
 
+// fetch the detail of giver register number
 Future<Map> fetchDetail(int regNo, int branch) async {
   String path = "company/" + (branch == 0 ? "branchA" : "branchB");
   info = {};
@@ -225,36 +237,39 @@ Future<Map> fetchDetail(int regNo, int branch) async {
   return info;
 }
 
+// fetch the requests if there any
 Future<List> fetchRequestData() async {
   tempData.clear();
   var requestPath = db.collection("company/requests/requests");
   db.collection("company").doc("requests").get().then((element) => {
-        if (element.data().containsKey("total") && element.data()["total"] > 0)
-          {
-            requestCount = element.data()["total"],
-            requestPath.snapshots().listen((QuerySnapshot querySnapshot) {
-              querySnapshot.docs.forEach((element) {
-                Map temp = element.data();
-                tempData.addAll([
-                  {
-                    "phoneNo": temp["phoneNo"],
-                    "username": temp["username"],
-                    "requestProfile": temp["requestProfile"]
-                  }
-                ]);
-              });
-            }),
-          }
-      });
+    if (element.data().containsKey("total") && element.data()["total"] > 0)
+      {
+        requestCount = element.data()["total"],
+        requestPath.snapshots().listen((QuerySnapshot querySnapshot) {
+          querySnapshot.docs.forEach((element) {
+            Map temp = element.data();
+            tempData.addAll([
+              {
+                "phoneNo": temp["phoneNo"],
+                "username": temp["username"],
+                "requestProfile": temp["requestProfile"]
+              }
+            ]);
+          });
+        }),
+      }
+  });
   await Future.delayed(Duration(seconds: 2));
   return tempData;
 }
 
+// clear the request list
 void clearRequestData() {
   requestData.clear();
   requestCount = -1;
 }
 
+// return the request list
 Future<List> getRequestData() async {
   if (requestCount == -1) {
     requestData.clear();
@@ -264,84 +279,89 @@ Future<List> getRequestData() async {
   return requestData;
 }
 
+// return count of requests exists
 int getRequestCount() {
   return requestCount;
 }
 
+// accept the request
 Future requestAccept(String phone) async {
   print(phone);
   var requestPath = db.collection("company/requests/requests");
   var userPath = db.collection("company/team/members");
   requestPath.doc(phone).get().then((snapShot) => {
-        if (snapShot.exists)
-          {
-            requestPath.doc(phone).delete(),
-            requestData.remove(requestData
-                .where((element) => element["phoneNo"] == phone)
-                .first),
-            db.collection("company").doc("requests").update(
-              {"total": FieldValue.increment(-1)},
-            ),
-          }
-        else
-          {print("snapShot doesn't exists!")}
-      });
+    if (snapShot.exists)
+      {
+        requestPath.doc(phone).delete(),
+        requestData.remove(requestData
+            .where((element) => element["phoneNo"] == phone)
+            .first),
+        db.collection("company").doc("requests").update(
+          {"total": FieldValue.increment(-1)},
+        ),
+      }
+    else
+      {print("snapShot doesn't exists!")}
+  });
   userPath.doc(phone).get().then((snapShot) => {
-        if (snapShot.exists)
-          {
-            userPath.doc(phone).update({
-              "requestAccepted": true,
-            })
-          }
-        else
-          {
-            print(
-                "Check Needed, no user saved on cloud but request is deleted"),
-          }
-      });
+    if (snapShot.exists)
+      {
+        userPath.doc(phone).update({
+          "requestAccepted": true,
+        })
+      }
+    else
+      {
+        print(
+            "Check Needed, no user saved on cloud but request is deleted"),
+      }
+  });
   await Future.delayed(Duration(seconds: 1));
 }
 
+// decline the request
 Future requestDecline(String phone) async {
   print(phone);
   var requestPath = db.collection("company/requests/requests");
   var userPath = db.collection("company/team/members");
   requestPath.doc(phone).get().then((snapShot) => {
-        if (snapShot.exists)
-          {
-            requestPath.doc(phone).delete(),
-            requestData.remove(requestData
-                .where((element) => element["phoneNo"] == phone)
-                .first),
-            db.collection("company").doc("requests").update(
-              {"total": FieldValue.increment(-1)},
-            ),
-          }
-      });
+    if (snapShot.exists)
+      {
+        requestPath.doc(phone).delete(),
+        requestData.remove(requestData
+            .where((element) => element["phoneNo"] == phone)
+            .first),
+        db.collection("company").doc("requests").update(
+          {"total": FieldValue.increment(-1)},
+        ),
+      }
+  });
   userPath.doc(phone).get().then((snapShot) => {
-        if (snapShot.exists)
-          {
-            userPath.doc(phone).update({
-              "name": "",
-              "profile": "",
-              "requestMade": false,
-            })
-          }
-        else
-          {
-            print(
-                "Check Needed, no user saved on cloud but request is deleted"),
-          }
-      });
+    if (snapShot.exists)
+      {
+        userPath.doc(phone).update({
+          "name": "",
+          "profile": "",
+          "requestMade": false,
+        })
+      }
+    else
+      {
+        print(
+            "Check Needed, no user saved on cloud but request is deleted"),
+      }
+  });
   await Future.delayed(Duration(seconds: 1));
 }
 
+// clean the members list
 void cleanTeams() {
   teamA.clear();
   teamB.clear();
   teamC.clear();
 }
 
+// fetch members
 Future fetchMembers() async {
   teamA.clear();
   teamB.clear();
@@ -371,10 +391,10 @@ Future fetchMembers() async {
       }
     });
   });
-
   await Future.delayed(Duration(seconds: 2));
 }
 
+// return Coat team
 Future<List> getTeamA() async {
   if (teamA == null || teamA.isEmpty) {
     await fetchMembers();
@@ -382,6 +402,7 @@ Future<List> getTeamA() async {
   return teamA;
 }
 
+// return Pent team
 Future<List> getTeamB() async {
   if (teamB == null || teamB.isEmpty) {
     await fetchMembers();
@@ -389,6 +410,7 @@ Future<List> getTeamB() async {
   return teamB;
 }
 
+// return Shirt team
 Future<List> getTeamC() async {
   if (teamC == null || teamC.isEmpty) {
     await fetchMembers();
@@ -396,13 +418,11 @@ Future<List> getTeamC() async {
   return teamC;
 }
 
+// (currently) it is use for fetching COATs which are not complete
 Future fetchItemRegister(String item) async {
   itemRegister = [];
   var itemPath = db.collection("company/branchA/products/products/$item");
-  itemPath
-      .orderBy("regNo", descending: true)
-      .snapshots()
-      .listen((QuerySnapshot querySnapshot) {
+  itemPath.snapshots().listen((QuerySnapshot querySnapshot) {
     querySnapshot.docs.forEach((element) {
       Map temp = element.data();
       if (temp.containsKey("isComplete") && temp["isComplete"] == false) {
@@ -418,10 +438,7 @@ Future fetchItemRegister(String item) async {
     });
   });
   itemPath = db.collection("company/branchB/products/products/$item");
-  itemPath
-      .orderBy("regNo", descending: true)
-      .snapshots()
-      .listen((QuerySnapshot querySnapshot) {
+  itemPath.snapshots().listen((QuerySnapshot querySnapshot) {
     querySnapshot.docs.forEach((element) {
       Map temp = element.data();
       if (temp.containsKey("isComplete") && temp["isComplete"] == false) {
@@ -438,13 +455,15 @@ Future fetchItemRegister(String item) async {
   });
 
   await Future.delayed(Duration(seconds: 2));
-  print(itemRegister);
+  itemRegister.sort((a, b) => (a['returnDate']).compareTo(b['returnDate']));
 }
 
+// clean the item register
 void cleanItemRegister() {
   itemRegister.clear();
 }
 
+// return the item register
 Future getItemRegister(String item) async {
   if (itemRegister == null || itemRegister.isEmpty) {
     await fetchItemRegister(item);
@@ -452,6 +471,7 @@ Future getItemRegister(String item) async {
   return itemRegister;
 }
 
+// it fetch the items which are not cut yet
 Future<List> fetchCuttingRegister(String item) async {
   tempData.clear();
   tempData = [];
@@ -504,14 +524,12 @@ Future<List> fetchCuttingRegister(String item) async {
       }
     });
   });
-
-  tempData.sort((a, b) => (a['returnDate']).compareTo(b['returnDate']));
-
   await Future.delayed(Duration(seconds: 2));
-  print(tempData);
+  tempData.sort((a, b) => (a['returnDate']).compareTo(b['returnDate']));
   return tempData;
 }
 
+// clean the cutting register
 void cleanCuttingRegister(String item) {
   if (item == "coat")
     coatR.clear();
@@ -530,6 +548,7 @@ void cleanCuttingRegister(String item) {
   else if (item == "others") othersR.clear();
 }
 
+// return the cutting register
 Future getCuttingRegister(String item) async {
   if (item == "coat") {
     if (coatR == null || coatR.isEmpty) {
@@ -583,6 +602,130 @@ Future getCuttingRegister(String item) async {
   }
 }
 
+// use by cutItem function
+void updateCuttingRegister(int regNo, String item, int branch, int count) {
+  if (item == "coat") {
+    var pk = coatR.where((element) => element['regNo'] == regNo).first;
+    if (pk['count'] == count) {
+      print(pk);
+      coatR.remove(pk);
+    } else {
+      print(pk);
+      (coatR.where((element) => element['regNo'] == regNo).first)['count'] =
+          pk['count'] - count;
+      print(coatR.where((element) => element['regNo'] == regNo).first);
+    }
+  } else if (item == "pent") {
+    var pk = pentR.where((element) => element['regNo'] == regNo).first;
+    if (pk['count'] == count) {
+      print(pk);
+      coatR.remove(pk);
+    } else {
+      print(pk);
+      (pentR.where((element) => element['regNo'] == regNo).first)['count'] =
+          pk['count'] - count;
+      print(pentR.where((element) => element['regNo'] == regNo).first);
+    }
+  } else if (item == "shirt") {
+    var pk = shirtR.where((element) => element['regNo'] == regNo).first;
+    if (pk['count'] == count) {
+      print(pk);
+      coatR.remove(pk);
+    } else {
+      print(pk);
+      (shirtR.where((element) => element['regNo'] == regNo).first)['count'] =
+          pk['count'] - count;
+      print(shirtR.where((element) => element['regNo'] == regNo).first);
+    }
+  } else if (item == "jacket") {
+    var pk = jacketR.where((element) => element['regNo'] == regNo).first;
+    if (pk['count'] == count) {
+      print(pk);
+      coatR.remove(pk);
+    } else {
+      print(pk);
+      (jacketR.where((element) => element['regNo'] == regNo).first)['count'] =
+          pk['count'] - count;
+      print(jacketR.where((element) => element['regNo'] == regNo).first);
+    }
+  } else if (item == "kurta") {
+    var pk = kurtaR.where((element) => element['regNo'] == regNo).first;
+    if (pk['count'] == count) {
+      print(pk);
+      coatR.remove(pk);
+    } else {
+      print(pk);
+      (kurtaR.where((element) => element['regNo'] == regNo).first)['count'] =
+          pk['count'] - count;
+      print(kurtaR.where((element) => element['regNo'] == regNo).first);
+    }
+  } else if (item == "pajama") {
+    var pk = pajamaR.where((element) => element['regNo'] == regNo).first;
+    if (pk['count'] == count) {
+      print(pk);
+      coatR.remove(pk);
+    } else {
+      print(pk);
+      (pajamaR.where((element) => element['regNo'] == regNo).first)['count'] =
+          pk['count'] - count;
+      print(pajamaR.where((element) => element['regNo'] == regNo).first);
+    }
+  } else if (item == "achkan") {
+    var pk = achkanR.where((element) => element['regNo'] == regNo).first;
+    if (pk['count'] == count) {
+      print(pk);
+      coatR.remove(pk);
+    } else {
+      print(pk);
+      (achkanR.where((element) => element['regNo'] == regNo).first)['count'] =
+          pk['count'] - count;
+      print(achkanR.where((element) => element['regNo'] == regNo).first);
+    }
+  } else if (item == "others") {
+    var pk = achkanR.where((element) => element['regNo'] == regNo).first;
+    if (pk['count'] == count) {
+      print(pk);
+      coatR.remove(pk);
+    } else {
+      print(pk);
+      (othersR.where((element) => element['regNo'] == regNo).first)['count'] =
+          pk['count'] - count;
+      print(othersR.where((element) => element['regNo'] == regNo).first);
+    }
+  }
+}
+
+// to update cutting detail of item
+Future cutItem(int regNo, String item, int branch, int count) async {
+  var temp;
+  var itemPath = db
+      .collection("company")
+      .doc(branch == 0 ? "branchA" : "branchB")
+      .collection("products/products/$item");
+  itemPath.doc("$regNo").get().then((snapShot) => {
+    if (snapShot.exists)
+      {
+        temp = snapShot.data()['status'],
+        updateCuttingRegister(regNo, item, branch, count),
+      }
+  });
+
+  await Future.delayed(Duration(seconds: 2));
+  print(temp);
+  if (temp != null) {
+    int r = 0;
+    for (int i = 0; i < temp.length && r < count; i++) {
+      if (temp[i] == 'uncut') {
+        temp[i] = 'cut';
+        r++;
+      }
+    }
+    itemPath.doc("$regNo").update({"status": temp});
+  }
+}
+
+//to fetch team members data
+
 Future<List> fetchData(String phoneNo) async {
   tempData.clear();
   // tempData = [[], []];
@@ -593,23 +736,23 @@ Future<List> fetchData(String phoneNo) async {
       Map temp = element.data();
       print(temp);
       // if (temp["isComplete"]) {
-        tempData.addAll([
-          {
-            'regNo': temp["reg_no"],
-            'type': temp["type"],
-            'count': temp["count"],
-            'isComplete': temp["isComplete"]
-          }
-        ]);
+      tempData.addAll([
+        {
+          'regNo': temp["reg_no"],
+          'type': temp["type"],
+          'count': temp["count"],
+          'isComplete': temp["isComplete"]
+        }
+      ]);
       // } else {
-    //     tempData[0].addAll([
-    //       {
-    //         'regNo': temp["reg_no"],
-    //         'type': temp["type"],
-    //         'count': temp["count"]
-    //       }
-    //     ]);
-    //   }
+      //     tempData[0].addAll([
+      //       {
+      //         'regNo': temp["reg_no"],
+      //         'type': temp["type"],
+      //         'count': temp["count"]
+      //       }
+      //     ]);
+      //   }
     });
   });
   await Future.delayed(Duration(seconds: 2));
@@ -632,4 +775,4 @@ Future<List> getAssignedData(String phoneNo) async {
 // return assignedData;
 }
 
-
+/////////////////////////////////////////

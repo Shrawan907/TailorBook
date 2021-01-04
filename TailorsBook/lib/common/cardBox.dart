@@ -1,9 +1,12 @@
+import 'package:TailorsBook/common/buttons.dart';
 import 'package:TailorsBook/locale/app_localization.dart';
 import 'package:TailorsBook/screens/profile.dart';
 import 'package:TailorsBook/screens/search_result.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:TailorsBook/handle_cloud/data_file.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CardBox extends StatelessWidget {
   final int regNo;
@@ -133,11 +136,11 @@ class DayCardBox extends StatelessWidget {
 }
 
 class RegisterCard extends StatelessWidget {
-  final String reg_no;
+  final String regNo;
   final bool delivered;
   final String coat;
 
-  const RegisterCard({this.reg_no, this.delivered, this.coat});
+  const RegisterCard({this.regNo, this.delivered, this.coat});
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +155,7 @@ class RegisterCard extends StatelessWidget {
           children: <Widget>[
             Expanded(
               child: Text(
-                '$reg_no',
+                '$regNo',
                 style: TextStyle(
                     fontWeight: FontWeight.w900,
                     fontSize: 30,
@@ -834,11 +837,187 @@ class CuttingCardBox extends StatelessWidget {
   final int count;
   final int branch;
   final DateTime returnDate;
-  const CuttingCardBox({this.regNo, this.count, this.branch, this.returnDate});
+  final String item;
+  final Function function;
+  const CuttingCardBox(
+      {this.regNo,
+        this.count,
+        this.branch,
+        this.returnDate,
+        this.item,
+        this.function});
+  Future onTap(BuildContext context) async {
+    int value = count;
+    bool loading = false;
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              content: Container(
+                height: 380,
+                width: 300,
+                padding: EdgeInsets.all(20),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Container(
+                        width: 150,
+                        decoration: BoxDecoration(
+                          border: Border(bottom: BorderSide(width: 2)),
+                        ),
+                        child: Center(
+                          child: Text(
+                            (branch == 0 ? "A " : "B ") + "$regNo",
+                            style: TextStyle(
+                                fontSize: 40,
+                                color: branch == 0
+                                    ? Colors.deepPurple
+                                    : Colors.red[800]),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 35,
+                            child: SvgPicture.asset(
+                              'assets/images/${this.item}.svg',
+                              height: 20,
+                              width: 20,
+                              color: Colors.black54,
+                            ),
+                          ),
+                          Text(
+                            "$item",
+                            style: TextStyle(color: Colors.black54),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 50),
+                      Text("Total: $count ", style: TextStyle(fontSize: 20)),
+                      SizedBox(height: 10),
+                      Container(
+                        padding: EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                          border: Border.all(width: 1),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            UpdateValueButton(
+                              icon: Icons.remove,
+                              perform: () {
+                                setState(() {
+                                  if (value > 1) value--;
+                                });
+                              },
+                            ),
+                            Container(
+                              height: 30,
+                              width: 40,
+                              child: Center(
+                                child: Text(
+                                  value.toString(),
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            UpdateValueButton(
+                              icon: Icons.add,
+                              perform: () {
+                                setState(() {
+                                  if (value < count) value++;
+                                  print(value);
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      loading == true
+                          ? SpinKitThreeBounce(
+                        color: Colors.blueAccent,
+                        size: 15,
+                      )
+                          : SizedBox(height: 10),
+                      SizedBox(height: 30),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: RaisedButton(
+                              elevation: 5.0,
+                              color: Colors.red[200],
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                  height: 60,
+                                  width: 60,
+                                  child: Icon(
+                                    Icons.arrow_back,
+                                    color: Colors.white,
+                                    size: 30,
+                                  )),
+                              shape: CircleBorder(),
+                            ),
+                          ),
+                          Expanded(
+                            child: RaisedButton(
+                              elevation: 5.0,
+                              color: Colors.blue[200],
+                              onPressed: () async {
+                                setState(() {
+                                  loading = true;
+                                });
+                                await cutItem(regNo, item, branch, value);
+                                await function();
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                  height: 60,
+                                  width: 60,
+                                  child: Icon(
+                                    Icons.content_cut,
+                                    color: Colors.white,
+                                    size: 30,
+                                  )),
+                              shape: CircleBorder(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          });
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () async {
+        // await Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (context) => UpdateCut(
+        //               regNo: this.regNo,
+        //               count: this.count,
+        //               branch: this.branch,
+        //               returnDate: this.returnDate,
+        //               item: this.item,
+        //             )));
+        await onTap(context);
+      },
       child: Card(
         color: Colors.red[50],
         child: Container(
