@@ -103,7 +103,7 @@ class _NavDrawerState extends State<NavDrawer> {
                           },
                         ),
                         title: Text(
-                          AppLocalizations.of(context).translate("english"),
+                          "English",
                         ),
                       ),
                       ListTile(

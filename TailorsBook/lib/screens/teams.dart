@@ -125,7 +125,8 @@ class _TeamMembersState extends State<TeamMembers> {
                     return PersonInfo(
                       name: teamA[index]['name'],
                       image: AssetImage("assets/images/person.png"),
-                      onPressed: onPressed,
+                      profile: teamA[index]['profile'],
+                      phoneNo: teamA[index]['phoneNo'],
                       color: Colors.purple[200],
                     );
                   }),
@@ -155,7 +156,8 @@ class _TeamMembersState extends State<TeamMembers> {
                     return PersonInfo(
                       name: teamB[index]['name'],
                       image: AssetImage("assets/images/person.png"),
-                      onPressed: onPressed,
+                      profile: teamB[index]['profile'],
+                      phoneNo: teamB[index]['phoneNo'],
                       color: Colors.purple[300],
                     );
                   }),
@@ -185,7 +187,8 @@ class _TeamMembersState extends State<TeamMembers> {
                     return PersonInfo(
                       name: teamC[index]['name'],
                       image: AssetImage("assets/images/person.png"),
-                      onPressed: onPressed,
+                      profile: teamC[index]['profile'],
+                      phoneNo: teamC[index]['phoneNo'],
                       color: Colors.purple[400],
                     );
                   }),

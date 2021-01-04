@@ -1,4 +1,5 @@
 import 'package:TailorsBook/locale/app_localization.dart';
+import 'package:TailorsBook/screens/profile.dart';
 import 'package:TailorsBook/screens/search_result.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -184,52 +185,68 @@ class PersonInfo extends StatelessWidget {
   final ImageProvider image;
   final Color color;
   final Function onPressed;
+  final String profile;
+  final String phoneNo;
 
-  PersonInfo({this.name, this.image, this.onPressed, this.color});
+  PersonInfo({this.name, this.image, this.onPressed, this.color, this.profile, this.phoneNo});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 10.0, right: 10),
-      child: Container(
-        height: 150,
-        width: 150,
-        decoration: BoxDecoration(
-          border: Border.all(color: this.color, width: 2),
-          color: Colors.transparent,
-        ),
-        child: RaisedButton(
-          color: Colors.amber[50],
-          padding: EdgeInsets.only(left: 0),
-          onPressed: this.onPressed,
-          child: Column(
-            children: [
-              Expanded(
-                  //this.image,
-                  child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: image,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              )),
-              Container(
-                color: this.color,
-                height: 40,
-                width: 150,
-                //width: double.infinity,
-                child: Center(
-                  child: Text(
-                    this.name,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Profile(
+                name: this.name,
+                profile: this.profile,
+                phoneNo: this.phoneNo,
               ),
-            ],
+            ),
+          );
+        },
+        child: Container(
+          height: 150,
+          width: 150,
+          decoration: BoxDecoration(
+            border: Border.all(color: this.color, width: 2),
+            color: Colors.transparent,
+          ),
+          child: RaisedButton(
+            color: Colors.amber[50],
+            padding: EdgeInsets.only(left: 0),
+            onPressed: this.onPressed,
+            child: Column(
+              children: [
+                Expanded(
+                    //this.image,
+                    child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: image,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                )),
+                Container(
+                  color: this.color,
+                  height: 40,
+                  width: 150,
+                  //width: double.infinity,
+                  child: Center(
+                    child: Text(
+                      this.name,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -256,11 +273,10 @@ class InfoCard extends StatelessWidget {
               padding: const EdgeInsets.all(10.0),
               child: Container(
                 width: 135,
-                height: 135,
+                height: 140,
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black54, width: 2),
-                  shape: BoxShape.circle,
-                  color: Colors.amber[50],
+                  border: Border.all(color: Colors.black, width: 4),
+                  borderRadius: BorderRadius.circular(100),
                 ),
                 child: CircleAvatar(
                   radius: 20,
@@ -318,7 +334,7 @@ class InfoCard extends StatelessWidget {
 }
 
 class ShirtCardBox extends StatelessWidget {
-  final String regNo;
+  final int regNo;
   final bool isComplete;
   final String type;
   final bool isColor;
@@ -347,7 +363,7 @@ class ShirtCardBox extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: type == "safari"
+              child: type == "shirt"
                   ? Icon(
                       Icons.check,
                       color: Colors.grey,
@@ -371,7 +387,15 @@ class ShirtCardBox extends StatelessWidget {
                   : Text(""),
             ),
             Expanded(
-              child: type == "shirt"
+              child: type == "safari"
+                  ? Icon(
+                      Icons.check,
+                      color: Colors.grey,
+                    )
+                  : Text(""),
+            ),
+            Expanded(
+              child: type == "other"
                   ? Icon(
                       Icons.check,
                       color: Colors.grey,
@@ -384,6 +408,142 @@ class ShirtCardBox extends StatelessWidget {
     );
   }
 }
+
+// class PantCardBox extends StatelessWidget {
+//   final String regNo;
+//   final bool isComplete;
+//   final String type;
+//   final bool isColor;
+//
+//   const ShirtCardBox({this.regNo, this.isComplete, this.type, this.isColor});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Card(
+//       color: isColor ? Colors.grey[200] : null,
+//       borderOnForeground: true,
+//       child: Container(
+//         height: 25,
+//         margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+//         child: Row(
+//           crossAxisAlignment: CrossAxisAlignment.center,
+//           mainAxisAlignment: MainAxisAlignment.spaceAround,
+//           children: <Widget>[
+//             Expanded(
+//               child: Text(
+//                 '$regNo',
+//                 style: TextStyle(
+//                   //fontWeight: FontWeight.bold,
+//                     fontSize: 25,
+//                     color: isComplete ? Colors.black : Colors.blue),
+//               ),
+//             ),
+//             Expanded(
+//               child: type == "safari"
+//                   ? Icon(
+//                 Icons.check,
+//                 color: Colors.grey,
+//               )
+//                   : Text(""),
+//             ),
+//             Expanded(
+//               child: type == "kurta"
+//                   ? Icon(
+//                 Icons.check,
+//                 color: Colors.grey,
+//               )
+//                   : Text(""),
+//             ),
+//             Expanded(
+//               child: type == "pajama"
+//                   ? Icon(
+//                 Icons.check,
+//                 color: Colors.grey,
+//               )
+//                   : Text(""),
+//             ),
+//             Expanded(
+//               child: type == "shirt"
+//                   ? Icon(
+//                 Icons.check,
+//                 color: Colors.grey,
+//               )
+//                   : Text(""),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+// class CoatCardBox extends StatelessWidget {
+//   final String regNo;
+//   final bool isComplete;
+//   final String type;
+//   final bool isColor;
+//
+//   const ShirtCardBox({this.regNo, this.isComplete, this.type, this.isColor});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Card(
+//       color: isColor ? Colors.grey[200] : null,
+//       borderOnForeground: true,
+//       child: Container(
+//         height: 25,
+//         margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+//         child: Row(
+//           crossAxisAlignment: CrossAxisAlignment.center,
+//           mainAxisAlignment: MainAxisAlignment.spaceAround,
+//           children: <Widget>[
+//             Expanded(
+//               child: Text(
+//                 '$regNo',
+//                 style: TextStyle(
+//                   //fontWeight: FontWeight.bold,
+//                     fontSize: 25,
+//                     color: isComplete ? Colors.black : Colors.blue),
+//               ),
+//             ),
+//             Expanded(
+//               child: type == "safari"
+//                   ? Icon(
+//                 Icons.check,
+//                 color: Colors.grey,
+//               )
+//                   : Text(""),
+//             ),
+//             Expanded(
+//               child: type == "kurta"
+//                   ? Icon(
+//                 Icons.check,
+//                 color: Colors.grey,
+//               )
+//                   : Text(""),
+//             ),
+//             Expanded(
+//               child: type == "pajama"
+//                   ? Icon(
+//                 Icons.check,
+//                 color: Colors.grey,
+//               )
+//                   : Text(""),
+//             ),
+//             Expanded(
+//               child: type == "shirt"
+//                   ? Icon(
+//                 Icons.check,
+//                 color: Colors.grey,
+//               )
+//                   : Text(""),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class RegCardBox extends StatelessWidget {
   final int regNo;
@@ -766,7 +926,7 @@ Card buildHeader(String headerType, BuildContext context) {
         ),
       ),
     );
-  } else if (headerType == "Shirt Maker") {
+  } else if (headerType == "SHIRT MAKER") {
     return Card(
       child: Container(
         height: 20,
@@ -791,7 +951,7 @@ Card buildHeader(String headerType, BuildContext context) {
             ),
             Expanded(
                 child: Text(
-              AppLocalizations.of(context).translate("safari"),
+              AppLocalizations.of(context).translate("shirt"),
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
@@ -815,7 +975,125 @@ Card buildHeader(String headerType, BuildContext context) {
             )),
             Expanded(
                 child: Text(
-              "   " + AppLocalizations.of(context).translate("shirt"),
+              "   " + AppLocalizations.of(context).translate("safari"),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: Colors.white),
+            )),
+            Expanded(
+                child: Text(
+              "   " + AppLocalizations.of(context).translate("other"),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: Colors.white),
+            )),
+          ],
+        ),
+      ),
+    );
+  } else if (headerType == "COAT MAKER") {
+    return Card(
+      child: Container(
+        height: 20,
+        decoration: BoxDecoration(
+          color: Colors.black54,
+        ),
+        padding: EdgeInsets.only(left: 15, right: 15),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Expanded(
+                child: Text(
+              AppLocalizations.of(context).translate("reg_no"),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: Colors.white),
+            )),
+            SizedBox(
+              width: 20,
+            ),
+            Expanded(
+                child: Text(
+              AppLocalizations.of(context).translate("coat"),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: Colors.white),
+            )),
+            Expanded(
+                child: Text(
+              AppLocalizations.of(context).translate("jacket"),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: Colors.white),
+            )),
+            Expanded(
+                child: Text(
+              AppLocalizations.of(context).translate("achkan"),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: Colors.white),
+            )),
+            Expanded(
+                child: Text(
+              "   " + AppLocalizations.of(context).translate("other"),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: Colors.white),
+            )),
+          ],
+        ),
+      ),
+    );
+  } else if (headerType == "PENT MAKER") {
+    return Card(
+      child: Container(
+        height: 20,
+        decoration: BoxDecoration(
+          color: Colors.black54,
+        ),
+        padding: EdgeInsets.only(left: 15, right: 15),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Expanded(
+                child: Text(
+              AppLocalizations.of(context).translate("reg_no"),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: Colors.white),
+            )),
+            SizedBox(
+              width: 20,
+            ),
+            Expanded(
+                child: Text(
+              AppLocalizations.of(context).translate("pent"),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: Colors.white),
+            )),
+            Expanded(
+                child: Text(
+              AppLocalizations.of(context).translate("pajama"),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: Colors.white),
+            )),
+            Expanded(
+                child: Text(
+              "   " + AppLocalizations.of(context).translate("other"),
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 15,

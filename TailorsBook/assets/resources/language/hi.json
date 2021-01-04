@@ -62,5 +62,6 @@
     "choudhary_tailors"     :   "चौधरी टेलर्स",
     "sunindiashowroom"      :   "सन इंडिया शोरूम",
     "no_internet"           :   "इंटरनेट कनेक्शन नहीं मिल रहा है।",
-    "uncut"                 :   "कटिंग नहीं हुआ"
+    "uncut"                 :   "कटिंग नहीं हुआ",
+    "incorrent_format"      :   "कृपया सभी चयन धयान से भरे।"
 }
