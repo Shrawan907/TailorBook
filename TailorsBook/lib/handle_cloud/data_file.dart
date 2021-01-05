@@ -215,10 +215,10 @@ Future<Map> fetchDetail(int regNo, int branch) async {
       .listen((QuerySnapshot querySnapshot) {
     var temp = querySnapshot.docs.first.data();
     //print(temp);
+    info["branch"] = branch;
     info["regNo"] = temp["regNo"];
     info["isComplete"] = temp["isComplete"];
-    DateTime date = temp["returnDate"].toDate();
-    info["returnDate"] = "${date.day}-${date.month}-${date.year}";
+    info["returnDate"] = temp["returnDate"].toDate();
     see(path, temp, "coat", regNo);
     see(path, temp, "pent", regNo);
     see(path, temp, "shirt", regNo);

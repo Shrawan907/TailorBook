@@ -22,12 +22,14 @@ class CardBox extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => SearchResult(
-                        regNo: this.regNo,
-                        branch: this.branch,
-                      )));
+            context,
+            MaterialPageRoute(
+              builder: (context) => SearchResult(
+                regNo: regNo,
+                branch: branch,
+              ),
+            ),
+          );
         },
         child: Container(
           height: 40,
@@ -194,45 +196,48 @@ class PersonInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 10.0, right: 10),
-      child: Container(
-        height: 150,
-        width: 150,
-        decoration: BoxDecoration(
-          border: Border.all(color: this.color, width: 2),
-          color: Colors.transparent,
-        ),
-        child: RaisedButton(
-          color: Colors.amber[50],
-          padding: EdgeInsets.only(left: 0),
-          onPressed: this.onPressed,
-          child: Column(
-            children: [
-              Expanded(
-                  //this.image,
-                  child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: image,
-                    fit: BoxFit.cover,
+      child: Card(
+        elevation: 15,
+        child: Container(
+          height: 150,
+          width: 150,
+          decoration: BoxDecoration(
+            border: Border.all(color: this.color, width: 2),
+            color: Colors.transparent,
+          ),
+          child: RaisedButton(
+            color: Colors.amber[50],
+            padding: EdgeInsets.only(left: 0),
+            onPressed: this.onPressed,
+            child: Column(
+              children: [
+                Expanded(
+                    //this.image,
+                    child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: image,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                )),
+                Container(
+                  color: this.color,
+                  height: 40,
+                  width: 150,
+                  //width: double.infinity,
+                  child: Center(
+                    child: Text(
+                      this.name,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
-              )),
-              Container(
-                color: this.color,
-                height: 40,
-                width: 150,
-                //width: double.infinity,
-                child: Center(
-                  child: Text(
-                    this.name,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -400,12 +405,13 @@ class RegCardBox extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => SearchResult(
-                      regNo: regNo,
-                      branch: branch,
-                    )));
+          context,
+          MaterialPageRoute(
+              builder: (context) => SearchResult(
+                    regNo: regNo,
+                    branch: branch,
+                  )),
+        );
       },
       child: Container(
         height: 40,
@@ -697,7 +703,7 @@ class CuttingCardBox extends StatelessWidget {
               content: Container(
                 height: 380,
                 width: 300,
-                padding: EdgeInsets.all(20),
+                padding: EdgeInsets.all(10),
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
@@ -755,6 +761,7 @@ class CuttingCardBox extends StatelessWidget {
                                 });
                               },
                             ),
+                            SizedBox(width: 10),
                             Container(
                               height: 30,
                               width: 40,
@@ -767,6 +774,7 @@ class CuttingCardBox extends StatelessWidget {
                                 ),
                               ),
                             ),
+                            SizedBox(width: 10),
                             UpdateValueButton(
                               icon: Icons.add,
                               perform: () {
