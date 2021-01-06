@@ -23,12 +23,14 @@ class CardBox extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => SearchResult(
-                        regNo: this.regNo,
-                        branch: this.branch,
-                      )));
+            context,
+            MaterialPageRoute(
+              builder: (context) => SearchResult(
+                regNo: regNo,
+                branch: branch,
+              ),
+            ),
+          );
         },
         child: Container(
           height: 40,
@@ -197,19 +199,10 @@ class PersonInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 10.0, right: 10),
-      child: GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Profile(
-                name: this.name,
-                profile: this.profile,
-                phoneNo: this.phoneNo,
-              ),
-            ),
-          );
-        },
+
+      child: Card(
+        elevation: 15,
+
         child: Container(
           height: 150,
           width: 150,
@@ -560,12 +553,13 @@ class RegCardBox extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => SearchResult(
-                      regNo: regNo,
-                      branch: branch,
-                    )));
+          context,
+          MaterialPageRoute(
+              builder: (context) => SearchResult(
+                    regNo: regNo,
+                    branch: branch,
+                  )),
+        );
       },
       child: Container(
         height: 40,
@@ -841,11 +835,13 @@ class CuttingCardBox extends StatelessWidget {
   final Function function;
   const CuttingCardBox(
       {this.regNo,
-        this.count,
-        this.branch,
-        this.returnDate,
-        this.item,
-        this.function});
+
+      this.count,
+      this.branch,
+      this.returnDate,
+      this.item,
+      this.function});
+
   Future onTap(BuildContext context) async {
     int value = count;
     bool loading = false;
@@ -857,7 +853,9 @@ class CuttingCardBox extends StatelessWidget {
               content: Container(
                 height: 380,
                 width: 300,
-                padding: EdgeInsets.all(20),
+
+                padding: EdgeInsets.all(10),
+
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
@@ -915,6 +913,9 @@ class CuttingCardBox extends StatelessWidget {
                                 });
                               },
                             ),
+
+                            SizedBox(width: 10),
+
                             Container(
                               height: 30,
                               width: 40,
@@ -927,6 +928,9 @@ class CuttingCardBox extends StatelessWidget {
                                 ),
                               ),
                             ),
+
+                            SizedBox(width: 10),
+
                             UpdateValueButton(
                               icon: Icons.add,
                               perform: () {
@@ -942,9 +946,10 @@ class CuttingCardBox extends StatelessWidget {
                       SizedBox(height: 10),
                       loading == true
                           ? SpinKitThreeBounce(
-                        color: Colors.blueAccent,
-                        size: 15,
-                      )
+
+                              color: Colors.blueAccent,
+                              size: 15,
+                            )
                           : SizedBox(height: 10),
                       SizedBox(height: 30),
                       Row(

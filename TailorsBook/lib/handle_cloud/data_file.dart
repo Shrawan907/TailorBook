@@ -217,10 +217,10 @@ Future<Map> fetchDetail(int regNo, int branch) async {
       .listen((QuerySnapshot querySnapshot) {
     var temp = querySnapshot.docs.first.data();
     //print(temp);
+    info["branch"] = branch;
     info["regNo"] = temp["regNo"];
     info["isComplete"] = temp["isComplete"];
-    DateTime date = temp["returnDate"].toDate();
-    info["returnDate"] = "${date.day}-${date.month}-${date.year}";
+    info["returnDate"] = temp["returnDate"].toDate();
     see(path, temp, "coat", regNo);
     see(path, temp, "pent", regNo);
     see(path, temp, "shirt", regNo);
@@ -325,17 +325,19 @@ Future requestDecline(String phone) async {
   var requestPath = db.collection("company/requests/requests");
   var userPath = db.collection("company/team/members");
   requestPath.doc(phone).get().then((snapShot) => {
-    if (snapShot.exists)
-      {
-        requestPath.doc(phone).delete(),
-        requestData.remove(requestData
-            .where((element) => element["phoneNo"] == phone)
-            .first),
-        db.collection("company").doc("requests").update(
-          {"total": FieldValue.increment(-1)},
-        ),
-      }
-  });
+
+        if (snapShot.exists)
+          {
+            requestPath.doc(phone).delete(),
+            requestData.remove(requestData
+                .where((element) => element["phoneNo"] == phone)
+                .first),
+            db.collection("company").doc("requests").update(
+              {"total": FieldValue.increment(-1)},
+            ),
+          }
+      });
+
   userPath.doc(phone).get().then((snapShot) => {
     if (snapShot.exists)
       {

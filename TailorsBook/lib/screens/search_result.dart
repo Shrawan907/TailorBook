@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:TailorsBook/locale/app_localization.dart';
 import 'package:TailorsBook/screens/signin.dart';
+import 'package:TailorsBook/screens/updateData.dart';
 import 'package:flutter/material.dart';
 import 'package:TailorsBook/common/nav_drower.dart';
 import 'package:TailorsBook/common/cardBox.dart';
@@ -12,6 +13,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 Map info = {};
 List detail = [];
+
+DateTime selectedDate = DateTime.now();
 
 class SearchResult extends StatefulWidget {
   final int regNo;
@@ -25,6 +28,7 @@ class SearchResult extends StatefulWidget {
 class _SearchResultState extends State<SearchResult> {
   final int regNo;
   final int branch;
+  String showDate = '...';
   _SearchResultState({this.regNo, this.branch});
   @override
   void initState() {
@@ -40,6 +44,15 @@ class _SearchResultState extends State<SearchResult> {
   Future fetchInfo() async {
     info.clear();
     info = (await fetchDetail(this.regNo, this.branch));
+    try {
+      if (info.containsKey('returnDate')) {
+        selectedDate = info['returnDate'];
+        showDate =
+            "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
+      }
+    } catch (err) {
+      print(err);
+    }
   }
 
   @override
@@ -51,6 +64,20 @@ class _SearchResultState extends State<SearchResult> {
               (branch == 0 ? " [ A ]" : " [ B ]"),
         ), //Text(AppLocalizations.of(context).translate("t_return_today")),
         actions: [
+          Padding(
+            padding: EdgeInsets.only(right: 30),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => UpdateData(initialDetail: info)));
+              },
+              child: Center(
+                child: Icon(Icons.edit),
+              ),
+            ),
+          ),
           GestureDetector(
             onTap: () {
               setState(() {});
@@ -85,14 +112,15 @@ class _SearchResultState extends State<SearchResult> {
                       child: Row(
                         children: [
                           Expanded(
-                              child: Text(AppLocalizations.of(context).translate("reg_no")+".:"+"$regNo",
+                              child: Text(
+                                  AppLocalizations.of(context)
+                                          .translate("reg_no") +
+                                      ":" +
+                                      "$regNo",
                                   style: TextStyle(fontSize: 25))),
                           Expanded(
-                            child: info.containsKey("returnDate")
-                                ? Text('${info["returnDate"]}',
-                                    style: TextStyle(fontSize: 20))
-                                : Container(),
-                          ),
+                              child: Text(showDate,
+                                  style: TextStyle(fontSize: 20))),
                         ],
                       ),
                     ),
@@ -112,6 +140,10 @@ class _SearchResultState extends State<SearchResult> {
   }
 
   Container dataContainer(String key) {
+    int count = 0;
+    if ((info[key]).containsKey('count')) {
+      count = info[key]['count'];
+    }
     return Container(
       margin: EdgeInsets.only(top: 20),
       padding: EdgeInsets.only(bottom: 10),
@@ -133,7 +165,7 @@ class _SearchResultState extends State<SearchResult> {
                 width: 10,
               ),
               Text(
-                AppLocalizations.of(context).translate("$key") + " ( " + info["$key"]["count"].toString() + " )",
+                "$key" + " ( $count )",
                 style: TextStyle(fontSize: 25, color: Colors.amber),
               ),
             ],
@@ -141,14 +173,14 @@ class _SearchResultState extends State<SearchResult> {
           SizedBox(
             height: 10,
           ),
-          for (int i = 0; i < info["$key"]["count"]; i++)
+          for (int i = 0; i < count; i++)
             Row(
               children: [
                 Expanded(
                   child: Icon(Icons.arrow_right_alt),
                 ),
                 Expanded(
-                    child: Text(AppLocalizations.of(context).translate(info["$key"]["status"][i]),
+                    child: Text(info["$key"]["status"][i],
                         style: TextStyle(fontSize: 20))),
               ],
             ),

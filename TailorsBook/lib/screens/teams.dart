@@ -74,33 +74,6 @@ class _TeamMembersState extends State<TeamMembers> {
         child: ListView(
           children: [
             Padding(
-              padding: EdgeInsets.only(left: 20, top: 20, bottom: 10),
-              child: RichText(
-                text: TextSpan(children: [
-                  WidgetSpan(child: Icon(Icons.content_cut)),
-                  TextSpan(
-                      text: "  " +
-                          AppLocalizations.of(context).translate("cutter"),
-                      style: TextStyle(fontSize: 25, color: Colors.black)),
-                ]),
-              ),
-            ),
-            Container(
-              // cutter card
-              height: 150,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  PersonInfo(
-                    name: "Amitabh Ji",
-                    image: AssetImage("assets/images/person.png"),
-                    onPressed: cutFunc,
-                    color: Colors.purple[100],
-                  ),
-                ],
-              ),
-            ),
-            Padding(
               padding: EdgeInsets.only(left: 20, top: 30, bottom: 10),
               child: RichText(
                 text: TextSpan(children: [
@@ -120,7 +93,7 @@ class _TeamMembersState extends State<TeamMembers> {
               height: 150,
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: teamA.length,
+                  itemCount: teamB.length,
                   itemBuilder: (context, index) {
                     return PersonInfo(
                       name: teamA[index]['name'],

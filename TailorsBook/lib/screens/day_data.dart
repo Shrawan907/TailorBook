@@ -26,6 +26,7 @@ class DayData extends StatefulWidget {
 
 class _DayDataState extends State<DayData> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  int listSize = 0;
 
   @override
   void initState() {
@@ -52,16 +53,19 @@ class _DayDataState extends State<DayData> {
     displayData.clear();
     displayData.addAll(await tommdata());
     print(displayData);
+    listSize = displayData[0].length + displayData[1].length;
   }
 
   Future fetchOverData() async {
     displayData.clear();
     displayData.addAll(await overmdata());
+    listSize = displayData[0].length + displayData[1].length;
   }
 
   Future fetchData() async {
     displayData.clear();
     displayData.addAll(await fetchTodayData(selectedDate));
+    listSize = displayData[0].length + displayData[1].length;
   }
 
   addNewData() {
@@ -118,6 +122,20 @@ class _DayDataState extends State<DayData> {
           showDate,
         ),
         actions: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(10),
+            child: Center(
+              child: Text(
+                "$listSize",
+                style: TextStyle(
+                  fontSize: 25,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+          ),
           Padding(
             padding: EdgeInsets.only(right: 30.0),
             child: RaisedButton(
@@ -249,7 +267,7 @@ class _DayDataState extends State<DayData> {
                     RefreshIndicator(
               onRefresh: () async {
                 try {
-                  initConnectivity(_scaffoldKey,context);
+                  initConnectivity(_scaffoldKey, context);
                   if (selectedDate.day == tommorowDate.day &&
                       selectedDate.month == tommorowDate.month &&
                       selectedDate.year == tommorowDate.year) {

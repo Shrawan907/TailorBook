@@ -82,35 +82,35 @@ class _CuttingState extends State<Cutting> {
         actions: <Widget>[
           searchBar
               ? Container(
-            width: 150,
-            height: 20,
-            margin: EdgeInsets.only(right: 50, bottom: 5, top: 5),
-            decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(width: 2)),
-            ),
-            child: TextField(
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-              onChanged: (value) {
-                filterSearchResults(value);
-                print(value);
-              },
-              controller: editingController,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                hintText:
-                AppLocalizations.of(context).translate("search"),
-                hintStyle: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
-                    fontWeight: FontWeight.normal),
-                prefixIcon: Icon(
-                  Icons.search,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-          )
+                  width: 150,
+                  height: 20,
+                  margin: EdgeInsets.only(right: 50, bottom: 5, top: 5),
+                  decoration: BoxDecoration(
+                    border: Border(bottom: BorderSide(width: 2)),
+                  ),
+                  child: TextField(
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                    onChanged: (value) {
+                      filterSearchResults(value);
+                      print(value);
+                    },
+                    controller: editingController,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      hintText:
+                          AppLocalizations.of(context).translate("search"),
+                      hintStyle: TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontWeight: FontWeight.normal),
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                )
               : Container(),
           GestureDetector(
               onTap: () async {
@@ -129,7 +129,7 @@ class _CuttingState extends State<Cutting> {
           Expanded(
             child: Container(
               child: //register.isNotEmpty ?
-              RefreshIndicator(
+                  RefreshIndicator(
                 onRefresh: () async {
                   try {
                     cleanCuttingRegister(this.item);
@@ -148,7 +148,7 @@ class _CuttingState extends State<Cutting> {
                           count: cuttingRegister[index]['count'],
                           branch: cuttingRegister[index]['branch'],
                           returnDate: cuttingRegister[index]['returnDate'] !=
-                              null
+                                  null
                               ? cuttingRegister[index]['returnDate'].toDate()
                               : null,
                           item: this.item,
@@ -178,6 +178,8 @@ return CuttingCardBox(
                             : null,
                         item: this.item,
                       );
+
+
                       GestureDetector(
                         onTap: () async {
                           await onTap(

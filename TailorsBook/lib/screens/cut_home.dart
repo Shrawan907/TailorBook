@@ -26,8 +26,6 @@ class CutHome extends StatefulWidget {
 
 class _CutHomeState extends State<CutHome> {
   int branch = 0;
-  int reg_no;
-  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext parentContext) {
     return Scaffold(
@@ -35,7 +33,7 @@ class _CutHomeState extends State<CutHome> {
       backgroundColor: Colors.blue[200],
       drawer: NavDrawer(),
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).translate("t_shortcuts")),
+        title: Text("Cutting Register"),
         centerTitle: true,
       ),
       body: ListView(
