@@ -10,6 +10,7 @@ import 'package:toast/toast.dart';
 
 DateTime bookingDate = DateTime.now();
 DateTime selectedDate = bookingDate;
+// DateTime selectedDate = null;
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 
@@ -26,8 +27,9 @@ class _RegisterNewDataState extends State<RegisterNewData> {
   _RegisterNewDataState({this.branch});
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
-  String showDate;
+  String showDate="";
   int regNo;
+  var _controller = TextEditingController();
   bool dateSelected = false;
   bool update = false;
   bool value1 = false,
@@ -94,6 +96,14 @@ class _RegisterNewDataState extends State<RegisterNewData> {
     }
   }
 
+  snackBarFunc(String str){
+    SnackBar snackBar = SnackBar(
+      content: Text(str),
+    );
+    _scaffoldKey.currentState.showSnackBar(snackBar);
+    Timer(Duration(seconds: 1), () {});
+  }
+
   submit() async {
     print("REG NO. : $regNo");
     if (regNo == null ||
@@ -106,12 +116,9 @@ class _RegisterNewDataState extends State<RegisterNewData> {
             value5 == false &&
             value6 == false &&
             value7 == false &&
-            value8 == false)) {
-      SnackBar snackBar = SnackBar(
-        content: Text("Entry format is not correct!"),
-      );
-      _scaffoldKey.currentState.showSnackBar(snackBar);
-      Timer(Duration(seconds: 1), () {});
+            value8 == false) ||
+        showDate=="") {
+      snackBarFunc(AppLocalizations.of(context).translate("incorrent_format"));
       return;
     }
     final form = _formKey.currentState;
@@ -180,7 +187,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
         });
       } else {
         Toast.show(
-            AppLocalizations.of(context).translate("regNo_exist"), context,
+            AppLocalizations.of(context).translate("reg_no_exist"), context,    //change regNo_exist to reg_no_exist
             duration: Toast.LENGTH_SHORT, gravity: Toast.CENTER);
       }
     }
@@ -280,6 +287,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                                   true, // to immediate execute validator
                               // as soon as user typed
                               child: TextFormField(
+                                controller: _controller,
                                   validator: (val) {
                                     if (val.trim().isEmpty)
                                       return AppLocalizations.of(context)
@@ -291,6 +299,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                                       return null;
                                   },
                                   onChanged: (val) => regNo = int.parse(val),
+                                  // controller: _regNo,
                                   decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                     labelText: AppLocalizations.of(context)
@@ -298,6 +307,13 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                                     labelStyle: TextStyle(fontSize: 15.0),
                                     hintText: AppLocalizations.of(context)
                                         .translate("reg_no_full"),
+                                      suffixIcon: IconButton(                 //$$$for clearing the issue of clear dur to digitsonly property
+                                          icon: Icon(Icons.clear),
+                                          onPressed: () {
+                                            regNo=null;
+                                            _controller.clear();
+                                            // print(regNo);
+                                          }),
                                   ),
                                   inputFormatters: [
                                     FilteringTextInputFormatter.digitsOnly

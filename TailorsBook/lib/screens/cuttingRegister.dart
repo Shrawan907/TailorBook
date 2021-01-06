@@ -169,7 +169,6 @@ class _CuttingState extends State<Cutting> {
 }
 
 /*
-
 return CuttingCardBox(
                         regNo: cuttingRegister[index]['regNo'],
                         count: cuttingRegister[index]['count'],
@@ -179,20 +178,6 @@ return CuttingCardBox(
                             : null,
                         item: this.item,
                       );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
                       GestureDetector(
@@ -245,6 +230,4 @@ return CuttingCardBox(
                           ),
                         ),
                       );
-
-
 */

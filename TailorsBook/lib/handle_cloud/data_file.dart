@@ -34,6 +34,7 @@ List kurtaR = [];
 List pajamaR = [];
 List achkanR = [];
 List othersR = [];
+List assignedData = [];
 
 // fetch data Date-wise
 Future<List> fetchTodayData(DateTime date) async {
@@ -41,6 +42,7 @@ Future<List> fetchTodayData(DateTime date) async {
   tempData = [[], []];
   db
       .collection("company/branchA/register")
+      .orderBy("regNo", descending: true)
       .snapshots()
       .listen((QuerySnapshot querySnapshot) {
     querySnapshot.docs.forEach((element) {
@@ -144,7 +146,7 @@ Future<List> fetchRegisterData(int branch) async {
   Map temp;
   db
       .collection(path)
-      .orderBy("regNo", descending: true)
+      .orderBy("regNo", descending: true)                   // improve by arrangement
       .snapshots()
       .listen((QuerySnapshot querySnapshot) {
     querySnapshot.docs.forEach((element) {
@@ -240,23 +242,23 @@ Future<List> fetchRequestData() async {
   tempData.clear();
   var requestPath = db.collection("company/requests/requests");
   db.collection("company").doc("requests").get().then((element) => {
-        if (element.data().containsKey("total") && element.data()["total"] > 0)
-          {
-            requestCount = element.data()["total"],
-            requestPath.snapshots().listen((QuerySnapshot querySnapshot) {
-              querySnapshot.docs.forEach((element) {
-                Map temp = element.data();
-                tempData.addAll([
-                  {
-                    "phoneNo": temp["phoneNo"],
-                    "username": temp["username"],
-                    "requestProfile": temp["requestProfile"]
-                  }
-                ]);
-              });
-            }),
-          }
-      });
+    if (element.data().containsKey("total") && element.data()["total"] > 0)
+      {
+        requestCount = element.data()["total"],
+        requestPath.snapshots().listen((QuerySnapshot querySnapshot) {
+          querySnapshot.docs.forEach((element) {
+            Map temp = element.data();
+            tempData.addAll([
+              {
+                "phoneNo": temp["phoneNo"],
+                "username": temp["username"],
+                "requestProfile": temp["requestProfile"]
+              }
+            ]);
+          });
+        }),
+      }
+  });
   await Future.delayed(Duration(seconds: 2));
   return tempData;
 }
@@ -288,32 +290,32 @@ Future requestAccept(String phone) async {
   var requestPath = db.collection("company/requests/requests");
   var userPath = db.collection("company/team/members");
   requestPath.doc(phone).get().then((snapShot) => {
-        if (snapShot.exists)
-          {
-            requestPath.doc(phone).delete(),
-            requestData.remove(requestData
-                .where((element) => element["phoneNo"] == phone)
-                .first),
-            db.collection("company").doc("requests").update(
-              {"total": FieldValue.increment(-1)},
-            ),
-          }
-        else
-          {print("snapShot doesn't exists!")}
-      });
+    if (snapShot.exists)
+      {
+        requestPath.doc(phone).delete(),
+        requestData.remove(requestData
+            .where((element) => element["phoneNo"] == phone)
+            .first),
+        db.collection("company").doc("requests").update(
+          {"total": FieldValue.increment(-1)},
+        ),
+      }
+    else
+      {print("snapShot doesn't exists!")}
+  });
   userPath.doc(phone).get().then((snapShot) => {
-        if (snapShot.exists)
-          {
-            userPath.doc(phone).update({
-              "requestAccepted": true,
-            })
-          }
-        else
-          {
-            print(
-                "Check Needed, no user saved on cloud but request is deleted"),
-          }
-      });
+    if (snapShot.exists)
+      {
+        userPath.doc(phone).update({
+          "requestAccepted": true,
+        })
+      }
+    else
+      {
+        print(
+            "Check Needed, no user saved on cloud but request is deleted"),
+      }
+  });
   await Future.delayed(Duration(seconds: 1));
 }
 
@@ -323,6 +325,7 @@ Future requestDecline(String phone) async {
   var requestPath = db.collection("company/requests/requests");
   var userPath = db.collection("company/team/members");
   requestPath.doc(phone).get().then((snapShot) => {
+
         if (snapShot.exists)
           {
             requestPath.doc(phone).delete(),
@@ -334,21 +337,22 @@ Future requestDecline(String phone) async {
             ),
           }
       });
+
   userPath.doc(phone).get().then((snapShot) => {
-        if (snapShot.exists)
-          {
-            userPath.doc(phone).update({
-              "name": "",
-              "profile": "",
-              "requestMade": false,
-            })
-          }
-        else
-          {
-            print(
-                "Check Needed, no user saved on cloud but request is deleted"),
-          }
-      });
+    if (snapShot.exists)
+      {
+        userPath.doc(phone).update({
+          "name": "",
+          "profile": "",
+          "requestMade": false,
+        })
+      }
+    else
+      {
+        print(
+            "Check Needed, no user saved on cloud but request is deleted"),
+      }
+  });
   await Future.delayed(Duration(seconds: 1));
 }
 
@@ -375,21 +379,20 @@ Future fetchMembers() async {
           temp.containsKey("profile")) {
         if (temp["profile"] == "COAT MAKER") {
           teamA.addAll([
-            {"name": temp["name"], "profile": temp["profile"]}
+            {"name": temp["name"], "profile": temp["profile"], "phoneNo": temp["phoneNo"]}
           ]);
         } else if (temp["profile"] == "PENT MAKER") {
           teamB.addAll([
-            {"name": temp["name"], "profile": temp["profile"]}
+            {"name": temp["name"], "profile": temp["profile"], "phoneNo": temp["phoneNo"]}
           ]);
         } else if (temp["profile"] == "SHIRT MAKER") {
           teamC.addAll([
-            {"name": temp["name"], "profile": temp["profile"]}
+            {"name": temp["name"], "profile": temp["profile"], "phoneNo": temp["phoneNo"]}
           ]);
         }
       }
     });
   });
-
   await Future.delayed(Duration(seconds: 2));
 }
 
@@ -702,12 +705,12 @@ Future cutItem(int regNo, String item, int branch, int count) async {
       .doc(branch == 0 ? "branchA" : "branchB")
       .collection("products/products/$item");
   itemPath.doc("$regNo").get().then((snapShot) => {
-        if (snapShot.exists)
-          {
-            temp = snapShot.data()['status'],
-            updateCuttingRegister(regNo, item, branch, count),
-          }
-      });
+    if (snapShot.exists)
+      {
+        temp = snapShot.data()['status'],
+        updateCuttingRegister(regNo, item, branch, count),
+      }
+  });
 
   await Future.delayed(Duration(seconds: 2));
   print(temp);
@@ -722,3 +725,56 @@ Future cutItem(int regNo, String item, int branch, int count) async {
     itemPath.doc("$regNo").update({"status": temp});
   }
 }
+
+//to fetch team members data
+
+Future<List> fetchData(String phoneNo) async {
+  tempData.clear();
+  // tempData = [[], []];
+  var dataPath = db.collection("company/team/members/$phoneNo/assigned");
+  // print(phoneNo);
+  dataPath.snapshots().listen((QuerySnapshot querySnapshot) {
+    querySnapshot.docs.forEach((element) {
+      Map temp = element.data();
+      print(temp);
+      // if (temp["isComplete"]) {
+      tempData.addAll([
+        {
+          'regNo': temp["reg_no"],
+          'type': temp["type"],
+          'count': temp["count"],
+          'isComplete': temp["isComplete"]
+        }
+      ]);
+      // } else {
+      //     tempData[0].addAll([
+      //       {
+      //         'regNo': temp["reg_no"],
+      //         'type': temp["type"],
+      //         'count': temp["count"]
+      //       }
+      //     ]);
+      //   }
+    });
+  });
+  await Future.delayed(Duration(seconds: 2));
+  return tempData;
+}
+
+void clearData() {
+  assignedData.clear();
+}
+
+Future<List> getAssignedData(String phoneNo) async {
+  clearData();
+  if (assignedData == null || assignedData.isEmpty) {
+    assignedData.clear();
+    assignedData = [...(await fetchData(phoneNo))];
+    return assignedData;
+  } else {
+    return assignedData;
+  }
+// return assignedData;
+}
+
+/////////////////////////////////////////
