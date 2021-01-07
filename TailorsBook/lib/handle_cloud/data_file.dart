@@ -35,6 +35,7 @@ List kurtaR = [];
 List pajamaR = [];
 List achkanR = [];
 List othersR = [];
+List assignedData = [];
 
 // fetch data Date-wise
 Future<List> fetchTodayData(DateTime date) async {
@@ -42,6 +43,7 @@ Future<List> fetchTodayData(DateTime date) async {
   tempData = [[], []];
   db
       .collection("company/branchA/register")
+      .orderBy("regNo", descending: true)
       .snapshots()
       .listen((QuerySnapshot querySnapshot) {
     querySnapshot.docs.forEach((element) {
@@ -145,7 +147,7 @@ Future<List> fetchRegisterData(int branch) async {
   Map temp;
   db
       .collection(path)
-      .orderBy("regNo", descending: true)
+      .orderBy("regNo", descending: true) // improve by arrangement
       .snapshots()
       .listen((QuerySnapshot querySnapshot) {
     querySnapshot.docs.forEach((element) {
@@ -332,6 +334,7 @@ Future requestDecline(String phone) async {
             ),
           }
       });
+
   userPath.doc(phone).get().then((snapShot) => {
         if (snapShot.exists)
           {
@@ -373,21 +376,32 @@ Future fetchMembers() async {
           temp.containsKey("profile")) {
         if (temp["profile"] == "COAT MAKER") {
           teamA.addAll([
-            {"name": temp["name"], "profile": temp["profile"]}
+            {
+              "name": temp["name"],
+              "profile": temp["profile"],
+              "phoneNo": temp["phoneNo"]
+            }
           ]);
         } else if (temp["profile"] == "PENT MAKER") {
           teamB.addAll([
-            {"name": temp["name"], "profile": temp["profile"]}
+            {
+              "name": temp["name"],
+              "profile": temp["profile"],
+              "phoneNo": temp["phoneNo"]
+            }
           ]);
         } else if (temp["profile"] == "SHIRT MAKER") {
           teamC.addAll([
-            {"name": temp["name"], "profile": temp["profile"]}
+            {
+              "name": temp["name"],
+              "profile": temp["profile"],
+              "phoneNo": temp["phoneNo"]
+            }
           ]);
         }
       }
     });
   });
-
   await Future.delayed(Duration(seconds: 2));
 }
 
@@ -723,7 +737,6 @@ Future cutItem(int regNo, String item, int branch, int count) async {
 
 // delete all the data of given Register Number
 Future deleteDataOf(int regNo, int branch) async {
-  Map temp;
   var registerPath = db
       .collection("company")
       .doc(branch == 0 ? "branchA" : "branchB")
@@ -769,4 +782,54 @@ Future deleteDataOf(int regNo, int branch) async {
   registerPath.doc('$regNo').get().then((snapShot) => {
         if (snapShot.exists) {registerPath.doc('$regNo').delete()}
       });
+}
+//to fetch team members data
+
+Future<List> fetchData(String phoneNo) async {
+  tempData.clear();
+  // tempData = [[], []];
+  var dataPath = db.collection("company/team/members/$phoneNo/assigned");
+  // print(phoneNo);
+  dataPath.snapshots().listen((QuerySnapshot querySnapshot) {
+    querySnapshot.docs.forEach((element) {
+      Map temp = element.data();
+      print(temp);
+      // if (temp["isComplete"]) {
+      tempData.addAll([
+        {
+          'regNo': temp["reg_no"],
+          'type': temp["type"],
+          'count': temp["count"],
+          'isComplete': temp["isComplete"]
+        }
+      ]);
+      // } else {
+      //     tempData[0].addAll([
+      //       {
+      //         'regNo': temp["reg_no"],
+      //         'type': temp["type"],
+      //         'count': temp["count"]
+      //       }
+      //     ]);
+      //   }
+    });
+  });
+  await Future.delayed(Duration(seconds: 2));
+  return tempData;
+}
+
+void clearData() {
+  assignedData.clear();
+}
+
+Future<List> getAssignedData(String phoneNo) async {
+  clearData();
+  if (assignedData == null || assignedData.isEmpty) {
+    assignedData.clear();
+    assignedData = [...(await fetchData(phoneNo))];
+    return assignedData;
+  } else {
+    return assignedData;
+  }
+// return assignedData;
 }
