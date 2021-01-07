@@ -3,6 +3,7 @@ import 'package:TailorsBook/common/buttons.dart';
 import 'package:TailorsBook/locale/app_localization.dart';
 import 'package:TailorsBook/screens/signin.dart';
 import 'package:TailorsBook/screens/updateData.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:TailorsBook/common/nav_drower.dart';
 import 'package:TailorsBook/common/cardBox.dart';
@@ -12,8 +13,11 @@ import 'package:TailorsBook/screens/on_working.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:toast/toast.dart';
 
-DateTime returnDate = DateTime.now();
+DateTime bookingDate = DateTime.now();
+DateTime returnDate = bookingDate;
+FirebaseFirestore db = FirebaseFirestore.instance;
 
 class UpdateData extends StatefulWidget {
   final Map initialDetail;
@@ -25,10 +29,12 @@ class UpdateData extends StatefulWidget {
 
 class _UpdateDataState extends State<UpdateData> {
   int branch = 0;
+  int initialBranch = 0;
   Map initialDetail;
   String showDate = "Not Get Yet";
   bool change = false;
   int regNo = 0;
+  int initialRegNo = 0;
   int coatVal = 0,
       pentVal = 0,
       shirtVal = 0,
@@ -46,6 +52,7 @@ class _UpdateDataState extends State<UpdateData> {
       achkanList = [],
       othersList = [];
 
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   _UpdateDataState({this.initialDetail});
   @override
   void initState() {
@@ -54,17 +61,19 @@ class _UpdateDataState extends State<UpdateData> {
   }
 
   void initialData() {
+    change = false;
     if (initialDetail.containsKey("branch")) {
-      branch = initialDetail["branch"];
+      initialBranch = initialDetail["branch"];
+      branch = initialBranch;
     }
     if (initialDetail.containsKey('regNo')) {
-      regNo = initialDetail['regNo'];
+      initialRegNo = initialDetail['regNo'];
+      regNo = initialRegNo;
     }
     if (initialDetail.containsKey("returnDate") &&
         initialDetail['returnDate'] != null) {
       returnDate = initialDetail['returnDate'];
-      showDate =
-          "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
+      showDate = "${returnDate.day}-${returnDate.month}-${returnDate.year}";
     }
     if (initialDetail.containsKey('coat')) {
       coatVal = initialDetail['coat']['count'];
@@ -137,11 +146,14 @@ class _UpdateDataState extends State<UpdateData> {
         );
       },
     );
-    if (picked != null)
-      setState(() {
-        returnDate = picked;
-        showDate = "${returnDate.day}-${returnDate.month}-${returnDate.year}";
-      });
+    if (picked != null) {
+      if (picked.day != returnDate.day ||
+          picked.month != returnDate.month ||
+          picked.year != returnDate.month) change = true;
+      returnDate = picked;
+      showDate = "${returnDate.day}-${returnDate.month}-${returnDate.year}";
+      setState(() {});
+    }
   }
 
   Future changeRegNo() async {
@@ -233,9 +245,12 @@ class _UpdateDataState extends State<UpdateData> {
                             margin: EdgeInsets.all(10),
                             child: RaisedButton(
                               onPressed: () {
+                                if (regNo != tempRegNo ||
+                                    branch != tempbranch) {
+                                  change = true;
+                                }
                                 regNo = tempRegNo;
                                 branch = tempbranch;
-                                print(regNo);
                                 Navigator.pop(context);
                               },
                               child: Center(
@@ -254,30 +269,248 @@ class _UpdateDataState extends State<UpdateData> {
         });
   }
 
+  addProduct(bool newRegNo, var path, int count, List statusList) {
+    if ((newRegNo == true && count > 0) || (newRegNo == false)) {
+      path.doc("$regNo").get().then((snapShot) => {
+            if (snapShot.exists)
+              {
+                if (newRegNo == false)
+                  {
+                    if (count > 0)
+                      {
+                        path.doc("$regNo").update({
+                          "regNo": regNo,
+                          "count": count,
+                          "isComplete": false,
+                          "return": returnDate,
+                          "status": statusList,
+                        }),
+                      }
+                    else
+                      {
+                        path.doc('$regNo').delete(),
+                      }
+                  }
+                else
+                  {
+                    print('This Register Number already Exists!'),
+                  }
+              }
+            else
+              {
+                if (count > 0)
+                  {
+                    path.doc("$regNo").set({
+                      "regNo": regNo,
+                      "count": count,
+                      "isComplete": false,
+                      "return": returnDate,
+                      "status": statusList,
+                    }),
+                  }
+              }
+          });
+    }
+  }
+
+  Future onSave() async {
+    bool newRegNo = false;
+    if (regNo == null ||
+        regNo <= 0 ||
+        regNo > 100000 ||
+        (coatVal == 0 &&
+            pentVal == 0 &&
+            shirtVal == 0 &&
+            jacketVal == 0 &&
+            kurtaVal == 0 &&
+            pajamaVal == 0 &&
+            achkanVal == 0 &&
+            othersVal == 0)) {
+      SnackBar snackBar = SnackBar(
+        content: Text("Entry format is not correct!"),
+      );
+      _scaffoldKey.currentState.showSnackBar(snackBar);
+      Timer(Duration(seconds: 1), () {});
+      return;
+    }
+
+    if (initialRegNo != regNo || initialBranch != branch) {
+      await deleteDataOf(initialRegNo, initialBranch);
+      print('yes it new reg No.');
+      newRegNo = true;
+    }
+
+    var regPath = db
+        .collection("company")
+        .doc(branch == 0 ? "branchA" : "branchB")
+        .collection("register");
+    var products = db
+        .collection("company")
+        .doc(branch == 0 ? "branchA" : "branchB")
+        .collection("products")
+        .doc("products");
+    var coatPath = products.collection("coat");
+    var pentPath = products.collection("pent");
+    var shirtPath = products.collection("shirt");
+    var achkanPath = products.collection("achkan");
+    var jacketPath = products.collection("jacket");
+    var kurtaPath = products.collection("kurta");
+    var pajamaPath = products.collection("pajama");
+    var otherPath = products.collection("others");
+    int check = 0; //to check duplicity of register number
+    await regPath.doc("$regNo").get().then((snapShot) => {
+          if (snapShot.exists)
+            {
+              if (newRegNo == true)
+                {
+                  check++,
+                  print("doc already exists"),
+                }
+              else
+                {
+                  regPath.doc("$regNo").update({
+                    "regNo": regNo,
+                    "returnDate": returnDate,
+                    if (coatVal > 0) "coat": coatVal,
+                    if (pentVal > 0) "pent": pentVal,
+                    if (shirtVal > 0) "shirt": shirtVal,
+                    if (jacketVal > 0) "jacket": jacketVal,
+                    if (kurtaVal > 0) "kurta": kurtaVal,
+                    if (pajamaVal > 0) "pajama": pajamaVal,
+                    if (achkanVal > 0) "achkan": achkanVal,
+                    if (othersVal > 0) "others": othersVal,
+                    "isComplete": false
+                  }),
+                }
+            }
+          else
+            {
+              regPath.doc("$regNo").set({
+                "regNo": regNo,
+                "bookingDate": bookingDate,
+                "returnDate": returnDate,
+                if (coatVal > 0) "coat": coatVal,
+                if (pentVal > 0) "pent": pentVal,
+                if (shirtVal > 0) "shirt": shirtVal,
+                if (jacketVal > 0) "jacket": jacketVal,
+                if (kurtaVal > 0) "kurta": kurtaVal,
+                if (pajamaVal > 0) "pajama": pajamaVal,
+                if (achkanVal > 0) "achkan": achkanVal,
+                if (othersVal > 0) "others": othersVal,
+                "isComplete": false
+              })
+            },
+          if (snapShot.exists == false || newRegNo == false)
+            {
+              addProduct(newRegNo, coatPath, coatVal, coatList),
+              addProduct(newRegNo, pentPath, pentVal, pentList),
+              addProduct(newRegNo, shirtPath, shirtVal, shirtList),
+              addProduct(newRegNo, jacketPath, jacketVal, jacketList),
+              addProduct(newRegNo, kurtaPath, kurtaVal, kurtaList),
+              addProduct(newRegNo, pajamaPath, pajamaVal, pajamaList),
+              addProduct(newRegNo, achkanPath, achkanVal, achkanList),
+              addProduct(newRegNo, otherPath, othersVal, othersList),
+            },
+          print("done")
+        });
+    if (check == 0) {
+      SnackBar snackBar = SnackBar(
+        content: Text(AppLocalizations.of(context).translate("save_detail_of") +
+            " ${regNo.toString()}"),
+      );
+      _scaffoldKey.currentState.showSnackBar(snackBar);
+      Timer(Duration(seconds: 1), () {
+        Navigator.pop(context, regNo.toString());
+      });
+    } else {
+      Toast.show(AppLocalizations.of(context).translate("regNo_exist"), context,
+          duration: Toast.LENGTH_SHORT, gravity: Toast.CENTER);
+    }
+    await Future.delayed(Duration(seconds: 2));
+  }
+
   @override
   Widget build(BuildContext parentContext) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
-          "Update Detials",
+          "Update",
         ), //Text(AppLocalizations.of(context).translate("t_return_today")),
         actions: [
           GestureDetector(
+            onTap: () async {
+              bool deleted = false;
+              await showDialog(
+                  context: context,
+                  child: AlertDialog(
+                    content: Container(
+                      height: 200,
+                      width: 300,
+                      child: ListView(
+                        children: [
+                          Text(
+                              'This will permanently delete all the details of: '),
+                          Text(
+                            (branch == 0 ? "A" : "B") + ' $regNo ',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 20),
+                          Text('Press Delete to proceed.'),
+                          SizedBox(height: 20),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 10, right: 10),
+                                  child: RaisedButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text('BACK'),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 10, right: 10),
+                                  child: RaisedButton(
+                                    onPressed: () async {
+                                      await deleteDataOf(regNo, branch);
+                                      deleted = true;
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text('DELETE'),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ));
+              if (deleted == true) {
+                Navigator.pop(context);
+              }
+            },
+            child: Container(
+                margin: EdgeInsets.only(right: 40),
+                child: Icon(Icons.delete_forever)),
+          ),
+          GestureDetector(
             onTap: () {
-              setState(() {
-                initialData();
-                setState(() {});
-              });
+              initialData();
+              setState(() {});
             },
             child: Container(
                 margin: EdgeInsets.only(right: 40), child: Icon(Icons.restore)),
           ),
           GestureDetector(
-            onTap: () {
-              setState(() {
-                initialData();
-                setState(() {});
-              });
+            onTap: () async {
+              await onSave();
             },
             child: Container(
                 margin: EdgeInsets.only(right: 20),
@@ -370,7 +603,6 @@ class _UpdateDataState extends State<UpdateData> {
                                     },
                                     child: Icon(
                                       Icons.date_range,
-                                      //color: Colors.amber,
                                     )),
                               ),
                             ),
@@ -391,12 +623,7 @@ class _UpdateDataState extends State<UpdateData> {
                                 children: [
                                   Row(
                                     children: [
-                                      SvgPicture.asset(
-                                        'assets/images/coat.svg',
-                                        height: 25,
-                                        width: 25,
-                                        color: Colors.amber,
-                                      ),
+                                      buildSvgPicture('coat', Colors.amber),
                                       SizedBox(
                                         width: 10,
                                       ),
@@ -415,6 +642,7 @@ class _UpdateDataState extends State<UpdateData> {
                                         icon: Icons.remove,
                                         perform: () {
                                           if (coatVal > 1) {
+                                            change = true;
                                             coatVal--;
                                             coatList.removeLast();
                                             setState(() {});
@@ -429,6 +657,7 @@ class _UpdateDataState extends State<UpdateData> {
                                       UpdateValueButton(
                                         icon: Icons.add,
                                         perform: () {
+                                          change = true;
                                           coatVal++;
                                           coatList.add('uncut');
                                           setState(() {});
@@ -438,6 +667,7 @@ class _UpdateDataState extends State<UpdateData> {
                                       SizedBox(width: 30),
                                       GestureDetector(
                                         onTap: () {
+                                          change = true;
                                           coatVal = 0;
                                           coatList.clear();
                                           setState(() {});
@@ -482,8 +712,11 @@ class _UpdateDataState extends State<UpdateData> {
                                                   );
                                                 }).toList(),
                                                 onChanged: (value) {
-                                                  coatList[i] = value;
-                                                  setState(() {});
+                                                  if (coatList[i] != value) {
+                                                    change = true;
+                                                    coatList[i] = value;
+                                                    setState(() {});
+                                                  }
                                                 }),
                                           ),
                                         ],
@@ -503,16 +736,13 @@ class _UpdateDataState extends State<UpdateData> {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
+                                      change = true;
                                       coatVal = 1;
                                       coatList = ['uncut'];
                                       setState(() {});
                                     },
-                                    child: SvgPicture.asset(
-                                      'assets/images/coat.svg',
-                                      height: 25,
-                                      width: 25,
-                                      color: Colors.black38,
-                                    ),
+                                    child:
+                                        buildSvgPicture('coat', Colors.black38),
                                   ),
                                   SizedBox(
                                     width: 10,
@@ -541,12 +771,7 @@ class _UpdateDataState extends State<UpdateData> {
                                 children: [
                                   Row(
                                     children: [
-                                      SvgPicture.asset(
-                                        'assets/images/pent.svg',
-                                        height: 25,
-                                        width: 25,
-                                        color: Colors.amber,
-                                      ),
+                                      buildSvgPicture('pent', Colors.amber),
                                       SizedBox(
                                         width: 10,
                                       ),
@@ -565,6 +790,7 @@ class _UpdateDataState extends State<UpdateData> {
                                         icon: Icons.remove,
                                         perform: () {
                                           if (pentVal > 1) {
+                                            change = true;
                                             pentVal--;
                                             pentList.removeLast();
                                             setState(() {});
@@ -579,6 +805,7 @@ class _UpdateDataState extends State<UpdateData> {
                                       UpdateValueButton(
                                         icon: Icons.add,
                                         perform: () {
+                                          change = true;
                                           pentVal++;
                                           pentList.add('uncut');
                                           setState(() {});
@@ -587,6 +814,7 @@ class _UpdateDataState extends State<UpdateData> {
                                       SizedBox(width: 30),
                                       GestureDetector(
                                         onTap: () {
+                                          change = true;
                                           pentVal = 0;
                                           pentList.clear();
                                           setState(() {});
@@ -631,8 +859,11 @@ class _UpdateDataState extends State<UpdateData> {
                                                   );
                                                 }).toList(),
                                                 onChanged: (value) {
-                                                  pentList[i] = value;
-                                                  setState(() {});
+                                                  if (pentList[i] != value) {
+                                                    change = true;
+                                                    pentList[i] = value;
+                                                    setState(() {});
+                                                  }
                                                 }),
                                           ),
                                         ],
@@ -652,16 +883,13 @@ class _UpdateDataState extends State<UpdateData> {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
+                                      change = true;
                                       pentVal = 1;
                                       pentList = ['uncut'];
                                       setState(() {});
                                     },
-                                    child: SvgPicture.asset(
-                                      'assets/images/pent.svg',
-                                      height: 25,
-                                      width: 25,
-                                      color: Colors.black38,
-                                    ),
+                                    child:
+                                        buildSvgPicture('pent', Colors.black38),
                                   ),
                                   SizedBox(
                                     width: 10,
@@ -690,12 +918,7 @@ class _UpdateDataState extends State<UpdateData> {
                                 children: [
                                   Row(
                                     children: [
-                                      SvgPicture.asset(
-                                        'assets/images/shirt.svg',
-                                        height: 25,
-                                        width: 25,
-                                        color: Colors.amber,
-                                      ),
+                                      buildSvgPicture('shirt', Colors.amber),
                                       SizedBox(
                                         width: 10,
                                       ),
@@ -714,6 +937,7 @@ class _UpdateDataState extends State<UpdateData> {
                                         icon: Icons.remove,
                                         perform: () {
                                           if (shirtVal > 1) {
+                                            change = true;
                                             shirtVal--;
                                             shirtList.removeLast();
                                             setState(() {});
@@ -728,6 +952,7 @@ class _UpdateDataState extends State<UpdateData> {
                                       UpdateValueButton(
                                         icon: Icons.add,
                                         perform: () {
+                                          change = true;
                                           shirtVal++;
                                           shirtList.add('uncut');
                                           setState(() {});
@@ -736,6 +961,7 @@ class _UpdateDataState extends State<UpdateData> {
                                       SizedBox(width: 30),
                                       GestureDetector(
                                         onTap: () {
+                                          change = true;
                                           shirtVal = 0;
                                           shirtList.clear();
                                           setState(() {});
@@ -780,8 +1006,11 @@ class _UpdateDataState extends State<UpdateData> {
                                                   );
                                                 }).toList(),
                                                 onChanged: (value) {
-                                                  shirtList[i] = value;
-                                                  setState(() {});
+                                                  if (shirtList[i] != value) {
+                                                    change = true;
+                                                    shirtList[i] = value;
+                                                    setState(() {});
+                                                  }
                                                 }),
                                           ),
                                         ],
@@ -801,16 +1030,13 @@ class _UpdateDataState extends State<UpdateData> {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
+                                      change = true;
                                       shirtVal = 1;
                                       shirtList = ['uncut'];
                                       setState(() {});
                                     },
-                                    child: SvgPicture.asset(
-                                      'assets/images/shirt.svg',
-                                      height: 25,
-                                      width: 25,
-                                      color: Colors.black38,
-                                    ),
+                                    child: buildSvgPicture(
+                                        'shirt', Colors.black38),
                                   ),
                                   SizedBox(
                                     width: 10,
@@ -839,12 +1065,7 @@ class _UpdateDataState extends State<UpdateData> {
                                 children: [
                                   Row(
                                     children: [
-                                      SvgPicture.asset(
-                                        'assets/images/jacket.svg',
-                                        height: 25,
-                                        width: 25,
-                                        color: Colors.amber,
-                                      ),
+                                      buildSvgPicture('jacket', Colors.amber),
                                       SizedBox(
                                         width: 10,
                                       ),
@@ -863,6 +1084,7 @@ class _UpdateDataState extends State<UpdateData> {
                                         icon: Icons.remove,
                                         perform: () {
                                           if (jacketVal > 1) {
+                                            change = true;
                                             jacketVal--;
                                             jacketList.removeLast();
                                             setState(() {});
@@ -877,6 +1099,7 @@ class _UpdateDataState extends State<UpdateData> {
                                       UpdateValueButton(
                                         icon: Icons.add,
                                         perform: () {
+                                          change = true;
                                           jacketVal++;
                                           jacketList.add('uncut');
                                           setState(() {});
@@ -885,6 +1108,7 @@ class _UpdateDataState extends State<UpdateData> {
                                       SizedBox(width: 30),
                                       GestureDetector(
                                         onTap: () {
+                                          change = true;
                                           jacketVal = 0;
                                           jacketList.clear();
                                           setState(() {});
@@ -929,8 +1153,11 @@ class _UpdateDataState extends State<UpdateData> {
                                                   );
                                                 }).toList(),
                                                 onChanged: (value) {
-                                                  jacketList[i] = value;
-                                                  setState(() {});
+                                                  if (jacketList[i] != value) {
+                                                    change = true;
+                                                    jacketList[i] = value;
+                                                    setState(() {});
+                                                  }
                                                 }),
                                           ),
                                         ],
@@ -950,16 +1177,13 @@ class _UpdateDataState extends State<UpdateData> {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
+                                      change = true;
                                       jacketVal = 1;
                                       jacketList = ['uncut'];
                                       setState(() {});
                                     },
-                                    child: SvgPicture.asset(
-                                      'assets/images/jacket.svg',
-                                      height: 25,
-                                      width: 25,
-                                      color: Colors.black38,
-                                    ),
+                                    child: buildSvgPicture(
+                                        'jacket', Colors.black38),
                                   ),
                                   SizedBox(
                                     width: 10,
@@ -988,12 +1212,7 @@ class _UpdateDataState extends State<UpdateData> {
                                 children: [
                                   Row(
                                     children: [
-                                      SvgPicture.asset(
-                                        'assets/images/kurta.svg',
-                                        height: 25,
-                                        width: 25,
-                                        color: Colors.amber,
-                                      ),
+                                      buildSvgPicture('kurta', Colors.amber),
                                       SizedBox(
                                         width: 10,
                                       ),
@@ -1012,6 +1231,7 @@ class _UpdateDataState extends State<UpdateData> {
                                         icon: Icons.remove,
                                         perform: () {
                                           if (kurtaVal > 1) {
+                                            change = true;
                                             kurtaVal--;
                                             kurtaList.removeLast();
                                             setState(() {});
@@ -1026,6 +1246,7 @@ class _UpdateDataState extends State<UpdateData> {
                                       UpdateValueButton(
                                         icon: Icons.add,
                                         perform: () {
+                                          change = true;
                                           kurtaVal++;
                                           kurtaList.add('uncut');
                                           setState(() {});
@@ -1034,6 +1255,7 @@ class _UpdateDataState extends State<UpdateData> {
                                       SizedBox(width: 30),
                                       GestureDetector(
                                         onTap: () {
+                                          change = true;
                                           kurtaVal = 0;
                                           kurtaList.clear();
                                           setState(() {});
@@ -1078,8 +1300,11 @@ class _UpdateDataState extends State<UpdateData> {
                                                   );
                                                 }).toList(),
                                                 onChanged: (value) {
-                                                  kurtaList[i] = value;
-                                                  setState(() {});
+                                                  if (kurtaList[i] != value) {
+                                                    change = true;
+                                                    kurtaList[i] = value;
+                                                    setState(() {});
+                                                  }
                                                 }),
                                           ),
                                         ],
@@ -1099,17 +1324,14 @@ class _UpdateDataState extends State<UpdateData> {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
+                                      change = true;
                                       kurtaVal = 1;
                                       kurtaList = ['uncut'];
                                       change = true;
                                       setState(() {});
                                     },
-                                    child: SvgPicture.asset(
-                                      'assets/images/kurta.svg',
-                                      height: 25,
-                                      width: 25,
-                                      color: Colors.black38,
-                                    ),
+                                    child: buildSvgPicture(
+                                        'kurta', Colors.black38),
                                   ),
                                   SizedBox(
                                     width: 10,
@@ -1138,12 +1360,7 @@ class _UpdateDataState extends State<UpdateData> {
                                 children: [
                                   Row(
                                     children: [
-                                      SvgPicture.asset(
-                                        'assets/images/pajama.svg',
-                                        height: 25,
-                                        width: 25,
-                                        color: Colors.amber,
-                                      ),
+                                      buildSvgPicture('pajama', Colors.amber),
                                       SizedBox(
                                         width: 10,
                                       ),
@@ -1162,6 +1379,7 @@ class _UpdateDataState extends State<UpdateData> {
                                         icon: Icons.remove,
                                         perform: () {
                                           if (pajamaVal > 1) {
+                                            change = true;
                                             pajamaVal--;
                                             pajamaList.removeLast();
                                             setState(() {});
@@ -1176,6 +1394,7 @@ class _UpdateDataState extends State<UpdateData> {
                                       UpdateValueButton(
                                         icon: Icons.add,
                                         perform: () {
+                                          change = true;
                                           pajamaVal++;
                                           pajamaList.add('uncut');
                                           setState(() {});
@@ -1185,6 +1404,7 @@ class _UpdateDataState extends State<UpdateData> {
                                       SizedBox(width: 30),
                                       GestureDetector(
                                         onTap: () {
+                                          change = true;
                                           pajamaVal = 0;
                                           pajamaList.clear();
                                           setState(() {});
@@ -1229,8 +1449,11 @@ class _UpdateDataState extends State<UpdateData> {
                                                   );
                                                 }).toList(),
                                                 onChanged: (value) {
-                                                  pajamaList[i] = value;
-                                                  setState(() {});
+                                                  if (pajamaList[i] != value) {
+                                                    change = true;
+                                                    pajamaList[i] = value;
+                                                    setState(() {});
+                                                  }
                                                 }),
                                           ),
                                         ],
@@ -1250,17 +1473,14 @@ class _UpdateDataState extends State<UpdateData> {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
+                                      change = true;
                                       pajamaVal = 1;
                                       pajamaList = ['uncut'];
                                       change = false;
                                       setState(() {});
                                     },
-                                    child: SvgPicture.asset(
-                                      'assets/images/pajama.svg',
-                                      height: 25,
-                                      width: 25,
-                                      color: Colors.black38,
-                                    ),
+                                    child: buildSvgPicture(
+                                        'pajama', Colors.black38),
                                   ),
                                   SizedBox(
                                     width: 10,
@@ -1289,12 +1509,7 @@ class _UpdateDataState extends State<UpdateData> {
                                 children: [
                                   Row(
                                     children: [
-                                      SvgPicture.asset(
-                                        'assets/images/achkan.svg',
-                                        height: 25,
-                                        width: 25,
-                                        color: Colors.amber,
-                                      ),
+                                      buildSvgPicture('achkan', Colors.amber),
                                       SizedBox(
                                         width: 10,
                                       ),
@@ -1313,6 +1528,7 @@ class _UpdateDataState extends State<UpdateData> {
                                         icon: Icons.remove,
                                         perform: () {
                                           if (achkanVal > 1) {
+                                            change = true;
                                             achkanVal--;
                                             achkanList.removeLast();
                                             setState(() {});
@@ -1327,6 +1543,7 @@ class _UpdateDataState extends State<UpdateData> {
                                       UpdateValueButton(
                                         icon: Icons.add,
                                         perform: () {
+                                          change = true;
                                           achkanVal++;
                                           achkanList.add('uncut');
                                           setState(() {});
@@ -1335,6 +1552,7 @@ class _UpdateDataState extends State<UpdateData> {
                                       SizedBox(width: 30),
                                       GestureDetector(
                                         onTap: () {
+                                          change = true;
                                           achkanVal = 0;
                                           achkanList.clear();
                                           setState(() {});
@@ -1379,8 +1597,11 @@ class _UpdateDataState extends State<UpdateData> {
                                                   );
                                                 }).toList(),
                                                 onChanged: (value) {
-                                                  achkanList[i] = value;
-                                                  setState(() {});
+                                                  if (achkanList[i] != value) {
+                                                    change = true;
+                                                    achkanList[i] = value;
+                                                    setState(() {});
+                                                  }
                                                 }),
                                           ),
                                         ],
@@ -1400,16 +1621,13 @@ class _UpdateDataState extends State<UpdateData> {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
+                                      change = true;
                                       achkanVal = 1;
                                       achkanList = ['uncut'];
                                       setState(() {});
                                     },
-                                    child: SvgPicture.asset(
-                                      'assets/images/achkan.svg',
-                                      height: 25,
-                                      width: 25,
-                                      color: Colors.black38,
-                                    ),
+                                    child: buildSvgPicture(
+                                        'achkan', Colors.black38),
                                   ),
                                   SizedBox(
                                     width: 10,
@@ -1438,12 +1656,7 @@ class _UpdateDataState extends State<UpdateData> {
                                 children: [
                                   Row(
                                     children: [
-                                      SvgPicture.asset(
-                                        'assets/images/others.svg',
-                                        height: 25,
-                                        width: 25,
-                                        color: Colors.amber,
-                                      ),
+                                      buildSvgPicture('others', Colors.amber),
                                       SizedBox(
                                         width: 10,
                                       ),
@@ -1462,6 +1675,7 @@ class _UpdateDataState extends State<UpdateData> {
                                         icon: Icons.remove,
                                         perform: () {
                                           if (othersVal > 1) {
+                                            change = true;
                                             othersVal--;
                                             othersList.removeLast();
                                             setState(() {});
@@ -1476,6 +1690,7 @@ class _UpdateDataState extends State<UpdateData> {
                                       UpdateValueButton(
                                         icon: Icons.add,
                                         perform: () {
+                                          change = true;
                                           othersVal++;
                                           othersList.add('uncut');
                                           setState(() {});
@@ -1484,6 +1699,7 @@ class _UpdateDataState extends State<UpdateData> {
                                       SizedBox(width: 30),
                                       GestureDetector(
                                         onTap: () {
+                                          change = true;
                                           othersVal = 0;
                                           othersList.clear();
                                           setState(() {});
@@ -1528,6 +1744,8 @@ class _UpdateDataState extends State<UpdateData> {
                                                   );
                                                 }).toList(),
                                                 onChanged: (value) {
+                                                  if (othersList[i] != value)
+                                                    change = true;
                                                   othersList[i] = value;
                                                   setState(() {});
                                                 }),
@@ -1549,16 +1767,13 @@ class _UpdateDataState extends State<UpdateData> {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
+                                      change = true;
                                       othersVal = 1;
                                       othersList = ['uncut'];
                                       setState(() {});
                                     },
-                                    child: SvgPicture.asset(
-                                      'assets/images/others.svg',
-                                      height: 25,
-                                      width: 25,
-                                      color: Colors.black38,
-                                    ),
+                                    child: buildSvgPicture(
+                                        'others', Colors.black38),
                                   ),
                                   SizedBox(
                                     width: 10,
@@ -1587,150 +1802,14 @@ class _UpdateDataState extends State<UpdateData> {
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
-                  if (coatVal > 0)
-                    Container(
-                      margin: EdgeInsets.only(right: 20),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(
-                            'assets/images/coat.svg',
-                            height: 25,
-                            width: 25,
-                            color: Colors.white,
-                          ),
-                          Text(
-                            "$coatVal",
-                            style: TextStyle(fontSize: 22, color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                  if (pentVal > 0)
-                    Container(
-                      margin: EdgeInsets.only(right: 20),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(
-                            'assets/images/pent.svg',
-                            height: 25,
-                            width: 25,
-                            color: Colors.white,
-                          ),
-                          Text(
-                            "$pentVal",
-                            style: TextStyle(fontSize: 22, color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                  if (shirtVal > 0)
-                    Container(
-                      margin: EdgeInsets.only(right: 20),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(
-                            'assets/images/shirt.svg',
-                            height: 25,
-                            width: 25,
-                            color: Colors.white,
-                          ),
-                          Text(
-                            "$shirtVal",
-                            style: TextStyle(fontSize: 22, color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                  if (jacketVal > 0)
-                    Container(
-                      margin: EdgeInsets.only(right: 20),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(
-                            'assets/images/jacket.svg',
-                            height: 25,
-                            width: 25,
-                            color: Colors.white,
-                          ),
-                          Text(
-                            "$jacketVal",
-                            style: TextStyle(fontSize: 22, color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                  if (kurtaVal > 0)
-                    Container(
-                      margin: EdgeInsets.only(right: 20),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(
-                            'assets/images/kurta.svg',
-                            height: 25,
-                            width: 25,
-                            color: Colors.white,
-                          ),
-                          Text(
-                            "$kurtaVal",
-                            style: TextStyle(fontSize: 22, color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                  if (pajamaVal > 0)
-                    Container(
-                      margin: EdgeInsets.only(right: 20),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(
-                            'assets/images/pajama.svg',
-                            height: 25,
-                            width: 25,
-                            color: Colors.white,
-                          ),
-                          Text(
-                            "$pajamaVal",
-                            style: TextStyle(fontSize: 22, color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                  if (achkanVal > 0)
-                    Container(
-                      margin: EdgeInsets.only(right: 20),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(
-                            'assets/images/achkan.svg',
-                            height: 25,
-                            width: 25,
-                            color: Colors.white,
-                          ),
-                          Text(
-                            "$achkanVal",
-                            style: TextStyle(fontSize: 22, color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                  if (othersVal > 0)
-                    Container(
-                      margin: EdgeInsets.only(right: 20),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(
-                            'assets/images/others.svg',
-                            height: 25,
-                            width: 25,
-                            color: Colors.white,
-                          ),
-                          Text(
-                            "$othersVal",
-                            style: TextStyle(fontSize: 22, color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
+                  if (coatVal > 0) buildBottomItemBar('coat', coatVal),
+                  if (pentVal > 0) buildBottomItemBar('pent', pentVal),
+                  if (shirtVal > 0) buildBottomItemBar('shirt', shirtVal),
+                  if (jacketVal > 0) buildBottomItemBar('jacket', jacketVal),
+                  if (kurtaVal > 0) buildBottomItemBar('kurta', kurtaVal),
+                  if (pajamaVal > 0) buildBottomItemBar('pajama', pajamaVal),
+                  if (achkanVal > 0) buildBottomItemBar('achkan', achkanVal),
+                  if (othersVal > 0) buildBottomItemBar('others', othersVal),
                 ],
               ),
             ),
@@ -1739,35 +1818,28 @@ class _UpdateDataState extends State<UpdateData> {
       ),
     );
   }
+
+  Container buildBottomItemBar(String item, int value) {
+    return Container(
+      margin: EdgeInsets.only(right: 20),
+      child: Row(
+        children: [
+          buildSvgPicture(item, Colors.white),
+          Text(
+            "$value",
+            style: TextStyle(fontSize: 22, color: Colors.white),
+          ),
+        ],
+      ),
+    );
+  }
+
+  SvgPicture buildSvgPicture(String item, Color color) {
+    return SvgPicture.asset(
+      'assets/images/$item.svg',
+      height: 25,
+      width: 25,
+      color: color,
+    );
+  }
 }
-
-/*
-
-TextFormField(
-                          validator: (val) {
-                            if (val.trim().isEmpty)
-                              return AppLocalizations.of(context)
-                                  .translate("must_not_empty");
-                            else if (val.trim().length > 6)
-                              return AppLocalizations.of(context)
-                                  .translate("wrong_entry");
-                            else
-                              return null;
-                          },
-                          onChanged: (val) => () {},
-                          initialValue: initialDetail['regNo'].toString(),
-                          decoration: InputDecoration(
-                            contentPadding:
-                                EdgeInsets.only(left: 10, right: 10),
-                            labelStyle: TextStyle(fontSize: 15.0),
-                            hintText: AppLocalizations.of(context)
-                                .translate("reg_no_full"),
-                          ),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
-                          keyboardType: TextInputType.number,
-                          style: TextStyle(fontSize: 25),
-                        ),
-
-*/

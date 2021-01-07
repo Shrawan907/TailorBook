@@ -20,6 +20,7 @@ class SearchResult extends StatefulWidget {
   final int regNo;
   final int branch;
   SearchResult({this.regNo, this.branch});
+
   @override
   _SearchResultState createState() =>
       _SearchResultState(regNo: this.regNo, branch: this.branch);
@@ -30,6 +31,8 @@ class _SearchResultState extends State<SearchResult> {
   final int branch;
   String showDate = '...';
   _SearchResultState({this.regNo, this.branch});
+
+  bool waiting = true;
   @override
   void initState() {
     super.initState();
@@ -38,6 +41,7 @@ class _SearchResultState extends State<SearchResult> {
 
   void initialData() async {
     await fetchInfo();
+    waiting = false;
     setState(() {});
   }
 
@@ -66,20 +70,28 @@ class _SearchResultState extends State<SearchResult> {
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 30),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => UpdateData(initialDetail: info)));
-              },
-              child: Center(
-                child: Icon(Icons.edit),
-              ),
-            ),
+            child: waiting == false
+                ? GestureDetector(
+                    onTap: () {
+                      if (info.isNotEmpty) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    UpdateData(initialDetail: info)));
+                      } else {
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: Center(
+                      child: Icon(Icons.edit),
+                    ),
+                  )
+                : Container(),
           ),
           GestureDetector(
             onTap: () {
+              if (info.isNotEmpty) waiting = false;
               setState(() {});
             },
             child: Container(
@@ -87,53 +99,64 @@ class _SearchResultState extends State<SearchResult> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.all(20),
-          child: info.isEmpty || info.containsKey("no_detail")
-              ? Center(
-                  child: Container(
-                    margin: EdgeInsets.all(20),
-                    child: Text(info.isEmpty
-                        ? AppLocalizations.of(context).translate("please_wait")
-                        : "Entry with given Register Number is not exist!"),
-                  ),
-                )
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: 40,
-                      decoration: BoxDecoration(
-                        border: Border(
-                            bottom: BorderSide(width: 2, color: Colors.amber)),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await fetchInfo();
+          setState(() {});
+        },
+        child: ListView(
+          children: [
+            Container(
+              padding: EdgeInsets.all(20),
+              child: waiting == true
+                  ? Center(
+                      child: Container(
+                        margin: EdgeInsets.all(20),
+                        child: Text(info.isEmpty
+                            ? AppLocalizations.of(context)
+                                .translate("please_wait")
+                            : "Entry with given Register Number is not exist!"),
                       ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                              child: Text(
-                                  AppLocalizations.of(context)
-                                          .translate("reg_no") +
-                                      ":" +
-                                      "$regNo",
-                                  style: TextStyle(fontSize: 25))),
-                          Expanded(
-                              child: Text(showDate,
-                                  style: TextStyle(fontSize: 20))),
-                        ],
-                      ),
+                    )
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: 40,
+                          decoration: BoxDecoration(
+                            border: Border(
+                                bottom:
+                                    BorderSide(width: 2, color: Colors.amber)),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                  child: Text(
+                                      AppLocalizations.of(context)
+                                              .translate("reg_no") +
+                                          " $regNo",
+                                      style: TextStyle(
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold))),
+                              Expanded(
+                                  child: Text(showDate,
+                                      style: TextStyle(fontSize: 20))),
+                            ],
+                          ),
+                        ),
+                        if (info.containsKey("coat")) dataContainer("coat"),
+                        if (info.containsKey("jacket")) dataContainer("jacket"),
+                        if (info.containsKey("pent")) dataContainer("pent"),
+                        if (info.containsKey("shirt")) dataContainer("shirt"),
+                        if (info.containsKey("kurta")) dataContainer("kurta"),
+                        if (info.containsKey("pajama")) dataContainer("pajama"),
+                        if (info.containsKey("achkan")) dataContainer("achkan"),
+                        if (info.containsKey("others")) dataContainer("others"),
+                      ],
                     ),
-                    if (info.containsKey("coat")) dataContainer("coat"),
-                    if (info.containsKey("jacket")) dataContainer("jacket"),
-                    if (info.containsKey("pent")) dataContainer("pent"),
-                    if (info.containsKey("shirt")) dataContainer("shirt"),
-                    if (info.containsKey("kurta")) dataContainer("kurta"),
-                    if (info.containsKey("pajama")) dataContainer("pajama"),
-                    if (info.containsKey("achkan")) dataContainer("achkan"),
-                    if (info.containsKey("others")) dataContainer("others"),
-                  ],
-                ),
+            ),
+          ],
         ),
       ),
     );

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:io';
 
+import 'package:TailorsBook/screens/book_screen.dart';
 import 'package:TailorsBook/screens/data_today.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -229,9 +230,6 @@ Future<Map> fetchDetail(int regNo, int branch) async {
     see(path, temp, "others", regNo);
   });
   await Future.delayed(Duration(seconds: 2));
-  if (info.isEmpty) {
-    info["no_detail"] = true;
-  }
   return info;
 }
 
@@ -721,4 +719,54 @@ Future cutItem(int regNo, String item, int branch, int count) async {
     }
     itemPath.doc("$regNo").update({"status": temp});
   }
+}
+
+// delete all the data of given Register Number
+Future deleteDataOf(int regNo, int branch) async {
+  Map temp;
+  var registerPath = db
+      .collection("company")
+      .doc(branch == 0 ? "branchA" : "branchB")
+      .collection("register");
+  var products = db
+      .collection("company")
+      .doc(branch == 0 ? "branchA" : "branchB")
+      .collection("products")
+      .doc("products");
+  var coatPath = products.collection("coat");
+  var pentPath = products.collection("pent");
+  var shirtPath = products.collection("shirt");
+  var achkanPath = products.collection("achkan");
+  var jacketPath = products.collection("jacket");
+  var kurtaPath = products.collection("kurta");
+  var pajamaPath = products.collection("pajama");
+  var othersPath = products.collection("others");
+
+  coatPath.doc('$regNo').get().then((snapShot) => {
+        if (snapShot.exists) {coatPath.doc('$regNo').delete()}
+      });
+  pentPath.doc('$regNo').get().then((snapShot) => {
+        if (snapShot.exists) {pentPath.doc('$regNo').delete()}
+      });
+  shirtPath.doc('$regNo').get().then((snapShot) => {
+        if (snapShot.exists) {shirtPath.doc('$regNo').delete()}
+      });
+  jacketPath.doc('$regNo').get().then((snapShot) => {
+        if (snapShot.exists) {jacketPath.doc('$regNo').delete()}
+      });
+  kurtaPath.doc('$regNo').get().then((snapShot) => {
+        if (snapShot.exists) {kurtaPath.doc('$regNo').delete()}
+      });
+  pajamaPath.doc('$regNo').get().then((snapShot) => {
+        if (snapShot.exists) {pajamaPath.doc('$regNo').delete()}
+      });
+  achkanPath.doc('$regNo').get().then((snapShot) => {
+        if (snapShot.exists) {achkanPath.doc('$regNo').delete()}
+      });
+  othersPath.doc('$regNo').get().then((snapShot) => {
+        if (snapShot.exists) {othersPath.doc('$regNo').delete()}
+      });
+  registerPath.doc('$regNo').get().then((snapShot) => {
+        if (snapShot.exists) {registerPath.doc('$regNo').delete()}
+      });
 }
