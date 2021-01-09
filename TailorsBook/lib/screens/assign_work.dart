@@ -7,13 +7,18 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 class AssignWork extends StatefulWidget {
+  final String name="okay";
   @override
-  _AssignWorkState createState() => _AssignWorkState();
+  _AssignWorkState createState() => _AssignWorkState(name: this.name);
 }
 
 List items = [];
 
 class _AssignWorkState extends State<AssignWork> {
+
+  String name="okayyy";         //we call name of team member here
+  _AssignWorkState({this.name});
+
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _textController = new TextEditingController();
   int branch = 0;
@@ -26,7 +31,7 @@ class _AssignWorkState extends State<AssignWork> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Name"), //$$$fetch
+        title: Text("$name"), //$$$fetch
       ),
       body: SizedBox(
         height: MediaQuery.of(context).size.height,

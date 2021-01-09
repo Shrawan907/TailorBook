@@ -93,7 +93,7 @@ class _TeamMembersState extends State<TeamMembers> {
               height: 150,
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: teamB.length,
+                  itemCount: teamA.length,
                   itemBuilder: (context, index) {
                     return PersonInfo(
                       name: teamA[index]['name'],
