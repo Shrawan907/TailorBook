@@ -78,7 +78,7 @@ class _CuttingState extends State<Cutting> {
     return Scaffold(
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
-        title: Text(item),
+        title: Text(AppLocalizations.of(context).translate(item)),
         actions: <Widget>[
           searchBar
               ? Container(

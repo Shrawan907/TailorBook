@@ -10,6 +10,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
 import 'package:TailorsBook/locale/app_localization.dart';
 
+import '../locale/app_localization.dart';
+
 int reqCount = 0;
 
 class NavDrawer extends StatefulWidget {
@@ -141,7 +143,7 @@ class _NavDrawerState extends State<NavDrawer> {
             leading: Icon(Icons.group_add),
             title: Row(
               children: [
-                Text("Requests"),
+                Text(AppLocalizations.of(context).translate("requests")),
                 SizedBox(width: 5),
                 if (reqCount > 0)
                   Text(

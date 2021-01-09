@@ -15,6 +15,8 @@ import 'package:TailorsBook/screens/on_working.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../locale/app_localization.dart';
+
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
 List todayData = [];
@@ -33,7 +35,7 @@ class _CutHomeState extends State<CutHome> {
       backgroundColor: Colors.blue[200],
       drawer: NavDrawer(),
       appBar: AppBar(
-        title: Text("Cutting Register"),
+        title: Text(AppLocalizations.of(context).translate("cutting_register")),
         centerTitle: true,
       ),
       body: ListView(
@@ -66,7 +68,7 @@ class _CutHomeState extends State<CutHome> {
                       ),
                       Expanded(
                         child: Text(
-                          "COAT",
+                          AppLocalizations.of(context).translate("coat"),
                           style: TextStyle(
                               fontSize: 30, fontWeight: FontWeight.w500),
                         ),
@@ -105,7 +107,7 @@ class _CutHomeState extends State<CutHome> {
                       ),
                       Expanded(
                         child: Text(
-                          "PENT",
+                          AppLocalizations.of(context).translate("pent"),
                           style: TextStyle(
                               fontSize: 30, fontWeight: FontWeight.w500),
                         ),
@@ -144,7 +146,7 @@ class _CutHomeState extends State<CutHome> {
                       ),
                       Expanded(
                         child: Text(
-                          "SHIRT",
+                          AppLocalizations.of(context).translate("shirt"),
                           style: TextStyle(
                               fontSize: 30, fontWeight: FontWeight.w500),
                         ),
@@ -183,7 +185,7 @@ class _CutHomeState extends State<CutHome> {
                       ),
                       Expanded(
                         child: Text(
-                          "JACKET",
+                          AppLocalizations.of(context).translate("jacket"),
                           style: TextStyle(
                               fontSize: 30, fontWeight: FontWeight.w500),
                         ),
@@ -222,7 +224,7 @@ class _CutHomeState extends State<CutHome> {
                       ),
                       Expanded(
                         child: Text(
-                          "KURTA",
+                          AppLocalizations.of(context).translate("kurta"),
                           style: TextStyle(
                               fontSize: 30, fontWeight: FontWeight.w500),
                         ),
@@ -261,7 +263,7 @@ class _CutHomeState extends State<CutHome> {
                       ),
                       Expanded(
                         child: Text(
-                          "PAJAMA",
+                          AppLocalizations.of(context).translate("pajama"),
                           style: TextStyle(
                               fontSize: 30, fontWeight: FontWeight.w500),
                         ),
@@ -300,7 +302,7 @@ class _CutHomeState extends State<CutHome> {
                       ),
                       Expanded(
                         child: Text(
-                          "ACHKAN",
+                          AppLocalizations.of(context).translate("achkan"),
                           style: TextStyle(
                               fontSize: 30, fontWeight: FontWeight.w500),
                         ),
@@ -340,7 +342,7 @@ class _CutHomeState extends State<CutHome> {
                       ),
                       Expanded(
                         child: Text(
-                          "OTHERS",
+                          AppLocalizations.of(context).translate("others"),
                           style: TextStyle(
                               fontSize: 30, fontWeight: FontWeight.w500),
                         ),

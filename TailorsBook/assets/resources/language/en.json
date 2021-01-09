@@ -6,6 +6,8 @@
     "n_menu"                :   "Side menu",
     "n_make_company"        :   "Make Team",
     "n_profile"             :   "Profile",
+    "n_name"                :   "Name",
+    "n_phone"               :   "Phone No.",
     "n_logout"              :   "Logout",
     "ch_lang"               :   "Change Language",
     "t_return_today"        :   "Today",
@@ -31,7 +33,7 @@
     "pajama"                :   "PAJAMA",
     "achkan"                :   "ACHKAN",
     "safari"                :   "SAFARI",
-    "other"                 :   "Other",
+    "others"                 :   "Others",
     "return_date"           :   "Return Date",
     "booking_date"          :   "Booking Date",
     "save"                  :   "SAVE",
@@ -62,6 +64,18 @@
     "choudhary_tailors"     :   "CHOUDHARY TAILORS",
     "sunindiashowroom"      :   "SUN INDIA SHOWROOM",
     "no_internet"           :   "No Internet Found",
+    "cut"                   :   "cut",
     "uncut"                 :   "uncut",
-    "incorrent_format"      :   "Entry format is not correct!"
+    "incorrent_format"      :   "Entry format is not correct!",
+    "requests"              :   "Requests",
+    "accept"                :   "Accept",
+    "decline"               :   "Decline",
+    "back"                  :   "BACK",
+    "notice_change_reg"     :   "This Will Change Reg. No.",
+    "notice_delete_warn"    :   "This will permanently delete all the details of:",
+    "notice_delete"         :   "Press Delete to proceed.",
+    "delete"                :   "DELETE",
+    "cutting_register"      :   "Cutting Register",
+    "total"                 :   "Total"
+
 }

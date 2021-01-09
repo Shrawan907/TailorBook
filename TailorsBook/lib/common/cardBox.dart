@@ -8,6 +8,8 @@ import 'package:TailorsBook/handle_cloud/data_file.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../locale/app_localization.dart';
+
 class CardBox extends StatelessWidget {
   final int regNo;
   final bool isComplete;
@@ -195,11 +197,11 @@ class PersonInfo extends StatelessWidget {
 
   PersonInfo(
       {this.name,
-        this.image,
-        this.onPressed,
-        this.color,
-        this.profile,
-        this.phoneNo});
+      this.image,
+      this.onPressed,
+      this.color,
+      this.profile,
+      this.phoneNo});
 
   @override
   Widget build(BuildContext context) {
@@ -234,15 +236,15 @@ class PersonInfo extends StatelessWidget {
               child: Column(
                 children: [
                   Expanded(
-                    //this.image,
+                      //this.image,
                       child: Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: image,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      )),
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: image,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  )),
                   Container(
                     color: this.color,
                     height: 40,
@@ -357,11 +359,11 @@ class ProfileCardBox extends StatelessWidget {
 
   const ProfileCardBox(
       {this.regNo,
-        this.isComplete,
-        this.type,
-        this.isColor,
-        this.count,
-        this.profile});
+      this.isComplete,
+      this.type,
+      this.isColor,
+      this.count,
+      this.profile});
 
   @override
   Widget build(BuildContext context) {
@@ -380,39 +382,54 @@ class ProfileCardBox extends StatelessWidget {
                 child: Text(
                   '$regNo',
                   style: TextStyle(
-                    //fontWeight: FontWeight.bold,
+                      //fontWeight: FontWeight.bold,
                       fontSize: 25,
                       color: isComplete ? Colors.black : Colors.blue),
                 ),
               ),
               Expanded(
                 child: type.toLowerCase() == "shirt"
-                    ? Text("$count",
-                  style: TextStyle(fontSize: 20, color: Colors.black54), textAlign: TextAlign.center,)
+                    ? Text(
+                        "$count",
+                        style: TextStyle(fontSize: 20, color: Colors.black54),
+                        textAlign: TextAlign.center,
+                      )
                     : Text(""),
               ),
               Expanded(
                 child: type.toLowerCase() == "kurta"
-                    ? Text("$count",
-                  style: TextStyle(fontSize: 20, color: Colors.black54), textAlign: TextAlign.center,)
+                    ? Text(
+                        "$count",
+                        style: TextStyle(fontSize: 20, color: Colors.black54),
+                        textAlign: TextAlign.center,
+                      )
                     : Text(""),
               ),
               Expanded(
                 child: type.toLowerCase() == "pajama"
-                    ? Text("$count",
-                  style: TextStyle(fontSize: 20, color: Colors.black54), textAlign: TextAlign.center,)
+                    ? Text(
+                        "$count",
+                        style: TextStyle(fontSize: 20, color: Colors.black54),
+                        textAlign: TextAlign.center,
+                      )
                     : Text(""),
               ),
               Expanded(
                 child: type.toLowerCase() == "safari"
-                    ? Text("$count",
-                  style: TextStyle(fontSize: 20, color: Colors.black54), textAlign: TextAlign.center,)
+                    ? Text(
+                        "$count",
+                        style: TextStyle(fontSize: 20, color: Colors.black54),
+                        textAlign: TextAlign.center,
+                      )
                     : Text(""),
               ),
               Expanded(
                 child: type.toLowerCase() == "others"
-                    ? Text("$count",
-                  style: TextStyle(fontSize: 20, color: Colors.black54), textAlign: TextAlign.center,)
+                    ? Text(
+                        "$count",
+                        style: TextStyle(fontSize: 20, color: Colors.black54),
+                        textAlign: TextAlign.center,
+                      )
                     : Text(""),
               ),
             ],
@@ -436,25 +453,35 @@ class ProfileCardBox extends StatelessWidget {
                   style: TextStyle(
                     //fontWeight: FontWeight.bold,
                     fontSize: 25,
-                    color: isComplete ? Colors.black : Colors.blue,),
+                    color: isComplete ? Colors.black : Colors.blue,
+                  ),
                 ),
               ),
               Expanded(
                 child: type.toLowerCase() == "pent"
-                    ? Text("$count",
-                  style: TextStyle(fontSize: 20, color: Colors.black54), textAlign: TextAlign.center,)
+                    ? Text(
+                        "$count",
+                        style: TextStyle(fontSize: 20, color: Colors.black54),
+                        textAlign: TextAlign.center,
+                      )
                     : Text(""),
               ),
               Expanded(
                 child: type.toLowerCase() == "pajama"
-                    ? Text("$count",
-                  style: TextStyle(fontSize: 20, color: Colors.black54), textAlign: TextAlign.center,)
+                    ? Text(
+                        "$count",
+                        style: TextStyle(fontSize: 20, color: Colors.black54),
+                        textAlign: TextAlign.center,
+                      )
                     : Text(""),
               ),
               Expanded(
                 child: type.toLowerCase() == "others"
-                    ? Text("$count",
-                  style: TextStyle(fontSize: 20, color: Colors.black54), textAlign: TextAlign.center,)
+                    ? Text(
+                        "$count",
+                        style: TextStyle(fontSize: 20, color: Colors.black54),
+                        textAlign: TextAlign.center,
+                      )
                     : Text(""),
               ),
             ],
@@ -476,33 +503,45 @@ class ProfileCardBox extends StatelessWidget {
                 child: Text(
                   '$regNo',
                   style: TextStyle(
-                    //fontWeight: FontWeight.bold,
+                      //fontWeight: FontWeight.bold,
                       fontSize: 25,
                       color: isComplete ? Colors.black : Colors.blue),
                 ),
               ),
               Expanded(
                 child: type.toLowerCase() == "coat"
-                    ? Text("$count",
-                  style: TextStyle(fontSize: 20, color: Colors.black54), textAlign: TextAlign.center,)
+                    ? Text(
+                        "$count",
+                        style: TextStyle(fontSize: 20, color: Colors.black54),
+                        textAlign: TextAlign.center,
+                      )
                     : Text(""),
               ),
               Expanded(
                 child: type.toLowerCase() == "jacket"
-                    ? Text("$count",
-                  style: TextStyle(fontSize: 20, color: Colors.black54), textAlign: TextAlign.center,)
+                    ? Text(
+                        "$count",
+                        style: TextStyle(fontSize: 20, color: Colors.black54),
+                        textAlign: TextAlign.center,
+                      )
                     : Text(""),
               ),
               Expanded(
                 child: type.toLowerCase() == "achkan"
-                    ? Text("$count",
-                  style: TextStyle(fontSize: 20, color: Colors.black54), textAlign: TextAlign.center,)
+                    ? Text(
+                        "$count",
+                        style: TextStyle(fontSize: 20, color: Colors.black54),
+                        textAlign: TextAlign.center,
+                      )
                     : Text(""),
               ),
               Expanded(
                 child: type.toLowerCase() == "others"
-                    ? Text("$count",
-                  style: TextStyle(fontSize: 20, color: Colors.black54), textAlign: TextAlign.center,)
+                    ? Text(
+                        "$count",
+                        style: TextStyle(fontSize: 20, color: Colors.black54),
+                        textAlign: TextAlign.center,
+                      )
                     : Text(""),
               ),
             ],
@@ -620,7 +659,9 @@ class RequestCard extends StatelessWidget {
                               child: Row(
                                 children: [
                                   Text(
-                                    "Accept  ",
+                                    AppLocalizations.of(context)
+                                            .translate("accept") +
+                                        "      ",
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold),
@@ -642,7 +683,9 @@ class RequestCard extends StatelessWidget {
                               child: Row(
                                 children: [
                                   Text(
-                                    "Decline  ",
+                                    AppLocalizations.of(context)
+                                            .translate("decline") +
+                                        "  ",
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold),
@@ -662,7 +705,7 @@ class RequestCard extends StatelessWidget {
                               Navigator.pop(context);
                             },
                             child: Text(
-                              "Back",
+                              AppLocalizations.of(context).translate("back"),
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),
@@ -685,7 +728,7 @@ class RequestCard extends StatelessWidget {
                   Container(
                       width: 100,
                       child: Text(
-                        "Name",
+                        AppLocalizations.of(context).translate("n_name"),
                         style: TextStyle(fontSize: 20),
                       )),
                   Expanded(
@@ -710,7 +753,7 @@ class RequestCard extends StatelessWidget {
                   Container(
                       width: 100,
                       child: Text(
-                        "Phone",
+                        AppLocalizations.of(context).translate("n_phone"),
                         style: TextStyle(fontSize: 20),
                       )),
                   Expanded(
@@ -729,7 +772,7 @@ class RequestCard extends StatelessWidget {
                   Container(
                       width: 100,
                       child: Text(
-                        "Profile",
+                        AppLocalizations.of(context).translate("n_profile"),
                         style: TextStyle(fontSize: 20),
                       )),
                   Expanded(
@@ -858,13 +901,18 @@ class CuttingCardBox extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            "$item",
+                            AppLocalizations.of(context).translate("$item"),
                             style: TextStyle(color: Colors.black54),
                           ),
                         ],
                       ),
                       SizedBox(height: 50),
-                      Text("Total: $count ", style: TextStyle(fontSize: 20)),
+                      Text(
+                          AppLocalizations.of(context).translate("total") +
+                              " " +
+                              AppLocalizations.of(context).translate("count") +
+                              ": $count ",
+                          style: TextStyle(fontSize: 20)),
                       SizedBox(height: 10),
                       Container(
                         padding: EdgeInsets.all(15),
@@ -1123,7 +1171,7 @@ Card buildHeader(String headerType, BuildContext context) {
             )),
             Expanded(
                 child: Text(
-              "   " + AppLocalizations.of(context).translate("safari"),
+              AppLocalizations.of(context).translate("safari"),
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
@@ -1131,7 +1179,7 @@ Card buildHeader(String headerType, BuildContext context) {
             )),
             Expanded(
                 child: Text(
-              "   " + AppLocalizations.of(context).translate("other"),
+              AppLocalizations.of(context).translate("others"),
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
@@ -1190,7 +1238,7 @@ Card buildHeader(String headerType, BuildContext context) {
             )),
             Expanded(
                 child: Text(
-              "   " + AppLocalizations.of(context).translate("other"),
+              "   " + AppLocalizations.of(context).translate("others"),
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
@@ -1241,7 +1289,7 @@ Card buildHeader(String headerType, BuildContext context) {
             )),
             Expanded(
                 child: Text(
-              "   " + AppLocalizations.of(context).translate("other"),
+              "   " + AppLocalizations.of(context).translate("others"),
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
@@ -1386,8 +1434,7 @@ Card buildHeader(String headerType, BuildContext context) {
               )),
               Expanded(
                   child: Text(
-                "COUNT",
-                //AppLocalizations.of(context).translate(""),
+                AppLocalizations.of(context).translate("count"),
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 15,
@@ -1427,8 +1474,7 @@ Card buildHeader(String headerType, BuildContext context) {
               )),
               Expanded(
                   child: Text(
-                "COUNT",
-                //AppLocalizations.of(context).translate(""),
+                AppLocalizations.of(context).translate("count"),
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 15,
@@ -1436,8 +1482,7 @@ Card buildHeader(String headerType, BuildContext context) {
               )),
               Expanded(
                   child: Text(
-                "RETURN",
-                //AppLocalizations.of(context).translate(""),
+                AppLocalizations.of(context).translate("return_date"),
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 15,

@@ -871,7 +871,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                     ),
                     Expanded(
                         child: Text(
-                      AppLocalizations.of(context).translate("other"),
+                      AppLocalizations.of(context).translate("others"),
                       style: TextStyle(fontSize: 20),
                     )),
                     Expanded(
