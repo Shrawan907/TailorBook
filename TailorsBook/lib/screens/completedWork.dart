@@ -89,6 +89,7 @@ class _CompletedState extends State<Completed> {
                       type: items[i]["type"],
                       count: items[i]["count"],
                       isColor: i & 1 == 1,
+                      status: "1"
                     ),
                 ],
               ),

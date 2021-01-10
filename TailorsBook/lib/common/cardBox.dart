@@ -7,6 +7,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:TailorsBook/handle_cloud/data_file.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:toast/toast.dart';
 
 import '../locale/app_localization.dart';
 
@@ -346,47 +347,240 @@ class ProfileItemCardBox extends StatelessWidget {
   final String type;
   final bool isColor;
   final int branch;
+  final String status;
+  final bool update;
+  final Function function;
+  final String phone;
 
   const ProfileItemCardBox(
-      {this.branch, this.regNo, this.count, this.type, this.isColor});
+      {this.branch,
+      this.regNo,
+      this.count,
+      this.type,
+      this.isColor,
+      this.status,
+      this.update,
+      this.function, this.phone});
+
+  Future onTapAssigned(BuildContext context) async {
+    int value = count;
+    bool loading = false;
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              content: Container(
+                height: 380,
+                width: 300,
+                padding: EdgeInsets.all(10),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Container(
+                        width: 150,
+                        decoration: BoxDecoration(
+                          border: Border(bottom: BorderSide(width: 2)),
+                        ),
+                        child: Center(
+                          child: Text(
+                            (branch == 0 ? "A " : "B ") + "$regNo",
+                            style: TextStyle(
+                                fontSize: 40,
+                                color: branch == 0
+                                    ? Colors.deepPurple
+                                    : Colors.red[800]),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 35,
+                            child: SvgPicture.asset(
+                              'assets/images/${this.type}.svg',
+                              height: 20,
+                              width: 20,
+                              color: Colors.black54,
+                            ),
+                          ),
+                          Text(
+                            AppLocalizations.of(context).translate("$type"),
+                            style: TextStyle(color: Colors.black54),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 50),
+                      Text(
+                          AppLocalizations.of(context).translate("total") +
+                              " " +
+                              AppLocalizations.of(context).translate("count") +
+                              ": $count ",
+                          style: TextStyle(fontSize: 20)),
+                      SizedBox(height: 10),
+                      Container(
+                        padding: EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                          border: Border.all(width: 1),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            UpdateValueButton(
+                              icon: Icons.remove,
+                              perform: () {
+                                setState(() {
+                                  if (value > 1) value--;
+                                });
+                              },
+                            ),
+                            SizedBox(width: 10),
+                            Container(
+                              height: 30,
+                              width: 40,
+                              child: Center(
+                                child: Text(
+                                  value.toString(),
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            UpdateValueButton(
+                              icon: Icons.add,
+                              perform: () {
+                                setState(() {
+                                  if (value < count) value++;
+                                  print(value);
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      loading == true
+                          ? SpinKitThreeBounce(
+                              color: Colors.blueAccent,
+                              size: 15,
+                            )
+                          : SizedBox(height: 10),
+                      SizedBox(height: 30),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: RaisedButton(
+                              elevation: 5.0,
+                              color: Colors.red[200],
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                  height: 60,
+                                  width: 60,
+                                  child: Icon(
+                                    Icons.arrow_back,
+                                    color: Colors.white,
+                                    size: 30,
+                                  )),
+                              shape: CircleBorder(),
+                            ),
+                          ),
+                          Expanded(
+                            child: RaisedButton(
+                              elevation: 5.0,
+                              color: Colors.green[400],
+                              onPressed: () async {
+                                setState(() {
+                                  loading = true;
+                                });
+                                await completeWork(regNo, phone, type, branch, value, count);
+                                await function();
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                  height: 60,
+                                  width: 60,
+                                  child: Icon(
+                                    Icons.check,
+                                    color: Colors.white,
+                                    size: 30,
+                                  )),
+                              shape: CircleBorder(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          });
+        });
+  }
+
+  Future onTapComplete(BuildContext context) async {
+    print("Working...");
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: isColor ? Colors.grey[200] : null,
-      borderOnForeground: true,
-      child: Container(
-        height: 30,
-        margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Expanded(
-              child: Text(
-                (branch == 0 ? "A " : "B ") + '$regNo',
-                style: TextStyle(
+    return GestureDetector(
+      onTap: () async {
+        if (status == "0") {
+          if (update == true)
+            await onTapAssigned(context);
+          else
+            Toast.show("Please turn on edit option from above", context,
+                duration: Toast.LENGTH_LONG, gravity: Toast.CENTER);
+        } else if (status == "1") {
+          await onTapComplete(context);
+        } else {
+          print("Okay something is wrong here...");
+        }
+      },
+      child: Card(
+        color: isColor ? Colors.grey[200] : null,
+        borderOnForeground: true,
+        child: Container(
+          height: 30,
+          margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Expanded(
+                child: Text(
+                  (branch == 0 ? "A " : "B ") + '$regNo',
+                  style: TextStyle(
+                      fontSize: 25,
+                      color: branch == 0 ? Colors.deepPurple : Colors.red[800]),
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  '$type',
+                  style: TextStyle(
                     fontSize: 25,
-                    color: branch == 0 ? Colors.deepPurple : Colors.red[800]),
-              ),
-            ),
-            Expanded(
-              child: Text(
-                '$type',
-                style: TextStyle(
-                  fontSize: 25,
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              child: Text(
-                '$count',
-                style: TextStyle(
-                  fontSize: 25,
+              Expanded(
+                child: Text(
+                  '$count',
+                  style: TextStyle(
+                    fontSize: 25,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

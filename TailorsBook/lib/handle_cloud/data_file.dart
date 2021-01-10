@@ -961,3 +961,121 @@ Future assignWork(List items, String phoneNo) async {
           }
       });
 }
+
+//to update completed work by team member
+
+Future completeWork(int regNo, String phone, String item, int branch, int count,
+    int totalCount) async {
+  var path = db.collection('company/team/members');
+  var subPath = path.doc(phone).collection('completed');
+  path.doc(phone).get().then((snapShot) => {
+        if (snapShot.exists)
+          {
+            print("$branch" + "_" + "$regNo" + "_" + "$item"),
+            subPath
+                .doc("$branch" + "_" + "$regNo" + "_" + "$item")
+                .get()
+                .then((snapShot) => {
+                      if (snapShot.exists)
+                        {
+                          subPath
+                              .doc("$branch" + "_" + "$regNo" + "_" + "$item")
+                              .update({'count': FieldValue.increment(count)}),
+                        }
+                      else
+                        {
+                          subPath
+                              .doc("$branch" + "_" + "$regNo" + "_" + "$item")
+                              .set({
+                            'branch': branch,
+                            'regNo': regNo,
+                            'type': item,
+                            'count': count
+                          })
+                        }
+                    }),
+          }
+        else
+          {
+            print('No user with phoneNo: {$phone} Exists'),
+          }
+      });
+  // delete from assigned
+  var subPath2 = path.doc(phone).collection('assigned');
+  path.doc(phone).get().then((snapShot) => {
+        if (snapShot.exists)
+          {
+            if (count == totalCount)
+              {
+                subPath2
+                    .doc("$branch" + "_" + "$regNo" + "_" + "$item")
+                    .delete(),
+              }
+            else if (count < totalCount)
+              {
+                subPath2
+                    .doc("$branch" + "_" + "$regNo" + "_" + "$item")
+                    .update({'count': totalCount - count}),
+              }
+            else
+              print("Okay lets check completeWork code again....")
+          }
+        else
+          {print("snapShot doesn't exists!")}
+      });
+  //update work completed to the register
+  var temp;
+  var itemPath = db
+      .collection("company")
+      .doc(branch == 0 ? "branchA" : "branchB")
+      .collection("products/products/$item");
+  itemPath.doc("$regNo").get().then((snapShot) => {
+        if (snapShot.exists)
+          {
+            temp = snapShot.data()['status'],
+            updateCuttingRegister(regNo, item, branch, count),
+          }
+      });
+
+  await Future.delayed(Duration(seconds: 2));
+  if (temp != null) {
+    int r = 0;
+    for (int i = 0; i < temp.length && r < count; i++) {
+      // if (temp[i] == 'cut') {
+      temp[i] = 'complete';
+      r++;
+      // }
+    }
+    itemPath.doc("$regNo").update({"status": temp});
+  }
+}
+// var requestPath = db.collection("company/requests/requests");
+// var userPath = db.collection("company/team/members");
+// requestPath.doc(phone).get().then((snapShot) => {
+// if (snapShot.exists)
+// {
+// requestPath.doc(phone).delete(),
+// requestData.remove(requestData
+//     .where((element) => element["phoneNo"] == phone)
+//     .first),
+// db.collection("company").doc("requests").update(
+// {"total": FieldValue.increment(-1)},
+// ),
+// }
+// else
+// {print("snapShot doesn't exists!")}
+// });
+// userPath.doc(phone).get().then((snapShot) => {
+// if (snapShot.exists)
+// {
+// userPath.doc(phone).update({
+// "requestAccepted": true,
+// })
+// }
+// else
+// {
+// print(
+// "Check Needed, no user saved on cloud but request is deleted"),
+// }
+// });
+// await Future.delayed(Duration(seconds: 1));
