@@ -189,20 +189,27 @@ class PersonInfo extends StatelessWidget {
   final String name;
   final ImageProvider image;
   final Color color;
-  final Function onPressed;
   final String profile;
   final String phoneNo;
 
-  PersonInfo({this.name, this.image, this.onPressed, this.color, this.profile, this.phoneNo});
+  PersonInfo({this.name, this.image, this.color, this.profile, this.phoneNo});
+
+  onPressed(BuildContext context) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Profile(
+                name: this.name,
+                profile: this.profile,
+                phoneNo: this.phoneNo)));
+  }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 10.0, right: 10),
-
       child: Card(
         elevation: 15,
-
         child: Container(
           height: 150,
           width: 150,
@@ -213,7 +220,9 @@ class PersonInfo extends StatelessWidget {
           child: RaisedButton(
             color: Colors.amber[50],
             padding: EdgeInsets.only(left: 0),
-            onPressed: this.onPressed,
+            onPressed: () {
+              onPressed(context);
+            },
             child: Column(
               children: [
                 Expanded(
@@ -329,13 +338,15 @@ class InfoCard extends StatelessWidget {
   }
 }
 
-class ShirtCardBox extends StatelessWidget {
+class ProfileItemCardBox extends StatelessWidget {
   final int regNo;
   final bool isComplete;
   final String type;
   final bool isColor;
+  final int branch;
 
-  const ShirtCardBox({this.regNo, this.isComplete, this.type, this.isColor});
+  const ProfileItemCardBox(
+      {this.branch, this.regNo, this.isComplete, this.type, this.isColor});
 
   @override
   Widget build(BuildContext context) {
@@ -343,7 +354,7 @@ class ShirtCardBox extends StatelessWidget {
       color: isColor ? Colors.grey[200] : null,
       borderOnForeground: true,
       child: Container(
-        height: 25,
+        height: 30,
         margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -351,52 +362,22 @@ class ShirtCardBox extends StatelessWidget {
           children: <Widget>[
             Expanded(
               child: Text(
-                '$regNo',
+                (branch == 0 ? "A " : "B ") + '$regNo',
                 style: TextStyle(
-                    //fontWeight: FontWeight.bold,
                     fontSize: 25,
-                    color: isComplete ? Colors.black : Colors.blue),
+                    color: branch == 0 ? Colors.deepPurple : Colors.red[800]),
               ),
             ),
             Expanded(
-              child: type == "shirt"
-                  ? Icon(
-                      Icons.check,
-                      color: Colors.grey,
-                    )
-                  : Text(""),
+              child: Text(
+                '$type',
+                style: TextStyle(
+                  fontSize: 25,
+                ),
+              ),
             ),
             Expanded(
-              child: type == "kurta"
-                  ? Icon(
-                      Icons.check,
-                      color: Colors.grey,
-                    )
-                  : Text(""),
-            ),
-            Expanded(
-              child: type == "pajama"
-                  ? Icon(
-                      Icons.check,
-                      color: Colors.grey,
-                    )
-                  : Text(""),
-            ),
-            Expanded(
-              child: type == "safari"
-                  ? Icon(
-                      Icons.check,
-                      color: Colors.grey,
-                    )
-                  : Text(""),
-            ),
-            Expanded(
-              child: type == "other"
-                  ? Icon(
-                      Icons.check,
-                      color: Colors.grey,
-                    )
-                  : Text(""),
+              child: isComplete ? Icon(Icons.check) : Container(),
             ),
           ],
         ),
@@ -404,142 +385,6 @@ class ShirtCardBox extends StatelessWidget {
     );
   }
 }
-
-// class PantCardBox extends StatelessWidget {
-//   final String regNo;
-//   final bool isComplete;
-//   final String type;
-//   final bool isColor;
-//
-//   const ShirtCardBox({this.regNo, this.isComplete, this.type, this.isColor});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Card(
-//       color: isColor ? Colors.grey[200] : null,
-//       borderOnForeground: true,
-//       child: Container(
-//         height: 25,
-//         margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-//         child: Row(
-//           crossAxisAlignment: CrossAxisAlignment.center,
-//           mainAxisAlignment: MainAxisAlignment.spaceAround,
-//           children: <Widget>[
-//             Expanded(
-//               child: Text(
-//                 '$regNo',
-//                 style: TextStyle(
-//                   //fontWeight: FontWeight.bold,
-//                     fontSize: 25,
-//                     color: isComplete ? Colors.black : Colors.blue),
-//               ),
-//             ),
-//             Expanded(
-//               child: type == "safari"
-//                   ? Icon(
-//                 Icons.check,
-//                 color: Colors.grey,
-//               )
-//                   : Text(""),
-//             ),
-//             Expanded(
-//               child: type == "kurta"
-//                   ? Icon(
-//                 Icons.check,
-//                 color: Colors.grey,
-//               )
-//                   : Text(""),
-//             ),
-//             Expanded(
-//               child: type == "pajama"
-//                   ? Icon(
-//                 Icons.check,
-//                 color: Colors.grey,
-//               )
-//                   : Text(""),
-//             ),
-//             Expanded(
-//               child: type == "shirt"
-//                   ? Icon(
-//                 Icons.check,
-//                 color: Colors.grey,
-//               )
-//                   : Text(""),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// class CoatCardBox extends StatelessWidget {
-//   final String regNo;
-//   final bool isComplete;
-//   final String type;
-//   final bool isColor;
-//
-//   const ShirtCardBox({this.regNo, this.isComplete, this.type, this.isColor});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Card(
-//       color: isColor ? Colors.grey[200] : null,
-//       borderOnForeground: true,
-//       child: Container(
-//         height: 25,
-//         margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-//         child: Row(
-//           crossAxisAlignment: CrossAxisAlignment.center,
-//           mainAxisAlignment: MainAxisAlignment.spaceAround,
-//           children: <Widget>[
-//             Expanded(
-//               child: Text(
-//                 '$regNo',
-//                 style: TextStyle(
-//                   //fontWeight: FontWeight.bold,
-//                     fontSize: 25,
-//                     color: isComplete ? Colors.black : Colors.blue),
-//               ),
-//             ),
-//             Expanded(
-//               child: type == "safari"
-//                   ? Icon(
-//                 Icons.check,
-//                 color: Colors.grey,
-//               )
-//                   : Text(""),
-//             ),
-//             Expanded(
-//               child: type == "kurta"
-//                   ? Icon(
-//                 Icons.check,
-//                 color: Colors.grey,
-//               )
-//                   : Text(""),
-//             ),
-//             Expanded(
-//               child: type == "pajama"
-//                   ? Icon(
-//                 Icons.check,
-//                 color: Colors.grey,
-//               )
-//                   : Text(""),
-//             ),
-//             Expanded(
-//               child: type == "shirt"
-//                   ? Icon(
-//                 Icons.check,
-//                 color: Colors.grey,
-//               )
-//                   : Text(""),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
 
 class RegCardBox extends StatelessWidget {
   final int regNo;
@@ -781,18 +626,210 @@ class ItemCardBox extends StatelessWidget {
   final int count;
   final int branch;
   final DateTime returnDate;
-  const ItemCardBox({this.regNo, this.count, this.branch, this.returnDate});
+  final String profile;
+  final String name;
+  final String item;
+  final Function function;
+  const ItemCardBox(
+      {this.regNo,
+      this.count,
+      this.branch,
+      this.returnDate,
+      this.profile,
+      this.name,
+      this.item,
+      this.function});
+
+  Future showFunction(BuildContext context) async {
+    int value = count;
+    bool loading = false;
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              content: Container(
+                height: 350,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border(bottom: BorderSide(width: 1)),
+                        ),
+                        margin: EdgeInsets.only(bottom: 10),
+                        child: Center(
+                          child: Text(
+                            (branch == 0 ? "A " : "B ") + "$regNo",
+                            style: TextStyle(
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                                color: branch == 0
+                                    ? Colors.deepPurple
+                                    : Colors.red[800]),
+                          ),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 35,
+                            child: SvgPicture.asset(
+                              'assets/images/${this.item}.svg',
+                              height: 20,
+                              width: 20,
+                              color: Colors.black54,
+                            ),
+                          ),
+                          Text(
+                            "$item",
+                            style: TextStyle(color: Colors.black54),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5),
+                      Text(
+                        name,
+                        style: TextStyle(fontSize: 20, color: Colors.blue),
+                      ),
+                      Text(
+                        profile,
+                        style: TextStyle(fontSize: 15, color: Colors.grey),
+                      ),
+                      SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Text('Total: ' + '$count',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold))
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      Container(
+                        padding: EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                          border: Border.all(width: 1),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            UpdateValueButton(
+                              icon: Icons.remove,
+                              perform: () {
+                                setState(() {
+                                  if (value > 1) value--;
+                                });
+                              },
+                            ),
+                            SizedBox(width: 10),
+                            Container(
+                              height: 30,
+                              width: 40,
+                              child: Center(
+                                child: Text(
+                                  value.toString(),
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            UpdateValueButton(
+                              icon: Icons.add,
+                              perform: () {
+                                setState(() {
+                                  if (value < count) value++;
+                                  print(value);
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      loading == true
+                          ? SpinKitThreeBounce(
+                              color: Colors.blueAccent,
+                              size: 15,
+                            )
+                          : SizedBox(height: 10),
+                      SizedBox(height: 30),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: RaisedButton(
+                              elevation: 5.0,
+                              color: Colors.red[200],
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                  height: 60,
+                                  width: 60,
+                                  child: Icon(
+                                    Icons.arrow_back,
+                                    color: Colors.white,
+                                    size: 30,
+                                  )),
+                              shape: CircleBorder(),
+                            ),
+                          ),
+                          Expanded(
+                            child: RaisedButton(
+                              elevation: 5.0,
+                              color: Colors.blue[200],
+                              onPressed: () async {
+                                setState(() {
+                                  loading = true;
+                                });
+                                //await cutItem(regNo, item, branch, value);
+                                function(regNo, value);
+                                await Future.delayed(Duration(seconds: 2));
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                  height: 60,
+                                  width: 60,
+                                  child: Icon(
+                                    Icons.check,
+                                    color: Colors.white,
+                                    size: 30,
+                                  )),
+                              shape: CircleBorder(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          });
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => SearchResult(
-                      regNo: regNo,
-                      branch: branch,
-                    )));
+        print("HELLO WORLD--");
+        if (profile == 'none' || profile == null) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => SearchResult(
+                        regNo: regNo,
+                        branch: branch,
+                      )));
+        } else {
+          showFunction(context);
+        }
       },
       child: Container(
         height: 40,
@@ -807,16 +844,22 @@ class ItemCardBox extends StatelessWidget {
           children: <Widget>[
             Expanded(
               child: Text(
-                "$regNo",
+                (branch == 0 ? "A " : "B ") + "$regNo",
                 style: TextStyle(
                     fontSize: 30,
-                    color: branch == 0 ? Colors.blue : Colors.blue[100]),
+                    color: branch == 0 ? Colors.deepPurple : Colors.red[800]),
               ),
             ),
             Expanded(
               child: Text(
                 '$count',
                 style: TextStyle(fontSize: 25, color: Colors.white),
+              ),
+            ),
+            Expanded(
+              child: Text(
+                '${returnDate.day}-${returnDate.month}-${returnDate.year}',
+                style: TextStyle(fontSize: 20, color: Colors.white),
               ),
             ),
           ],
@@ -835,7 +878,6 @@ class CuttingCardBox extends StatelessWidget {
   final Function function;
   const CuttingCardBox(
       {this.regNo,
-
       this.count,
       this.branch,
       this.returnDate,
@@ -853,9 +895,7 @@ class CuttingCardBox extends StatelessWidget {
               content: Container(
                 height: 380,
                 width: 300,
-
                 padding: EdgeInsets.all(10),
-
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
@@ -913,9 +953,7 @@ class CuttingCardBox extends StatelessWidget {
                                 });
                               },
                             ),
-
                             SizedBox(width: 10),
-
                             Container(
                               height: 30,
                               width: 40,
@@ -928,9 +966,7 @@ class CuttingCardBox extends StatelessWidget {
                                 ),
                               ),
                             ),
-
                             SizedBox(width: 10),
-
                             UpdateValueButton(
                               icon: Icons.add,
                               perform: () {
@@ -946,7 +982,6 @@ class CuttingCardBox extends StatelessWidget {
                       SizedBox(height: 10),
                       loading == true
                           ? SpinKitThreeBounce(
-
                               color: Colors.blueAccent,
                               size: 15,
                             )
@@ -1061,6 +1096,72 @@ class CuttingCardBox extends StatelessWidget {
   }
 }
 
+class AddItemCard extends StatelessWidget {
+  final int branch;
+  final String type;
+  final int regNo;
+  final int count;
+  final Function function;
+  final int index;
+
+  AddItemCard(
+      {this.branch,
+      this.regNo,
+      this.count,
+      this.type,
+      this.function,
+      this.index});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.amber[100],
+      margin: EdgeInsets.all(10),
+      height: 50,
+      child: Row(
+        children: [
+          Expanded(
+              child: Center(
+            child: Text(
+              (branch == 0 ? "A " : "B ") + '$regNo',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22,
+                  color: branch == 0 ? Colors.deepPurple : Colors.red[800]),
+            ),
+          )),
+          Expanded(
+              child: Center(
+            child: Text(
+              '$count',
+              style: TextStyle(fontSize: 20),
+            ),
+          )),
+          Expanded(
+              child: Center(
+            child: Text(
+              '$type',
+              style: TextStyle(fontSize: 20),
+            ),
+          )),
+          GestureDetector(
+              onTap: () {
+                function(index);
+              },
+              child: Container(
+                  width: 50,
+                  child: Center(
+                    child: Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    ),
+                  ))),
+        ],
+      ),
+    );
+  }
+}
+
 Card buildHeader(String headerType, BuildContext context) {
   if (headerType == "dailyInfo") {
     return Card(
@@ -1110,7 +1211,7 @@ Card buildHeader(String headerType, BuildContext context) {
         ),
       ),
     );
-  } else if (headerType == "SHIRT MAKER") {
+  } else if (headerType == "profile_header") {
     return Card(
       child: Container(
         height: 20,
@@ -1130,12 +1231,9 @@ Card buildHeader(String headerType, BuildContext context) {
                   fontSize: 15,
                   color: Colors.white),
             )),
-            SizedBox(
-              width: 20,
-            ),
             Expanded(
                 child: Text(
-              AppLocalizations.of(context).translate("shirt"),
+              "TYPE",
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
@@ -1143,141 +1241,7 @@ Card buildHeader(String headerType, BuildContext context) {
             )),
             Expanded(
                 child: Text(
-              AppLocalizations.of(context).translate("kurta"),
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                  color: Colors.white),
-            )),
-            Expanded(
-                child: Text(
-              AppLocalizations.of(context).translate("pajama"),
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                  color: Colors.white),
-            )),
-            Expanded(
-                child: Text(
-              "   " + AppLocalizations.of(context).translate("safari"),
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                  color: Colors.white),
-            )),
-            Expanded(
-                child: Text(
-              "   " + AppLocalizations.of(context).translate("other"),
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                  color: Colors.white),
-            )),
-          ],
-        ),
-      ),
-    );
-  } else if (headerType == "COAT MAKER") {
-    return Card(
-      child: Container(
-        height: 20,
-        decoration: BoxDecoration(
-          color: Colors.black54,
-        ),
-        padding: EdgeInsets.only(left: 15, right: 15),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Expanded(
-                child: Text(
-              AppLocalizations.of(context).translate("reg_no"),
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                  color: Colors.white),
-            )),
-            SizedBox(
-              width: 20,
-            ),
-            Expanded(
-                child: Text(
-              AppLocalizations.of(context).translate("coat"),
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                  color: Colors.white),
-            )),
-            Expanded(
-                child: Text(
-              AppLocalizations.of(context).translate("jacket"),
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                  color: Colors.white),
-            )),
-            Expanded(
-                child: Text(
-              AppLocalizations.of(context).translate("achkan"),
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                  color: Colors.white),
-            )),
-            Expanded(
-                child: Text(
-              "   " + AppLocalizations.of(context).translate("other"),
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                  color: Colors.white),
-            )),
-          ],
-        ),
-      ),
-    );
-  } else if (headerType == "PENT MAKER") {
-    return Card(
-      child: Container(
-        height: 20,
-        decoration: BoxDecoration(
-          color: Colors.black54,
-        ),
-        padding: EdgeInsets.only(left: 15, right: 15),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Expanded(
-                child: Text(
-              AppLocalizations.of(context).translate("reg_no"),
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                  color: Colors.white),
-            )),
-            SizedBox(
-              width: 20,
-            ),
-            Expanded(
-                child: Text(
-              AppLocalizations.of(context).translate("pent"),
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                  color: Colors.white),
-            )),
-            Expanded(
-                child: Text(
-              AppLocalizations.of(context).translate("pajama"),
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                  color: Colors.white),
-            )),
-            Expanded(
-                child: Text(
-              "   " + AppLocalizations.of(context).translate("other"),
+              "COMPLETE",
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
@@ -1335,7 +1299,10 @@ Card buildHeader(String headerType, BuildContext context) {
                       fontSize: 15,
                       color: Colors.white),
                 ),
-              ))
+              )),
+              Container(
+                width: 50,
+              ),
             ],
           ),
         ),
@@ -1424,6 +1391,14 @@ Card buildHeader(String headerType, BuildContext context) {
                   child: Text(
                 "COUNT",
                 //AppLocalizations.of(context).translate(""),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                    color: Colors.white),
+              )),
+              Expanded(
+                  child: Text(
+                "RETURN",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 15,

@@ -25,7 +25,6 @@ class ShortCuts extends StatefulWidget {
 class _ShortCutsState extends State<ShortCuts> {
   int branch = 0;
   int reg_no;
-  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext parentContext) {
     return Scaffold(

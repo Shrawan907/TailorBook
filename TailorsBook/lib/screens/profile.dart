@@ -13,50 +13,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:TailorsBook/screens/assign_work.dart';
-
-// List items = [
-//   {"regNo": "111", "type": "other", "isComplete": true},
-//   {"regNo": "123", "type": "pajama", "isComplete": true},
-//   {"regNo": "124", "type": "shirt", "isComplete": false},
-//   {"regNo": "127", "type": "kurta", "isComplete": true},
-//   {"regNo": "127", "type": "shirt", "isComplete": true},
-//   {"regNo": "123", "type": "pajama", "isComplete": true},
-//   {"regNo": "124", "type": "shirt", "isComplete": false},
-//   {"regNo": "127", "type": "kurta", "isComplete": true},
-//   {"regNo": "127", "type": "shirt", "isComplete": true},
-//   {"regNo": "123", "type": "pajama", "isComplete": true},
-//   {"regNo": "124", "type": "shirt", "isComplete": false},
-//   {"regNo": "127", "type": "kurta", "isComplete": true},
-//   {"regNo": "127", "type": "shirt", "isComplete": true},
-//   {"regNo": "123", "type": "pajama", "isComplete": true},
-//   {"regNo": "124", "type": "shirt", "isComplete": false},
-//   {"regNo": "127", "type": "kurta", "isComplete": true},
-//   {"regNo": "127", "type": "shirt", "isComplete": true},
-//   {"regNo": "123", "type": "pajama", "isComplete": true},
-//   {"regNo": "124", "type": "shirt", "isComplete": false},
-//   {"regNo": "127", "type": "kurta", "isComplete": true},
-//   {"regNo": "127", "type": "shirt", "isComplete": true},
-//   {"regNo": "123", "type": "pajama", "isComplete": true},
-//   {"regNo": "124", "type": "shirt", "isComplete": false},
-//   {"regNo": "127", "type": "kurta", "isComplete": true},
-//   {"regNo": "127", "type": "shirt", "isComplete": true},
-//   {"regNo": "123", "type": "pajama", "isComplete": true},
-//   {"regNo": "124", "type": "shirt", "isComplete": false},
-//   {"regNo": "127", "type": "kurta", "isComplete": true},
-//   {"regNo": "127", "type": "shirt", "isComplete": true},
-//   {"regNo": "123", "type": "pajama", "isComplete": true},
-//   {"regNo": "124", "type": "shirt", "isComplete": false},
-//   {"regNo": "127", "type": "kurta", "isComplete": true},
-//   {"regNo": "127", "type": "shirt", "isComplete": true},
-//   {"regNo": "123", "type": "pajama", "isComplete": true},
-//   {"regNo": "124", "type": "shirt", "isComplete": false},
-//   {"regNo": "127", "type": "kurta", "isComplete": true},
-//   {"regNo": "127", "type": "shirt", "isComplete": true},
-//   {"regNo": "123", "type": "pajama", "isComplete": true},
-//   {"regNo": "124", "type": "shirt", "isComplete": false},
-//   {"regNo": "127", "type": "kurta", "isComplete": true},
-//   {"regNo": "127", "type": "shirt", "isComplete": true},
-// ];
+import 'package:TailorsBook/screens/workHome.dart';
 
 List items = [];
 
@@ -71,7 +28,6 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-
   String name = "";
   String profile = "";
   String phoneNo = "";
@@ -92,12 +48,16 @@ class _ProfileState extends State<Profile> {
   Future getData() async {
     items.clear();
     items = [...(await getAssignedData(this.phoneNo))];
-    setState(() {});
   }
 
   onPressed() {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => AssignWork()));
+        context,
+        MaterialPageRoute(
+            builder: (context) => WorkHome(
+                  profile: this.profile,
+                  name: this.name,
+                )));
   }
 
   @override
@@ -134,7 +94,8 @@ class _ProfileState extends State<Profile> {
         onRefresh: () async {
           try {
             clearData();
-            getData();
+            await getData();
+            setState(() {});
           } catch (err) {
             print(err);
           }
@@ -148,16 +109,15 @@ class _ProfileState extends State<Profile> {
               image: AssetImage("assets/images/person.png"),
             ),
             StickyHeader(
-              header: buildHeader(this.profile, context),
+              header: buildHeader('profile_header', context),
               content: Column(
                 children: [
                   for (int i = 0; i < items.length; i++)
-                    ShirtCardBox(
+                    ProfileItemCardBox(
+                      branch: items[i]['branch'],
                       regNo: items[i]['regNo'],
                       isComplete: items[i]['isComplete'],
                       type: items[i]["type"],
-                      // count: items[i]["count"],
-                      // profile: this.profile,
                       isColor: i & 1 == 1,
                     ),
                 ],
@@ -169,37 +129,3 @@ class _ProfileState extends State<Profile> {
     );
   }
 }
-
-//     child: ListView(
-//       body:
-//       SingleChildScrollView(
-//         child: Column(
-//           children: [
-//             InfoCard(
-//               name: this.name,
-//               profile: this.profile,
-//               phone: this.phoneNo,
-//               image: AssetImage("assets/images/person.png"),
-//             ),
-//             StickyHeader(
-//               header: buildHeader(profile, context),
-//               content: Column(
-//                 children: [
-//                   for (int i = 0; i < items.length; i++)
-//                     ShirtCardBox(
-//                       regNo: items[i]['regNo'],
-//                       isComplete: items[i]['isComplete'],
-//                       type: items[i]['type'],
-//                       isColor: i & 1 == 1,
-//                     ),
-//                 ],
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     ),
-//     ),
-//     );
-//   }
-// }

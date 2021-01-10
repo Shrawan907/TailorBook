@@ -433,40 +433,61 @@ Future<List> getTeamC() async {
 Future fetchItemRegister(String item) async {
   itemRegister = [];
   var itemPath = db.collection("company/branchA/products/products/$item");
-  itemPath.snapshots().listen((QuerySnapshot querySnapshot) {
+  itemPath
+      .orderBy('regNo', descending: true)
+      .snapshots()
+      .listen((QuerySnapshot querySnapshot) {
     querySnapshot.docs.forEach((element) {
       Map temp = element.data();
-      if (temp.containsKey("isComplete") && temp["isComplete"] == false) {
-        itemRegister.addAll([
-          {
-            "regNo": temp["regNo"],
-            "count": temp["count"],
-            "branch": 0,
-            "returnDate": temp["return"]
-          }
-        ]);
+      if (temp.containsKey("isComplete") &&
+          temp["isComplete"] == false &&
+          temp.containsKey('status')) {
+        int cnt = 0;
+        for (int i = 0; i < temp['status'].length; i++) {
+          if (temp['status'][i] == 'cut' || temp['status'][i] == 'uncut') cnt++;
+        }
+        if (cnt > 0) {
+          itemRegister.addAll([
+            {
+              "regNo": temp["regNo"],
+              "count": cnt,
+              "branch": 0,
+              "returnDate": temp["return"],
+            }
+          ]);
+        }
       }
     });
   });
   itemPath = db.collection("company/branchB/products/products/$item");
-  itemPath.snapshots().listen((QuerySnapshot querySnapshot) {
+  itemPath
+      .orderBy('regNo', descending: true)
+      .snapshots()
+      .listen((QuerySnapshot querySnapshot) {
     querySnapshot.docs.forEach((element) {
       Map temp = element.data();
-      if (temp.containsKey("isComplete") && temp["isComplete"] == false) {
-        itemRegister.addAll([
-          {
-            "regNo": temp["regNo"],
-            "count": temp["count"],
-            "branch": 1,
-            "returnDate": temp["return"]
-          }
-        ]);
+      if (temp.containsKey("isComplete") &&
+          temp["isComplete"] == false &&
+          temp.containsKey('status')) {
+        int cnt = 0;
+        for (int i = 0; i < temp['status'].length; i++) {
+          if (temp['status'][i] == 'cut' || temp['status'][i] == 'uncut') cnt++;
+        }
+        if (cnt > 0) {
+          itemRegister.addAll([
+            {
+              "regNo": temp["regNo"],
+              "count": cnt,
+              "branch": 1,
+              "returnDate": temp["return"],
+            }
+          ]);
+        }
       }
     });
   });
 
   await Future.delayed(Duration(seconds: 2));
-  itemRegister.sort((a, b) => (a['returnDate']).compareTo(b['returnDate']));
 }
 
 // clean the item register
@@ -783,8 +804,8 @@ Future deleteDataOf(int regNo, int branch) async {
         if (snapShot.exists) {registerPath.doc('$regNo').delete()}
       });
 }
-//to fetch team members data
 
+//to fetch team members data
 Future<List> fetchData(String phoneNo) async {
   tempData.clear();
   // tempData = [[], []];
@@ -797,6 +818,7 @@ Future<List> fetchData(String phoneNo) async {
       // if (temp["isComplete"]) {
       tempData.addAll([
         {
+          'branch': temp["branch"],
           'regNo': temp["reg_no"],
           'type': temp["type"],
           'count': temp["count"],

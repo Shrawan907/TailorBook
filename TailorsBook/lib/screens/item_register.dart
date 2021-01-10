@@ -37,6 +37,7 @@ class _ItemBookState extends State<ItemBook> {
   }
 
   Future getData() async {
+    cleanItemRegister();
     itemRegister.clear();
     itemRegister = [...(await getItemRegister(item))];
     duplicateRegister.clear();

@@ -8,6 +8,7 @@ import 'package:TailorsBook/screens/register_new.dart';
 import 'package:TailorsBook/screens/on_working.dart';
 import 'package:TailorsBook/screens/book_screen.dart';
 import 'package:TailorsBook/test_conn.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 List displayData = [];
 List data = [];
@@ -27,6 +28,7 @@ class DayData extends StatefulWidget {
 class _DayDataState extends State<DayData> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   int listSize = 0;
+  bool searching = false;
 
   @override
   void initState() {
@@ -76,6 +78,9 @@ class _DayDataState extends State<DayData> {
   }
 
   _selectDate(BuildContext context) async {
+    setState(() {
+      searching = true;
+    });
     final DateTime picked = await showDatePicker(
       context: context,
       initialDate: selectedDate, // Refer step 1
@@ -91,11 +96,12 @@ class _DayDataState extends State<DayData> {
     if (picked != null) {
       selectedDate = picked;
       await fetchData();
-      setState(() {
-        showDate =
-            "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
-      });
     }
+    setState(() {
+      searching = false;
+      showDate =
+          "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
+    });
   }
 
   @override
@@ -247,7 +253,12 @@ class _DayDataState extends State<DayData> {
                     onPressed: () {
                       _selectDate(context);
                     },
-                    child: Icon(Icons.calendar_today_outlined),
+                    child: searching == false
+                        ? Icon(Icons.calendar_today_outlined)
+                        : SpinKitThreeBounce(
+                            color: Colors.blueAccent,
+                            size: 20,
+                          ),
                     color: Colors.greenAccent,
                   ),
                 ),

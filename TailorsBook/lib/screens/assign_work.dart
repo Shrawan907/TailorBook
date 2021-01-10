@@ -7,26 +7,51 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 class AssignWork extends StatefulWidget {
+  final String item;
+  final String name;
+  AssignWork({this.item, this.name});
   @override
-  _AssignWorkState createState() => _AssignWorkState();
+  _AssignWorkState createState() =>
+      _AssignWorkState(item: this.item, name: this.name);
 }
 
 List items = [];
 
 class _AssignWorkState extends State<AssignWork> {
-  final _formKey = GlobalKey<FormState>();
+  final String item;
+  final String name;
+  _AssignWorkState({this.item, this.name});
   final TextEditingController _textController = new TextEditingController();
+
+  void function(int index) {
+    items.removeAt(index);
+    setState(() {});
+  }
+
   int branch = 0;
   int val1 = 0;
   int value = 0;
   int regNo = -1, count = -1;
-  String type;
   @override
   Widget build(BuildContext parentContext) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        title: Text("Name"), //$$$fetch
+        title: Text("$name"), //$$$fetch
+        actions: [
+          if (items.length > 0)
+            Container(
+              color: items.length > 0 ? Colors.blue[50] : Colors.amber,
+              margin: EdgeInsets.all(10),
+              child: RaisedButton(
+                onPressed: () {},
+                child: Center(
+                    child: Text(
+                  'SAVE',
+                  style: TextStyle(fontSize: 20),
+                )),
+              ),
+            ),
+        ],
       ),
       body: SizedBox(
         height: MediaQuery.of(context).size.height,
@@ -37,35 +62,18 @@ class _AssignWorkState extends State<AssignWork> {
             buildHeader("add_shirt", context),
             Expanded(
               child: Container(
-                child: Column(
-                  children: [
-                    for (var item in items)
-                      Container(
-                        color: Colors.yellow,
-                        height: 50,
-                        margin: EdgeInsets.all(5),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Center(
-                                child: Text(item["regNo"]),
-                              ),
-                            ),
-                            Expanded(
-                              child: Center(
-                                child: Text(item["count"]),
-                              ),
-                            ),
-                            Expanded(
-                              child: Center(
-                                child: Text(AppLocalizations.of(context)
-                                    .translate(item["type"])),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                  ],
+                child: ListView.builder(
+                  itemCount: items.length,
+                  itemBuilder: (builder, index) {
+                    return AddItemCard(
+                      branch: items[index]['branch'],
+                      regNo: items[index]['regNo'],
+                      count: items[index]['count'],
+                      type: items[index]['type'],
+                      function: function,
+                      index: index,
+                    );
+                  },
                 ),
               ),
             ),
@@ -74,10 +82,10 @@ class _AssignWorkState extends State<AssignWork> {
             ),
             Card(
               child: Container(
-                height: 160,
+                height: 120,
                 width: double.infinity,
                 color: Colors.amber[50],
-                child: Column(
+                child: ListView(
                   children: [
                     Container(
                       //color: Colors.yellow,
@@ -120,7 +128,8 @@ class _AssignWorkState extends State<AssignWork> {
                                 controller: _textController,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(),
-                                  hintText: AppLocalizations.of(context).translate("reg_no"),
+                                  hintText: AppLocalizations.of(context)
+                                      .translate("reg_no"),
                                   fillColor: Colors.white,
                                   contentPadding: EdgeInsets.only(
                                       bottom: 0, left: 10, right: 10),
@@ -176,115 +185,21 @@ class _AssignWorkState extends State<AssignWork> {
                         ],
                       ),
                     ),
-                    Container(
-                      height: 45,
-                      margin: EdgeInsets.only(left: 10, right: 10),
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          Container(
-                              width: 90,
-                              child: Center(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      value = 0;
-                                      type = "shirt";
-                                    });
-                                  },
-                                  child: Text(
-                                      AppLocalizations.of(context)
-                                          .translate("shirt"),
-                                      style: value == 0
-                                          ? TextStyle(
-                                              fontSize: 25, color: Colors.blue)
-                                          : null),
-                                ),
-                              )),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Container(
-                              width: 90,
-                              child: Center(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      value = 1;
-                                      type = "kurta";
-                                    });
-                                  },
-                                  child: Text(
-                                      AppLocalizations.of(context)
-                                          .translate("kurta"),
-                                      style: value == 1
-                                          ? TextStyle(
-                                              fontSize: 25, color: Colors.blue)
-                                          : null),
-                                ),
-                              )),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Container(
-                              width: 100,
-                              child: Center(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      value = 2;
-                                      type = "pajama";
-                                    });
-                                  },
-                                  child: Text(
-                                      AppLocalizations.of(context)
-                                          .translate("pajama"),
-                                      style: value == 2
-                                          ? TextStyle(
-                                              fontSize: 25, color: Colors.blue)
-                                          : null),
-                                ),
-                              )),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Container(
-                              width: 90,
-                              child: Center(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      value = 3;
-                                      type = "safari";
-                                    });
-                                  },
-                                  child: Text(
-                                      AppLocalizations.of(context)
-                                          .translate("safari"),
-                                      style: value == 3
-                                          ? TextStyle(
-                                              fontSize: 25, color: Colors.blue)
-                                          : null),
-                                ),
-                              )),
-                        ],
-                      ),
-                    ),
                     SizedBox(
                       height: 10,
                     ),
                     RaisedButton(
                       onPressed: () {
-                        if (regNo != -1 && count > 0 && type != null) {
+                        if (regNo != -1 && count > 0) {
                           items.add({
-                            "regNo": regNo.toString(),
-                            "type": type,
-                            "count": count.toString()
+                            "branch": branch,
+                            "regNo": regNo,
+                            "type": this.item,
+                            "count": count
                           });
                         }
                         setState(() {
                           regNo = -1;
-                          type = null;
                           count = -1;
                           val1 = 0;
                           value = 0;
@@ -295,7 +210,7 @@ class _AssignWorkState extends State<AssignWork> {
                         height: 45,
                         child: Center(
                           child: Text(
-                            AppLocalizations.of(context).translate("save"),
+                            "ADD",
                             style: TextStyle(
                                 fontSize: 25,
                                 fontWeight: FontWeight.bold,

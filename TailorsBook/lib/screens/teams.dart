@@ -44,14 +44,6 @@ class _TeamMembersState extends State<TeamMembers> {
     teamC = [...(await getTeamC())];
   }
 
-  onPressed() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
-  }
-
-  cutFunc() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => CutHome()));
-  }
-
   @override
   Widget build(BuildContext parentContext) {
     return Scaffold(
