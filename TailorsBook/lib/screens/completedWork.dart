@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:TailorsBook/locale/app_localization.dart';
-import 'package:TailorsBook/screens/completedWork.dart';
 import 'package:TailorsBook/screens/day_data.dart';
 import 'package:TailorsBook/screens/signin.dart';
 import 'package:flutter/material.dart';
@@ -18,94 +17,46 @@ import 'package:TailorsBook/screens/workHome.dart';
 
 List items = [];
 
-class Profile extends StatefulWidget {
+class Completed extends StatefulWidget {
   final String name;
   final String profile;
   final String phoneNo;
-  Profile({this.name, this.profile, this.phoneNo});
+  Completed({this.name, this.profile, this.phoneNo});
   @override
-  _ProfileState createState() => _ProfileState(
+  _CompletedState createState() => _CompletedState(
       name: this.name, profile: this.profile, phoneNo: this.phoneNo);
 }
 
-class _ProfileState extends State<Profile> {
+class _CompletedState extends State<Completed> {
   String name = "";
   String profile = "";
   String phoneNo = "";
 
-  _ProfileState({this.name, this.profile, this.phoneNo});
+  _CompletedState({this.name, this.profile, this.phoneNo});
 
   @override
   void initState() {
-    print(phoneNo);
     super.initState();
     initialData();
   }
 
   void initialData() async {
-    clearAssignedData();
+    clearCompletedData();
     await getData();
     setState(() {});
   }
 
   Future getData() async {
     items.clear();
-    items = [...(await getAssignedData(this.phoneNo))];
-  }
-
-  onPressed() {
-    print(phoneNo);
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => WorkHome(
-                  profile: this.profile,
-                  name: this.name,
-                  phoneNo: this.phoneNo,
-                )));
+    items = [...(await getCompletedData(this.phoneNo))];
   }
 
   @override
   Widget build(BuildContext parentContext) {
     return Scaffold(
-      //backgroundColor: Colors.grey[300],
-      floatingActionButton: Container(
-        height: 60,
-        width: 60,
-        margin: EdgeInsets.only(right: 15, bottom: 15),
-        child: FloatingActionButton(
-          onPressed: onPressed,
-          child: Icon(
-            Icons.note_add,
-            size: 30,
-            color: Colors.white,
-          ),
-          backgroundColor: Colors.amber,
-        ),
-      ),
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).translate("member_diary")),
+        title: Text(name),
         actions: [
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Completed(
-                            name: this.name,
-                            phoneNo: this.phoneNo,
-                            profile: this.profile,
-                          )));
-            },
-            child: Container(
-              margin: EdgeInsets.only(right: 20),
-              child: Center(
-                  child: Icon(
-                Icons.playlist_add_check,
-                size: 30,
-              )),
-            ),
-          ),
           GestureDetector(
             onTap: getData,
             child: Container(
@@ -118,7 +69,7 @@ class _ProfileState extends State<Profile> {
       body: RefreshIndicator(
         onRefresh: () async {
           try {
-            clearAssignedData();
+            clearCompletedData();
             await getData();
             setState(() {});
           } catch (err) {
@@ -127,12 +78,6 @@ class _ProfileState extends State<Profile> {
         },
         child: ListView(
           children: [
-            InfoCard(
-              name: this.name,
-              profile: this.profile,
-              phone: this.phoneNo,
-              image: AssetImage("assets/images/person.png"),
-            ),
             StickyHeader(
               header: buildHeader('profile_header', context),
               content: Column(

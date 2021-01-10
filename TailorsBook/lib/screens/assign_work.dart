@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:TailorsBook/common/buttons.dart';
 import 'package:TailorsBook/common/cardBox.dart';
+import 'package:TailorsBook/handle_cloud/data_file.dart';
 import 'package:TailorsBook/locale/app_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -9,32 +12,73 @@ import 'package:flutter/services.dart';
 class AssignWork extends StatefulWidget {
   final String item;
   final String name;
-  AssignWork({this.item, this.name});
+  final String phoneNo;
+  AssignWork({this.item, this.name, this.phoneNo});
   @override
   _AssignWorkState createState() =>
-      _AssignWorkState(item: this.item, name: this.name);
+      _AssignWorkState(item: this.item, name: this.name, phoneNo: this.phoneNo);
 }
-
-List items = [];
 
 class _AssignWorkState extends State<AssignWork> {
   final String item;
   final String name;
-  _AssignWorkState({this.item, this.name});
+  final String phoneNo;
+  _AssignWorkState({this.item, this.name, this.phoneNo});
   final TextEditingController _textController = new TextEditingController();
 
+  List items = [];
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   void function(int index) {
+    print(phoneNo);
+    print(this.phoneNo);
     items.removeAt(index);
     setState(() {});
   }
 
   int branch = 0;
-  int val1 = 0;
-  int value = 0;
-  int regNo = -1, count = -1;
+  int val1 = 1;
+  int regNo = -1, count = 1;
+
+  Future addItem() async {
+    if (regNo != -1) {
+      if (await getCheck(branch, regNo, item, count)) {
+        print('yes');
+        items.add({
+          "branch": branch,
+          "regNo": regNo,
+          "type": this.item,
+          "count": count
+        });
+      } else {
+        SnackBar snackBar = SnackBar(
+          content: Text(
+            'Data set is not correct',
+          ),
+        );
+        _scaffoldKey.currentState.showSnackBar(snackBar);
+        Timer(Duration(seconds: 1), () {});
+      }
+    }
+    regNo = -1;
+    count = 1;
+    val1 = 1;
+    _textController.clear();
+    setState(() {});
+  }
+
+  void onSave() async {
+    print(phoneNo);
+    if (phoneNo != null) {
+      await assignWork(items, phoneNo);
+      Navigator.pop(context);
+    }
+  }
+
   @override
   Widget build(BuildContext parentContext) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text("$name"), //$$$fetch
         actions: [
@@ -43,7 +87,7 @@ class _AssignWorkState extends State<AssignWork> {
               color: items.length > 0 ? Colors.blue[50] : Colors.amber,
               margin: EdgeInsets.all(10),
               child: RaisedButton(
-                onPressed: () {},
+                onPressed: onSave,
                 child: Center(
                     child: Text(
                   'SAVE',
@@ -189,28 +233,14 @@ class _AssignWorkState extends State<AssignWork> {
                       height: 10,
                     ),
                     RaisedButton(
-                      onPressed: () {
-                        if (regNo != -1 && count > 0) {
-                          items.add({
-                            "branch": branch,
-                            "regNo": regNo,
-                            "type": this.item,
-                            "count": count
-                          });
-                        }
-                        setState(() {
-                          regNo = -1;
-                          count = -1;
-                          val1 = 0;
-                          value = 0;
-                          _textController.clear();
-                        });
+                      onPressed: () async {
+                        await addItem();
                       },
                       child: Container(
                         height: 45,
                         child: Center(
                           child: Text(
-                            "ADD",
+                            "ADD ( $item )",
                             style: TextStyle(
                                 fontSize: 25,
                                 fontWeight: FontWeight.bold,

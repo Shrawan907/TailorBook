@@ -343,18 +343,12 @@ class InfoCard extends StatelessWidget {
 class ProfileItemCardBox extends StatelessWidget {
   final int regNo;
   final int count;
-  final bool isComplete;
   final String type;
   final bool isColor;
   final int branch;
 
   const ProfileItemCardBox(
-      {this.branch,
-      this.regNo,
-      this.count,
-      this.isComplete,
-      this.type,
-      this.isColor});
+      {this.branch, this.regNo, this.count, this.type, this.isColor});
 
   @override
   Widget build(BuildContext context) {
@@ -391,9 +385,6 @@ class ProfileItemCardBox extends StatelessWidget {
                   fontSize: 25,
                 ),
               ),
-            ),
-            Expanded(
-              child: isComplete ? Icon(Icons.check) : Container(),
             ),
           ],
         ),
@@ -1267,14 +1258,6 @@ Card buildHeader(String headerType, BuildContext context) {
             Expanded(
                 child: Text(
               "COUNT",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                  color: Colors.white),
-            )),
-            Expanded(
-                child: Text(
-              "COMPLETE",
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 15,

@@ -36,6 +36,7 @@ List pajamaR = [];
 List achkanR = [];
 List othersR = [];
 List assignedData = [];
+List completedData = [];
 
 // fetch data Date-wise
 Future<List> fetchTodayData(DateTime date) async {
@@ -806,7 +807,7 @@ Future deleteDataOf(int regNo, int branch) async {
 }
 
 //to fetch team members data
-Future<List> fetchData(String phoneNo) async {
+Future<List> fetchAssignedData(String phoneNo) async {
   tempData.clear();
   // tempData = [[], []];
   var dataPath = db.collection("company/team/members/$phoneNo/assigned");
@@ -819,39 +820,144 @@ Future<List> fetchData(String phoneNo) async {
       tempData.addAll([
         {
           'branch': temp["branch"],
-          'regNo': temp["reg_no"],
+          'regNo': temp["regNo"],
           'type': temp["type"],
           'count': temp["count"],
-          'isComplete': temp["isComplete"]
         }
       ]);
-      // } else {
-      //     tempData[0].addAll([
-      //       {
-      //         'regNo': temp["reg_no"],
-      //         'type': temp["type"],
-      //         'count': temp["count"]
-      //       }
-      //     ]);
-      //   }
     });
   });
   await Future.delayed(Duration(seconds: 2));
   return tempData;
 }
 
-void clearData() {
+void clearAssignedData() {
   assignedData.clear();
 }
 
 Future<List> getAssignedData(String phoneNo) async {
-  clearData();
   if (assignedData == null || assignedData.isEmpty) {
-    assignedData.clear();
-    assignedData = [...(await fetchData(phoneNo))];
+    assignedData = [...(await fetchAssignedData(phoneNo))];
     return assignedData;
   } else {
     return assignedData;
   }
 // return assignedData;
+}
+
+Future<List> fetchCompletedData(String phoneNo) async {
+  tempData.clear();
+  var dataPath = db.collection("company/team/members/$phoneNo/completed");
+  dataPath.snapshots().listen((QuerySnapshot querySnapshot) {
+    querySnapshot.docs.forEach((element) {
+      Map temp = element.data();
+      print(temp);
+      // if (temp["isComplete"]) {
+      tempData.addAll([
+        {
+          'branch': temp["branch"],
+          'regNo': temp["regNo"],
+          'type': temp["type"],
+          'count': temp["count"],
+        }
+      ]);
+    });
+  });
+  await Future.delayed(Duration(seconds: 2));
+  return tempData;
+}
+
+void clearCompletedData() {
+  completedData.clear();
+}
+
+Future<List> getCompletedData(String phoneNo) async {
+  if (completedData == null || completedData.isEmpty) {
+    completedData = [...(await fetchCompletedData(phoneNo))];
+    return completedData;
+  } else {
+    return completedData;
+  }
+}
+
+Future<bool> getCheck(int branch, int regNo, String item, int count) async {
+  print(item);
+  bool proceed = false;
+  int cnt = 0;
+  Map temp;
+  var path = db
+      .collection('company')
+      .doc(branch == 0 ? "branchA" : "branchB")
+      .collection('products/products/$item');
+  path.doc('$regNo').get().then((element) => {
+        temp = element.data(),
+        if (temp != null &&
+            temp.containsKey('isComplete') &&
+            temp['isComplete'] == false &&
+            temp.containsKey('status'))
+          {
+            for (int i = 0; i < temp['status'].length; i++)
+              {
+                print(temp['status'][i]),
+                if (temp['status'][i] == 'cut' || temp['status'][i] == 'uncut')
+                  cnt++,
+              },
+          }
+        else
+          {
+            print(temp),
+            print(temp.containsKey('isComplete')),
+            print(temp.containsKey('status')),
+          }
+      }); //
+  await Future.delayed(Duration(seconds: 1, milliseconds: 250));
+  print(cnt);
+  print(count);
+  if (count > 0 && count <= cnt) proceed = true;
+  print('hello');
+  print(proceed);
+  return proceed;
+}
+
+Future assignWork(List items, String phoneNo) async {
+  var path = db.collection('company/team/members');
+  var subPath = path.doc(phoneNo).collection('assigned');
+  path.doc(phoneNo).get().then((snapShot) => {
+        if (snapShot.exists)
+          {
+            items.forEach((data) => {
+                  print("${data['branch']}_${data['regNo']}_${data['type']}"),
+                  subPath
+                      .doc("${data['branch']}_${data['regNo']}_${data['type']}")
+                      .get()
+                      .then((snapShot) => {
+                            if (snapShot.exists)
+                              {
+                                subPath
+                                    .doc(
+                                        "${data['branch']}_${data['regNo']}_${data['type']}")
+                                    .update({
+                                  'count': FieldValue.increment(data['count'])
+                                }),
+                              }
+                            else
+                              {
+                                subPath
+                                    .doc(
+                                        "${data['branch']}_${data['regNo']}_${data['type']}")
+                                    .set({
+                                  'branch': data['branch'],
+                                  'regNo': data['regNo'],
+                                  'type': data['type'],
+                                  'count': data['count']
+                                })
+                              }
+                          }),
+                }),
+          }
+        else
+          {
+            print('No user with phoneNo: {$phoneNo} Exists'),
+          }
+      });
 }

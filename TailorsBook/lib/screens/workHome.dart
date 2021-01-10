@@ -32,16 +32,18 @@ Map pref = {
 class WorkHome extends StatefulWidget {
   final String profile;
   final String name;
-  WorkHome({this.profile, this.name});
+  final String phoneNo;
+  WorkHome({this.profile, this.name, this.phoneNo});
   @override
-  _WorkHomeState createState() =>
-      _WorkHomeState(profile: this.profile, name: this.name);
+  _WorkHomeState createState() => _WorkHomeState(
+      profile: this.profile, name: this.name, phoneNo: this.phoneNo);
 }
 
 class _WorkHomeState extends State<WorkHome> {
   final String profile;
   final String name;
-  _WorkHomeState({this.profile, this.name});
+  final String phoneNo;
+  _WorkHomeState({this.profile, this.name, this.phoneNo});
 
   String prefKey = 'coat_maker';
   String prefNKey = 'n_coat';
@@ -63,6 +65,19 @@ class _WorkHomeState extends State<WorkHome> {
     }
   }
 
+  onTap(String item) {
+    print(phoneNo);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => AssignWork(
+                item: item,
+                name: this.name,
+                phoneNo: this.phoneNo,
+              )),
+    );
+  }
+
   @override
   Widget build(BuildContext parentContext) {
     return Scaffold(
@@ -81,8 +96,7 @@ class _WorkHomeState extends State<WorkHome> {
             WorkItemBox(
               item: pref[prefKey][i],
               color: Colors.red[100],
-              name: this.name,
-              profile: this.profile,
+              onTap: onTap,
             ),
           Container(
             margin: EdgeInsets.all(5),
@@ -113,8 +127,7 @@ class _WorkHomeState extends State<WorkHome> {
               WorkItemBox(
                 item: pref[prefNKey][i],
                 color: Colors.blue[200],
-                name: this.name,
-                profile: this.profile,
+                onTap: onTap,
               )
         ],
       ),
@@ -125,21 +138,13 @@ class _WorkHomeState extends State<WorkHome> {
 class WorkItemBox extends StatelessWidget {
   final String item;
   final Color color;
-  final String name;
-  final String profile;
-  WorkItemBox({this.item, this.color, this.profile, this.name});
+  final Function onTap;
+  WorkItemBox({this.item, this.color, this.onTap});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => AssignWork(
-                    item: this.item,
-                    name: this.name,
-                  )),
-        );
+        onTap(this.item);
       },
       child: Card(
         color: color, // lightGreenAccent
