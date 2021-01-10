@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:core';
 import 'package:TailorsBook/locale/app_localization.dart';
 import 'package:TailorsBook/screens/cut_home.dart';
 import 'package:TailorsBook/screens/signin.dart';
@@ -13,10 +14,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:TailorsBook/screens/profile.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-List teamA = []; // Cutter
-List teamB = []; // Coat Maker
-List teamC = []; // Pent Maker
-List teamD = []; // Shirt Maker
+List teamA = []; // Coat Maker
+List teamB = []; // Pent Maker
+List teamC = []; // Shirt Maker
 
 class TeamMembers extends StatefulWidget {
   @override
@@ -85,7 +85,7 @@ class _TeamMembersState extends State<TeamMembers> {
               height: 150,
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: teamB.length,
+                  itemCount: teamA.length,
                   itemBuilder: (context, index) {
                     return PersonInfo(
                       name: teamA[index]['name'],

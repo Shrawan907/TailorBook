@@ -11,6 +11,8 @@ import 'package:TailorsBook/screens/on_working.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../locale/app_localization.dart';
+
 Map info = {};
 List detail = [];
 
@@ -188,7 +190,7 @@ class _SearchResultState extends State<SearchResult> {
                 width: 10,
               ),
               Text(
-                "$key" + " ( $count )",
+                AppLocalizations.of(context).translate("$key") + " ( $count )",
                 style: TextStyle(fontSize: 25, color: Colors.amber),
               ),
             ],
@@ -203,7 +205,8 @@ class _SearchResultState extends State<SearchResult> {
                   child: Icon(Icons.arrow_right_alt),
                 ),
                 Expanded(
-                    child: Text(info["$key"]["status"][i],
+                    child: Text(
+                        AppLocalizations.of(context).translate(info["$key"]["status"][i]),
                         style: TextStyle(fontSize: 20))),
               ],
             ),

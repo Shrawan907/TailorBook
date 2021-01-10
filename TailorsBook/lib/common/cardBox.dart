@@ -8,6 +8,8 @@ import 'package:TailorsBook/handle_cloud/data_file.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../locale/app_localization.dart';
+
 class CardBox extends StatelessWidget {
   final int regNo;
   final bool isComplete;
@@ -226,15 +228,15 @@ class PersonInfo extends StatelessWidget {
             child: Column(
               children: [
                 Expanded(
-                    //this.image,
-                    child: Container(
-                  decoration: BoxDecoration(
+                  //this.image,
+                  child: Container(
+                      decoration: BoxDecoration(
                     image: DecorationImage(
                       image: image,
                       fit: BoxFit.cover,
                     ),
-                  ),
-                )),
+                  )),
+                ),
                 Container(
                   color: this.color,
                   height: 40,
@@ -340,13 +342,19 @@ class InfoCard extends StatelessWidget {
 
 class ProfileItemCardBox extends StatelessWidget {
   final int regNo;
+  final int count;
   final bool isComplete;
   final String type;
   final bool isColor;
   final int branch;
 
   const ProfileItemCardBox(
-      {this.branch, this.regNo, this.isComplete, this.type, this.isColor});
+      {this.branch,
+      this.regNo,
+      this.count,
+      this.isComplete,
+      this.type,
+      this.isColor});
 
   @override
   Widget build(BuildContext context) {
@@ -371,6 +379,14 @@ class ProfileItemCardBox extends StatelessWidget {
             Expanded(
               child: Text(
                 '$type',
+                style: TextStyle(
+                  fontSize: 25,
+                ),
+              ),
+            ),
+            Expanded(
+              child: Text(
+                '$count',
                 style: TextStyle(
                   fontSize: 25,
                 ),
@@ -493,7 +509,9 @@ class RequestCard extends StatelessWidget {
                               child: Row(
                                 children: [
                                   Text(
-                                    "Accept  ",
+                                    AppLocalizations.of(context)
+                                            .translate("accept") +
+                                        "      ",
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold),
@@ -515,7 +533,9 @@ class RequestCard extends StatelessWidget {
                               child: Row(
                                 children: [
                                   Text(
-                                    "Decline  ",
+                                    AppLocalizations.of(context)
+                                            .translate("decline") +
+                                        "  ",
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold),
@@ -535,7 +555,7 @@ class RequestCard extends StatelessWidget {
                               Navigator.pop(context);
                             },
                             child: Text(
-                              "Back",
+                              AppLocalizations.of(context).translate("back"),
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),
@@ -558,7 +578,7 @@ class RequestCard extends StatelessWidget {
                   Container(
                       width: 100,
                       child: Text(
-                        "Name",
+                        AppLocalizations.of(context).translate("n_name"),
                         style: TextStyle(fontSize: 20),
                       )),
                   Expanded(
@@ -583,7 +603,7 @@ class RequestCard extends StatelessWidget {
                   Container(
                       width: 100,
                       child: Text(
-                        "Phone",
+                        AppLocalizations.of(context).translate("n_phone"),
                         style: TextStyle(fontSize: 20),
                       )),
                   Expanded(
@@ -602,7 +622,7 @@ class RequestCard extends StatelessWidget {
                   Container(
                       width: 100,
                       child: Text(
-                        "Profile",
+                        AppLocalizations.of(context).translate("n_profile"),
                         style: TextStyle(fontSize: 20),
                       )),
                   Expanded(
@@ -929,13 +949,18 @@ class CuttingCardBox extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            "$item",
+                            AppLocalizations.of(context).translate("$item"),
                             style: TextStyle(color: Colors.black54),
                           ),
                         ],
                       ),
                       SizedBox(height: 50),
-                      Text("Total: $count ", style: TextStyle(fontSize: 20)),
+                      Text(
+                          AppLocalizations.of(context).translate("total") +
+                              " " +
+                              AppLocalizations.of(context).translate("count") +
+                              ": $count ",
+                          style: TextStyle(fontSize: 20)),
                       SizedBox(height: 10),
                       Container(
                         padding: EdgeInsets.all(15),
@@ -1241,6 +1266,14 @@ Card buildHeader(String headerType, BuildContext context) {
             )),
             Expanded(
                 child: Text(
+              "COUNT",
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: Colors.white),
+            )),
+            Expanded(
+                child: Text(
               "COMPLETE",
               style: TextStyle(
                   fontWeight: FontWeight.bold,
@@ -1389,8 +1422,7 @@ Card buildHeader(String headerType, BuildContext context) {
               )),
               Expanded(
                   child: Text(
-                "COUNT",
-                //AppLocalizations.of(context).translate(""),
+                AppLocalizations.of(context).translate("count"),
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 15,
@@ -1438,8 +1470,7 @@ Card buildHeader(String headerType, BuildContext context) {
               )),
               Expanded(
                   child: Text(
-                "COUNT",
-                //AppLocalizations.of(context).translate(""),
+                AppLocalizations.of(context).translate("count"),
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 15,
@@ -1447,8 +1478,7 @@ Card buildHeader(String headerType, BuildContext context) {
               )),
               Expanded(
                   child: Text(
-                "RETURN",
-                //AppLocalizations.of(context).translate(""),
+                AppLocalizations.of(context).translate("return_date"),
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 15,

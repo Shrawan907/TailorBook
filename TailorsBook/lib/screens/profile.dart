@@ -118,6 +118,7 @@ class _ProfileState extends State<Profile> {
                       regNo: items[i]['regNo'],
                       isComplete: items[i]['isComplete'],
                       type: items[i]["type"],
+                      count: items[i]["count"],
                       isColor: i & 1 == 1,
                     ),
                 ],
