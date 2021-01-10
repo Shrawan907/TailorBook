@@ -15,6 +15,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:toast/toast.dart';
 
+import '../locale/app_localization.dart';
+import '../locale/app_localization.dart';
+import '../locale/app_localization.dart';
+
 DateTime bookingDate = DateTime.now();
 DateTime returnDate = bookingDate;
 FirebaseFirestore db = FirebaseFirestore.instance;
@@ -168,7 +172,7 @@ class _UpdateDataState extends State<UpdateData> {
                 height: 200,
                 child: Column(
                   children: [
-                    Text('This Will Change Reg. No.'),
+                    Text(AppLocalizations.of(context).translate("notice_change_reg")),
                     Expanded(
                       child: Row(
                         children: [
@@ -235,7 +239,7 @@ class _UpdateDataState extends State<UpdateData> {
                                 Navigator.pop(context);
                               },
                               child: Center(
-                                child: Text('BACK'),
+                                child: Text(AppLocalizations.of(context).translate("back")),
                               ),
                             ),
                           ),
@@ -254,7 +258,7 @@ class _UpdateDataState extends State<UpdateData> {
                                 Navigator.pop(context);
                               },
                               child: Center(
-                                child: Text('SAVE'),
+                                child: Text(AppLocalizations.of(context).translate("save")),
                               ),
                             ),
                           ),
@@ -435,8 +439,8 @@ class _UpdateDataState extends State<UpdateData> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
-          "Update",
-        ), //Text(AppLocalizations.of(context).translate("t_return_today")),
+          AppLocalizations.of(context).translate("update"),
+        ),
         actions: [
           GestureDetector(
             onTap: () async {
@@ -449,14 +453,13 @@ class _UpdateDataState extends State<UpdateData> {
                       width: 300,
                       child: ListView(
                         children: [
-                          Text(
-                              'This will permanently delete all the details of: '),
+                          Text(AppLocalizations.of(context).translate("notice_delete_warn")),
                           Text(
                             (branch == 0 ? "A" : "B") + ' $regNo ',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           SizedBox(height: 20),
-                          Text('Press Delete to proceed.'),
+                          Text(AppLocalizations.of(context).translate("notice_delete")),
                           SizedBox(height: 20),
                           Row(
                             children: [
@@ -468,7 +471,7 @@ class _UpdateDataState extends State<UpdateData> {
                                     onPressed: () {
                                       Navigator.pop(context);
                                     },
-                                    child: Text('BACK'),
+                                    child: Text(AppLocalizations.of(context).translate("back")),
                                   ),
                                 ),
                               ),
@@ -482,7 +485,7 @@ class _UpdateDataState extends State<UpdateData> {
                                       deleted = true;
                                       Navigator.pop(context);
                                     },
-                                    child: Text('DELETE'),
+                                    child: Text(AppLocalizations.of(context).translate("delete")),
                                   ),
                                 ),
                               ),
@@ -493,7 +496,9 @@ class _UpdateDataState extends State<UpdateData> {
                     ),
                   ));
               if (deleted == true) {
-                Navigator.pop(context);
+                Navigator.pop(context);           //$$$issue here$$$ When it is deleted it need to go back to Day Data page but it is not going over there
+                                                  //$$$issue here2$$$ If we change reg no in edit for x to x+1 and on the same page just by changing value
+                                                  // on the same page then it delete the data of x+1 reg no.
               }
             },
             child: Container(
@@ -516,7 +521,7 @@ class _UpdateDataState extends State<UpdateData> {
                 margin: EdgeInsets.only(right: 20),
                 child: Center(
                     child: Text(
-                  "SAVE",
+                      AppLocalizations.of(context).translate("save"),
                   style: TextStyle(
                       fontSize: 20,
                       color: change ? Colors.black : Colors.black38),
@@ -585,8 +590,8 @@ class _UpdateDataState extends State<UpdateData> {
                             Container(
                               width: 130,
                               padding: EdgeInsets.all(10),
-                              child: Text("Return" + ":",
-                                  style: TextStyle(fontSize: 22)),
+                              child: Text(AppLocalizations.of(context).translate("return_date") + ":",
+                                  style: TextStyle(fontSize: 18)),
                             ),
                             Expanded(
                                 child: Text(showDate,
@@ -629,7 +634,7 @@ class _UpdateDataState extends State<UpdateData> {
                                       ),
                                       Expanded(
                                         child: Text(
-                                          "coat",
+                                          AppLocalizations.of(context).translate("coat"),
                                           style: TextStyle(
                                               fontSize: 25,
                                               color: Colors.amber),
@@ -708,7 +713,7 @@ class _UpdateDataState extends State<UpdateData> {
                                                   return new DropdownMenuItem<
                                                       String>(
                                                     value: value,
-                                                    child: new Text(value),
+                                                    child: new Text(AppLocalizations.of(context).translate(value)),
                                                   );
                                                 }).toList(),
                                                 onChanged: (value) {
@@ -749,7 +754,7 @@ class _UpdateDataState extends State<UpdateData> {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      "coat",
+                                      AppLocalizations.of(context).translate("coat"),
                                       style: TextStyle(
                                           fontSize: 25, color: Colors.black38),
                                     ),
@@ -777,7 +782,7 @@ class _UpdateDataState extends State<UpdateData> {
                                       ),
                                       Expanded(
                                         child: Text(
-                                          "pent",
+                                          AppLocalizations.of(context).translate("pent"),
                                           style: TextStyle(
                                               fontSize: 25,
                                               color: Colors.amber),
@@ -855,7 +860,7 @@ class _UpdateDataState extends State<UpdateData> {
                                                   return new DropdownMenuItem<
                                                       String>(
                                                     value: value,
-                                                    child: new Text(value),
+                                                    child: new Text(AppLocalizations.of(context).translate(value)),
                                                   );
                                                 }).toList(),
                                                 onChanged: (value) {
@@ -896,7 +901,7 @@ class _UpdateDataState extends State<UpdateData> {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      "pent",
+                                      AppLocalizations.of(context).translate("pent"),
                                       style: TextStyle(
                                           fontSize: 25, color: Colors.black38),
                                     ),
@@ -924,7 +929,7 @@ class _UpdateDataState extends State<UpdateData> {
                                       ),
                                       Expanded(
                                         child: Text(
-                                          "shirt",
+                                          AppLocalizations.of(context).translate("shirt"),
                                           style: TextStyle(
                                               fontSize: 25,
                                               color: Colors.amber),
@@ -1002,7 +1007,7 @@ class _UpdateDataState extends State<UpdateData> {
                                                   return new DropdownMenuItem<
                                                       String>(
                                                     value: value,
-                                                    child: new Text(value),
+                                                    child: new Text(AppLocalizations.of(context).translate(value)),
                                                   );
                                                 }).toList(),
                                                 onChanged: (value) {
@@ -1043,7 +1048,7 @@ class _UpdateDataState extends State<UpdateData> {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      "shirt",
+                                      AppLocalizations.of(context).translate("shirt"),
                                       style: TextStyle(
                                           fontSize: 25, color: Colors.black38),
                                     ),
@@ -1071,7 +1076,7 @@ class _UpdateDataState extends State<UpdateData> {
                                       ),
                                       Expanded(
                                         child: Text(
-                                          "jacket",
+                                          AppLocalizations.of(context).translate("jacket"),
                                           style: TextStyle(
                                               fontSize: 25,
                                               color: Colors.amber),
@@ -1149,7 +1154,7 @@ class _UpdateDataState extends State<UpdateData> {
                                                   return new DropdownMenuItem<
                                                       String>(
                                                     value: value,
-                                                    child: new Text(value),
+                                                    child: new Text(AppLocalizations.of(context).translate(value)),
                                                   );
                                                 }).toList(),
                                                 onChanged: (value) {
@@ -1190,7 +1195,7 @@ class _UpdateDataState extends State<UpdateData> {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      "jacket",
+                                      AppLocalizations.of(context).translate("jacket"),
                                       style: TextStyle(
                                           fontSize: 25, color: Colors.black38),
                                     ),
@@ -1218,7 +1223,7 @@ class _UpdateDataState extends State<UpdateData> {
                                       ),
                                       Expanded(
                                         child: Text(
-                                          "kurta",
+                                          AppLocalizations.of(context).translate("kurta"),
                                           style: TextStyle(
                                               fontSize: 25,
                                               color: Colors.amber),
@@ -1296,7 +1301,7 @@ class _UpdateDataState extends State<UpdateData> {
                                                   return new DropdownMenuItem<
                                                       String>(
                                                     value: value,
-                                                    child: new Text(value),
+                                                    child: new Text(AppLocalizations.of(context).translate(value)),
                                                   );
                                                 }).toList(),
                                                 onChanged: (value) {
@@ -1338,7 +1343,7 @@ class _UpdateDataState extends State<UpdateData> {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      "kurta",
+                                      AppLocalizations.of(context).translate("kurta"),
                                       style: TextStyle(
                                           fontSize: 25, color: Colors.black38),
                                     ),
@@ -1366,7 +1371,7 @@ class _UpdateDataState extends State<UpdateData> {
                                       ),
                                       Expanded(
                                         child: Text(
-                                          "pajama",
+                                          AppLocalizations.of(context).translate("pajama"),
                                           style: TextStyle(
                                               fontSize: 25,
                                               color: Colors.amber),
@@ -1445,7 +1450,7 @@ class _UpdateDataState extends State<UpdateData> {
                                                   return new DropdownMenuItem<
                                                       String>(
                                                     value: value,
-                                                    child: new Text(value),
+                                                    child: new Text(AppLocalizations.of(context).translate(value)),
                                                   );
                                                 }).toList(),
                                                 onChanged: (value) {
@@ -1487,7 +1492,7 @@ class _UpdateDataState extends State<UpdateData> {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      "pajama",
+                                      AppLocalizations.of(context).translate("pajama"),
                                       style: TextStyle(
                                           fontSize: 25, color: Colors.black38),
                                     ),
@@ -1515,7 +1520,7 @@ class _UpdateDataState extends State<UpdateData> {
                                       ),
                                       Expanded(
                                         child: Text(
-                                          "achkan",
+                                          AppLocalizations.of(context).translate("achkan"),
                                           style: TextStyle(
                                               fontSize: 25,
                                               color: Colors.amber),
@@ -1593,7 +1598,7 @@ class _UpdateDataState extends State<UpdateData> {
                                                   return new DropdownMenuItem<
                                                       String>(
                                                     value: value,
-                                                    child: new Text(value),
+                                                    child: new Text(AppLocalizations.of(context).translate(value)),
                                                   );
                                                 }).toList(),
                                                 onChanged: (value) {
@@ -1634,7 +1639,7 @@ class _UpdateDataState extends State<UpdateData> {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      "achkan",
+                                      AppLocalizations.of(context).translate("achkan"),
                                       style: TextStyle(
                                           fontSize: 25, color: Colors.black38),
                                     ),
@@ -1662,7 +1667,7 @@ class _UpdateDataState extends State<UpdateData> {
                                       ),
                                       Expanded(
                                         child: Text(
-                                          "others",
+                                          AppLocalizations.of(context).translate("others"),
                                           style: TextStyle(
                                               fontSize: 25,
                                               color: Colors.amber),
@@ -1740,7 +1745,7 @@ class _UpdateDataState extends State<UpdateData> {
                                                   return new DropdownMenuItem<
                                                       String>(
                                                     value: value,
-                                                    child: new Text(value),
+                                                    child: new Text(AppLocalizations.of(context).translate(value)),
                                                   );
                                                 }).toList(),
                                                 onChanged: (value) {
@@ -1780,7 +1785,7 @@ class _UpdateDataState extends State<UpdateData> {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      "others",
+                                      AppLocalizations.of(context).translate("others"),
                                       style: TextStyle(
                                           fontSize: 25, color: Colors.black38),
                                     ),

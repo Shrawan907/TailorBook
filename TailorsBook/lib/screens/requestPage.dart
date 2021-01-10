@@ -46,8 +46,7 @@ class _RequestPageState extends State<RequestPage> {
   Widget build(BuildContext parentContext) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-            "Requests"), //AppLocalizations.of(context).translate("t_return_today")),
+        title: Text(AppLocalizations.of(context).translate("requests")),
       ),
       body: RefreshIndicator(
         onRefresh: () async {

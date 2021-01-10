@@ -14,50 +14,6 @@ import 'package:sticky_headers/sticky_headers.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:TailorsBook/screens/assign_work.dart';
 
-// List items = [
-//   {"regNo": "111", "type": "other", "isComplete": true},
-//   {"regNo": "123", "type": "pajama", "isComplete": true},
-//   {"regNo": "124", "type": "shirt", "isComplete": false},
-//   {"regNo": "127", "type": "kurta", "isComplete": true},
-//   {"regNo": "127", "type": "shirt", "isComplete": true},
-//   {"regNo": "123", "type": "pajama", "isComplete": true},
-//   {"regNo": "124", "type": "shirt", "isComplete": false},
-//   {"regNo": "127", "type": "kurta", "isComplete": true},
-//   {"regNo": "127", "type": "shirt", "isComplete": true},
-//   {"regNo": "123", "type": "pajama", "isComplete": true},
-//   {"regNo": "124", "type": "shirt", "isComplete": false},
-//   {"regNo": "127", "type": "kurta", "isComplete": true},
-//   {"regNo": "127", "type": "shirt", "isComplete": true},
-//   {"regNo": "123", "type": "pajama", "isComplete": true},
-//   {"regNo": "124", "type": "shirt", "isComplete": false},
-//   {"regNo": "127", "type": "kurta", "isComplete": true},
-//   {"regNo": "127", "type": "shirt", "isComplete": true},
-//   {"regNo": "123", "type": "pajama", "isComplete": true},
-//   {"regNo": "124", "type": "shirt", "isComplete": false},
-//   {"regNo": "127", "type": "kurta", "isComplete": true},
-//   {"regNo": "127", "type": "shirt", "isComplete": true},
-//   {"regNo": "123", "type": "pajama", "isComplete": true},
-//   {"regNo": "124", "type": "shirt", "isComplete": false},
-//   {"regNo": "127", "type": "kurta", "isComplete": true},
-//   {"regNo": "127", "type": "shirt", "isComplete": true},
-//   {"regNo": "123", "type": "pajama", "isComplete": true},
-//   {"regNo": "124", "type": "shirt", "isComplete": false},
-//   {"regNo": "127", "type": "kurta", "isComplete": true},
-//   {"regNo": "127", "type": "shirt", "isComplete": true},
-//   {"regNo": "123", "type": "pajama", "isComplete": true},
-//   {"regNo": "124", "type": "shirt", "isComplete": false},
-//   {"regNo": "127", "type": "kurta", "isComplete": true},
-//   {"regNo": "127", "type": "shirt", "isComplete": true},
-//   {"regNo": "123", "type": "pajama", "isComplete": true},
-//   {"regNo": "124", "type": "shirt", "isComplete": false},
-//   {"regNo": "127", "type": "kurta", "isComplete": true},
-//   {"regNo": "127", "type": "shirt", "isComplete": true},
-//   {"regNo": "123", "type": "pajama", "isComplete": true},
-//   {"regNo": "124", "type": "shirt", "isComplete": false},
-//   {"regNo": "127", "type": "kurta", "isComplete": true},
-//   {"regNo": "127", "type": "shirt", "isComplete": true},
-// ];
-
 List items = [];
 
 class Profile extends StatefulWidget {
@@ -152,11 +108,12 @@ class _ProfileState extends State<Profile> {
               content: Column(
                 children: [
                   for (int i = 0; i < items.length; i++)
-                    ShirtCardBox(
+                    ProfileCardBox(
+                      profile: this.profile,
                       regNo: items[i]['regNo'],
                       isComplete: items[i]['isComplete'],
                       type: items[i]["type"],
-                      // count: items[i]["count"],
+                      count: items[i]["count"],
                       // profile: this.profile,
                       isColor: i & 1 == 1,
                     ),
