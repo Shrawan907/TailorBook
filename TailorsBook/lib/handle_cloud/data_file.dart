@@ -16,9 +16,9 @@ DateTime timestamp = DateTime.now();
 
 Map info = {};
 List todayData = [];
+List oldData = [];
 List tommData = [];
 List overmData = [];
-List tempData = [];
 List registerAdata = [];
 List registerBdata = [];
 List requestData = [];
@@ -40,8 +40,7 @@ List completedData = [];
 
 // fetch data Date-wise
 Future<List> fetchTodayData(DateTime date) async {
-  tempData.clear();
-  tempData = [[], []];
+  List tempData = [[], []];
   db
       .collection("company/branchA/register")
       .orderBy("regNo", descending: true)
@@ -106,8 +105,6 @@ void clearTodayData() {
 // return today data
 Future<List> todaydata() async {
   if (todayData.isEmpty || todayData == null) {
-    todayData.clear();
-    print("empty");
     todayData = [...(await fetchTodayData(timestamp))];
     return todayData;
   }
@@ -139,10 +136,72 @@ Future<List> overmdata() async {
   return overmData;
 }
 
+Future fetchOldData() async {
+  List tempData = [[], []];
+  db
+      .collection("company/branchA/register")
+      .orderBy("returnDate", descending: true)
+      .snapshots()
+      .listen((QuerySnapshot querySnapshot) {
+    querySnapshot.docs.forEach((element) {
+      Map temp = element.data();
+      DateTime dt = temp["returnDate"].toDate();
+      print(dt.difference(timestamp).inDays);
+      if (dt.difference(timestamp).inDays < 0 &&
+          temp.containsKey('isComplete') &&
+          temp['isComplete'] == false) {
+        tempData[0].addAll([
+          {
+            'regNo': temp['regNo'],
+            'isComplete': temp['isComplete'],
+            'returnDate': temp['returnDate'],
+          }
+        ]);
+      }
+    });
+  });
+  db
+      .collection("company/branchB/register")
+      .orderBy("returnDate", descending: true)
+      .snapshots()
+      .listen((QuerySnapshot querySnapshot) {
+    querySnapshot.docs.forEach((element) {
+      Map temp = element.data();
+      DateTime dt = temp["returnDate"].toDate();
+      if (dt.difference(timestamp).inDays < 0 &&
+          temp.containsKey('isComplete') &&
+          temp['isComplete'] == false) {
+        tempData[1].addAll([
+          {
+            'regNo': temp['regNo'],
+            'isComplete': temp['isComplete'],
+            'returnDate': temp['returnDate'],
+          }
+        ]);
+      }
+    });
+  });
+  await Future.delayed(Duration(seconds: 2));
+  print('hello');
+  return tempData;
+}
+
+void clearOldData() {
+  oldData.clear();
+}
+
+Future getOldData() async {
+  if (oldData == null || oldData.isEmpty) {
+    oldData = [...(await fetchOldData())];
+  }
+  print(oldData);
+  print('ok');
+  return oldData;
+}
+
 // fetch data for register A or B
 Future<List> fetchRegisterData(int branch) async {
-  tempData.clear();
-  tempData = [];
+  List tempData = [];
   String path =
       "company/" + (branch == 0 ? "branchA" : "branchB") + "/register";
   Map temp;
@@ -238,7 +297,7 @@ Future<Map> fetchDetail(int regNo, int branch) async {
 
 // fetch the requests if there any
 Future<List> fetchRequestData() async {
-  tempData.clear();
+  List tempData = [];
   var requestPath = db.collection("company/requests/requests");
   db.collection("company").doc("requests").get().then((element) => {
         if (element.data().containsKey("total") && element.data()["total"] > 0)
@@ -506,8 +565,7 @@ Future getItemRegister(String item) async {
 
 // it fetch the items which are not cut yet
 Future<List> fetchCuttingRegister(String item) async {
-  tempData.clear();
-  tempData = [];
+  List tempData = [];
   int cnt = 0;
   var itemPath = db.collection("company/branchA/products/products/$item");
   itemPath.snapshots().listen((QuerySnapshot querySnapshot) {
@@ -808,8 +866,7 @@ Future deleteDataOf(int regNo, int branch) async {
 
 //to fetch team members data
 Future<List> fetchAssignedData(String phoneNo) async {
-  tempData.clear();
-  // tempData = [[], []];
+  List tempData = [];
   var dataPath = db.collection("company/team/members/$phoneNo/assigned");
   // print(phoneNo);
   dataPath.snapshots().listen((QuerySnapshot querySnapshot) {
@@ -846,7 +903,7 @@ Future<List> getAssignedData(String phoneNo) async {
 }
 
 Future<List> fetchCompletedData(String phoneNo) async {
-  tempData.clear();
+  List tempData = [];
   var dataPath = db.collection("company/team/members/$phoneNo/completed");
   dataPath.snapshots().listen((QuerySnapshot querySnapshot) {
     querySnapshot.docs.forEach((element) {
@@ -1049,33 +1106,3 @@ Future completeWork(int regNo, String phone, String item, int branch, int count,
     itemPath.doc("$regNo").update({"status": temp});
   }
 }
-// var requestPath = db.collection("company/requests/requests");
-// var userPath = db.collection("company/team/members");
-// requestPath.doc(phone).get().then((snapShot) => {
-// if (snapShot.exists)
-// {
-// requestPath.doc(phone).delete(),
-// requestData.remove(requestData
-//     .where((element) => element["phoneNo"] == phone)
-//     .first),
-// db.collection("company").doc("requests").update(
-// {"total": FieldValue.increment(-1)},
-// ),
-// }
-// else
-// {print("snapShot doesn't exists!")}
-// });
-// userPath.doc(phone).get().then((snapShot) => {
-// if (snapShot.exists)
-// {
-// userPath.doc(phone).update({
-// "requestAccepted": true,
-// })
-// }
-// else
-// {
-// print(
-// "Check Needed, no user saved on cloud but request is deleted"),
-// }
-// });
-// await Future.delayed(Duration(seconds: 1));

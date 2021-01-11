@@ -78,6 +78,73 @@ class CardBox extends StatelessWidget {
   }
 }
 
+class OldCardBox extends StatelessWidget {
+  final int regNo;
+  final bool isComplete;
+  final DateTime returnDate;
+  final int branch;
+
+  const OldCardBox({this.regNo, this.isComplete, this.returnDate, this.branch});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: Colors.grey[100], // lightGreenAccent
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SearchResult(
+                regNo: regNo,
+                branch: branch,
+              ),
+            ),
+          );
+        },
+        child: Container(
+          height: 40,
+          margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Expanded(
+                child: Text(
+                  '$regNo',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 30,
+                      color: this.branch == 0
+                          ? Colors.deepPurple
+                          : Colors.red[700]),
+                ),
+              ),
+              Expanded(
+                child: isComplete
+                    ? Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      )
+                    : Icon(
+                        Icons.close,
+                        color: Colors.red,
+                      ),
+              ),
+              Expanded(
+                child: Text(
+                  "${returnDate.day}-${returnDate.month}-${returnDate.year}",
+                  style: TextStyle(fontSize: 22),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class DayCardBox extends StatelessWidget {
   final int regNo;
   final bool isComplete;
@@ -360,7 +427,8 @@ class ProfileItemCardBox extends StatelessWidget {
       this.isColor,
       this.status,
       this.update,
-      this.function, this.phone});
+      this.function,
+      this.phone});
 
   Future onTapAssigned(BuildContext context) async {
     int value = count;
@@ -499,7 +567,8 @@ class ProfileItemCardBox extends StatelessWidget {
                                 setState(() {
                                   loading = true;
                                 });
-                                await completeWork(regNo, phone, type, branch, value, count);
+                                await completeWork(
+                                    regNo, phone, type, branch, value, count);
                                 await function();
                                 Navigator.pop(context);
                               },
@@ -679,8 +748,7 @@ class RequestCard extends StatelessWidget {
               builder: (BuildContext context) {
                 return AlertDialog(
                   content: Container(
-                    height: 300,
-                    width: 200,
+                    height: 200,
                     padding: EdgeInsets.all(20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -1661,6 +1729,54 @@ Card buildHeader(String headerType, BuildContext context) {
                     fontSize: 15,
                     color: Colors.white),
               )),
+            ],
+          ),
+        ),
+      ),
+    );
+  } else if (headerType == "oldData") {
+    return Card(
+      child: Container(
+        height: 20,
+        decoration: BoxDecoration(
+          color: Colors.black54,
+          border: Border(
+            bottom: BorderSide(
+              color: Colors.white,
+              width: 1.0,
+            ),
+          ),
+        ),
+        padding: EdgeInsets.only(left: 30, right: 0),
+        child: Container(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Expanded(
+                  child: Text(
+                AppLocalizations.of(context).translate("reg_no"),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                    color: Colors.white),
+              )),
+              Expanded(
+                  child: Text(
+                AppLocalizations.of(context).translate("complete"),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                    color: Colors.white),
+              )),
+              Expanded(
+                  child: Text(
+                AppLocalizations.of(context).translate("return_date"),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                    color: Colors.white),
+              ))
             ],
           ),
         ),

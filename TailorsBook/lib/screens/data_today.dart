@@ -24,7 +24,7 @@ class DataToday extends StatefulWidget {
 
 class _DataTodayState extends State<DataToday> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-
+  bool today = true;
   @override
   void initState() {
     super.initState();
@@ -37,7 +37,11 @@ class _DataTodayState extends State<DataToday> {
   }
 
   Future fetchData() async {
-    displayData = [...(await todaydata())];
+    if (today == true)
+      displayData = [...(await todaydata())];
+    else {
+      displayData = [...(await getOldData())];
+    }
   }
 
   addNewData() {
@@ -113,21 +117,71 @@ class _DataTodayState extends State<DataToday> {
       ),
       body: Column(
         children: <Widget>[
-          SizedBox(
-            height: 2,
+          Container(
+            height: 35,
+            decoration: BoxDecoration(
+              color: Colors.deepPurple,
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: RaisedButton(
+                    color: today ? Colors.orange[800] : Colors.orange[100],
+                    onPressed: () async {
+                      if (today == false) {
+                        today = true;
+                        await fetchData();
+                        setState(() {});
+                      }
+                    },
+                    child: Center(
+                      child: Text(
+                        'TODAY',
+                        style: TextStyle(
+                            fontSize: today ? 18 : 15,
+                            color: today ? Colors.white : Colors.black45),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: RaisedButton(
+                    color: today ? Colors.orange[100] : Colors.orange[800],
+                    onPressed: () async {
+                      if (today == true) {
+                        today = false;
+                        await fetchData();
+                        setState(() {});
+                      }
+                    },
+                    child: Center(
+                      child: Text(
+                        "OLD",
+                        style: TextStyle(
+                            fontSize: today ? 15 : 18,
+                            color: today ? Colors.black45 : Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           SizedBox(
             height: 2,
           ),
-          buildHeader("dailyInfo", context),
+          buildHeader(today ? "dailyInfo" : "oldData", context),
           Expanded(
             child: Container(
               child: //displayData.isNotEmpty ?
                   RefreshIndicator(
                 onRefresh: () async {
                   try {
-                    initConnectivity(_scaffoldKey,context);
-                    clearTodayData();
+                    initConnectivity(_scaffoldKey, context);
+                    if (today)
+                      clearTodayData();
+                    else
+                      clearOldData();
                     await fetchData();
                     print(displayData.isEmpty);
                     setState(() {});
@@ -135,19 +189,39 @@ class _DataTodayState extends State<DataToday> {
                     print("Refresh Bar Error: " + err);
                   }
                 },
-                child: Container(
-                  child: ListView.builder(
-                    itemCount:
-                        displayData.isEmpty ? 0 : displayData[branch].length,
-                    itemBuilder: (context, index) {
-                      return CardBox(
-                          regNo: displayData[branch][index]['regNo'],
-                          isComplete: displayData[branch][index]['isComplete'],
-                          coat: displayData[branch][index]['coat'],
-                          branch: branch);
-                    },
-                  ),
-                ),
+                child: today
+                    ? Container(
+                        child: ListView.builder(
+                          itemCount: displayData.isEmpty
+                              ? 0
+                              : displayData[branch].length,
+                          itemBuilder: (context, index) {
+                            return CardBox(
+                                regNo: displayData[branch][index]['regNo'],
+                                isComplete: displayData[branch][index]
+                                    ['isComplete'],
+                                coat: displayData[branch][index]['coat'],
+                                branch: branch);
+                          },
+                        ),
+                      )
+                    : Container(
+                        child: ListView.builder(
+                          itemCount: displayData.isEmpty
+                              ? 0
+                              : displayData[branch].length,
+                          itemBuilder: (context, index) {
+                            return OldCardBox(
+                                regNo: displayData[branch][index]['regNo'],
+                                isComplete: displayData[branch][index]
+                                    ['isComplete'],
+                                returnDate: displayData[branch][index]
+                                        ['returnDate']
+                                    .toDate(),
+                                branch: branch);
+                          },
+                        ),
+                      ),
               ),
             ),
           ),
