@@ -15,7 +15,6 @@ import 'package:sticky_headers/sticky_headers.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:TailorsBook/screens/assign_work.dart';
 import 'package:TailorsBook/screens/workHome.dart';
-import 'package:toast/toast.dart';
 
 List items = [];
 
@@ -33,7 +32,6 @@ class _ProfileState extends State<Profile> {
   String name = "";
   String profile = "";
   String phoneNo = "";
-  bool update = false;
 
   _ProfileState({this.name, this.profile, this.phoneNo});
 
@@ -88,16 +86,6 @@ class _ProfileState extends State<Profile> {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).translate("member_diary")),
         actions: [
-          Switch(
-            value: update,
-            onChanged: (val) {
-              setState(() {
-                update = val;
-                print(update);
-              });
-            },
-            activeColor: Colors.red,
-          ),
           GestureDetector(
             onTap: () {
               Navigator.push(
@@ -156,13 +144,6 @@ class _ProfileState extends State<Profile> {
                       type: items[i]["type"],
                       count: items[i]["count"],
                       isColor: i & 1 == 1,
-                      status: "0",
-                      update: update,
-                      phone: this.phoneNo,
-                      function: () async {
-                        await getData();
-                        setState(() {});
-                      },
                     ),
                 ],
               ),
