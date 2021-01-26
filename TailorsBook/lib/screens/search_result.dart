@@ -133,20 +133,42 @@ class _SearchResultState extends State<SearchResult> {
                           ),
                           child: Row(
                             children: [
+                              Container(
+                                child: Text(
+                                    AppLocalizations.of(context)
+                                        .translate("reg_no"),
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                    )),
+                              ),
                               Expanded(
                                   child: Text(
-                                      AppLocalizations.of(context)
-                                              .translate("reg_no") +
-                                          " $regNo",
+                                      (branch == 0 ? " A" : " B") + " $regNo",
                                       style: TextStyle(
                                           fontSize: 25,
-                                          fontWeight: FontWeight.bold))),
+                                          fontWeight: FontWeight.bold,
+                                          color: branch == 0
+                                              ? Colors.deepPurple
+                                              : Colors.red[800]))),
                               Expanded(
                                   child: Text(showDate,
                                       style: TextStyle(fontSize: 20))),
                             ],
                           ),
                         ),
+                        if (info != null &&
+                            info.containsKey('delivered') &&
+                            info['delivered'])
+                          Container(
+                            margin: EdgeInsets.only(top: 10),
+                            child: Text(
+                              AppLocalizations.of(context)
+                                  .translate('delivered'),
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
                         if (info.containsKey("coat")) dataContainer("coat"),
                         if (info.containsKey("jacket")) dataContainer("jacket"),
                         if (info.containsKey("pent")) dataContainer("pent"),
@@ -154,6 +176,10 @@ class _SearchResultState extends State<SearchResult> {
                         if (info.containsKey("kurta")) dataContainer("kurta"),
                         if (info.containsKey("pajama")) dataContainer("pajama"),
                         if (info.containsKey("achkan")) dataContainer("achkan"),
+                        if (info.containsKey("jodJacket"))
+                          dataContainer("jodJacket"),
+                        if (info.containsKey("blazer")) dataContainer("blazer"),
+                        if (info.containsKey("safari")) dataContainer("safari"),
                         if (info.containsKey("others")) dataContainer("others"),
                       ],
                     ),
@@ -206,7 +232,8 @@ class _SearchResultState extends State<SearchResult> {
                 ),
                 Expanded(
                     child: Text(
-                        AppLocalizations.of(context).translate(info["$key"]["status"][i]),
+                        AppLocalizations.of(context)
+                            .translate(info["$key"]["status"][i]),
                         style: TextStyle(fontSize: 20))),
               ],
             ),

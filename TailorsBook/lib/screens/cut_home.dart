@@ -40,320 +40,57 @@ class _CutHomeState extends State<CutHome> {
       ),
       body: ListView(
         children: [
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Cutting(item: "coat")));
-            },
-            child: Card(
-              color: Colors.amber[50], // lightGreenAccent
-              child: Container(
-                height: 80,
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          width: 30,
-                          child: SvgPicture.asset(
-                            'assets/images/coat.svg',
-                            height: 30,
-                            width: 30,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          AppLocalizations.of(context).translate("coat"),
-                          style: TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Cutting(item: "pent")));
-            },
-            child: Card(
-              color: Colors.amber[50], // lightGreenAccent
-              child: Container(
-                height: 80,
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          width: 30,
-                          child: SvgPicture.asset(
-                            'assets/images/pent.svg',
-                            height: 30,
-                            width: 30,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          AppLocalizations.of(context).translate("pent"),
-                          style: TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Cutting(item: "shirt")));
-            },
-            child: Card(
-              color: Colors.amber[50], // lightGreenAccent
-              child: Container(
-                height: 80,
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          width: 30,
-                          child: SvgPicture.asset(
-                            'assets/images/shirt.svg',
-                            height: 30,
-                            width: 30,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          AppLocalizations.of(context).translate("shirt"),
-                          style: TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Cutting(item: "jacket")));
-            },
-            child: Card(
-              color: Colors.amber[50], // lightGreenAccent
-              child: Container(
-                height: 80,
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          width: 30,
-                          child: SvgPicture.asset(
-                            'assets/images/jacket.svg',
-                            height: 30,
-                            width: 30,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          AppLocalizations.of(context).translate("jacket"),
-                          style: TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Cutting(item: "kurta")));
-            },
-            child: Card(
-              color: Colors.amber[50], // lightGreenAccent
-              child: Container(
-                height: 80,
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          width: 30,
-                          child: SvgPicture.asset(
-                            'assets/images/kurta.svg',
-                            height: 30,
-                            width: 30,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          AppLocalizations.of(context).translate("kurta"),
-                          style: TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Cutting(item: "pajama")));
-            },
-            child: Card(
-              color: Colors.amber[50], // lightGreenAccent
-              child: Container(
-                height: 80,
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          width: 30,
-                          child: SvgPicture.asset(
-                            'assets/images/pajama.svg',
-                            height: 30,
-                            width: 30,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          AppLocalizations.of(context).translate("pajama"),
-                          style: TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Cutting(item: "achkan")));
-            },
-            child: Card(
-              color: Colors.amber[50], // lightGreenAccent
-              child: Container(
-                height: 80,
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          width: 30,
-                          child: SvgPicture.asset(
-                            'assets/images/achkan.svg',
-                            height: 30,
-                            width: 30,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          AppLocalizations.of(context).translate("achkan"),
-                          style: TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => Cutting(item: "others")),
-              );
-            },
-            child: Card(
-              color: Colors.amber[50], // lightGreenAccent
-              child: Container(
-                height: 80,
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          width: 30,
-                          child: SvgPicture.asset(
-                            'assets/images/others.svg',
-                            height: 30,
-                            width: 30,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          AppLocalizations.of(context).translate("others"),
-                          style: TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
+          buildGestureDetector('blazer', true),
+          buildGestureDetector('coat', false),
+          buildGestureDetector('pent', true),
+          buildGestureDetector('shirt', false),
+          buildGestureDetector('jacket', true),
+          buildGestureDetector('jodJacket', false),
+          buildGestureDetector('kurta', true),
+          buildGestureDetector('pajama', false),
+          buildGestureDetector('safari', true),
+          buildGestureDetector('achkan', false),
+          buildGestureDetector('others', true),
         ],
+      ),
+    );
+  }
+
+  GestureDetector buildGestureDetector(String key, bool odd) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => Cutting(item: key)));
+      },
+      child: Card(
+        color: odd ? Colors.amber[50] : Colors.lime[100], // lightGreenAccent
+        child: Container(
+          height: 60,
+          child: Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 100,
+                  child: Center(
+                    child: SvgPicture.asset(
+                      'assets/images/$key.svg',
+                      height: 30,
+                      width: 30,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    AppLocalizations.of(context).translate("$key"),
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

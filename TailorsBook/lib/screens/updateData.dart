@@ -39,6 +39,8 @@ class _UpdateDataState extends State<UpdateData> {
   bool change = false;
   int regNo = 0;
   int initialRegNo = 0;
+  bool delivered = false;
+  bool initialDelivered = false;
   int coatVal = 0,
       pentVal = 0,
       shirtVal = 0,
@@ -46,7 +48,11 @@ class _UpdateDataState extends State<UpdateData> {
       kurtaVal = 0,
       pajamaVal = 0,
       achkanVal = 0,
-      othersVal = 0;
+      othersVal = 0,
+      blazerVal = 0,
+      jodJacketVal = 0,
+      safariVal = 0;
+
   List coatList = [],
       pentList = [],
       shirtList = [],
@@ -54,6 +60,9 @@ class _UpdateDataState extends State<UpdateData> {
       kurtaList = [],
       pajamaList = [],
       achkanList = [],
+      blazerList = [],
+      jodJacketList = [],
+      safariList = [],
       othersList = [];
 
   final _controller = TextEditingController();
@@ -67,6 +76,7 @@ class _UpdateDataState extends State<UpdateData> {
 
   void initialData() {
     change = false;
+
     if (initialDetail.containsKey("branch")) {
       initialBranch = initialDetail["branch"];
       branch = initialBranch;
@@ -79,6 +89,13 @@ class _UpdateDataState extends State<UpdateData> {
         initialDetail['returnDate'] != null) {
       returnDate = initialDetail['returnDate'];
       showDate = "${returnDate.day}-${returnDate.month}-${returnDate.year}";
+    }
+    if (initialDetail.containsKey("delivered")) {
+      delivered = initialDetail['delivered'];
+      initialDelivered = delivered;
+    } else {
+      delivered = false;
+      initialDelivered = delivered;
     }
     if (initialDetail.containsKey('coat')) {
       coatVal = initialDetail['coat']['count'];
@@ -121,6 +138,27 @@ class _UpdateDataState extends State<UpdateData> {
     } else {
       pajamaVal = 0;
       pajamaList.clear();
+    }
+    if (initialDetail.containsKey('jodJacket')) {
+      jodJacketVal = initialDetail['jodJacket']['count'];
+      jodJacketList = [...(initialDetail['jodJacket']['status'])];
+    } else {
+      jodJacketVal = 0;
+      jodJacketList.clear();
+    }
+    if (initialDetail.containsKey('blazer')) {
+      blazerVal = initialDetail['blazer']['count'];
+      blazerList = [...(initialDetail['blazer']['status'])];
+    } else {
+      blazerVal = 0;
+      blazerList.clear();
+    }
+    if (initialDetail.containsKey('safari')) {
+      safariVal = initialDetail['safari']['count'];
+      safariList = [...(initialDetail['safari']['status'])];
+    } else {
+      safariVal = 0;
+      safariList.clear();
     }
     if (initialDetail.containsKey('achkan')) {
       achkanVal = initialDetail['achkan']['count'];
@@ -272,6 +310,16 @@ class _UpdateDataState extends State<UpdateData> {
 
   addProduct(bool newRegNo, var path, int count, List statusList) {
     if ((newRegNo == true && count > 0) || (newRegNo == false)) {
+      bool isComplete = true;
+      if (delivered == false)
+        for (String value in statusList) {
+          if (value == 'uncut' ||
+              value == 'cut' ||
+              (value != 'complete' && value.startsWith('#') == false)) {
+            isComplete = false;
+            break;
+          }
+        }
       path.doc("$regNo").get().then((snapShot) => {
             if (snapShot.exists)
               {
@@ -282,7 +330,7 @@ class _UpdateDataState extends State<UpdateData> {
                         path.doc("$regNo").update({
                           "regNo": regNo,
                           "count": count,
-                          "isComplete": false,
+                          "isComplete": isComplete,
                           "return": returnDate,
                           "status": statusList,
                         }),
@@ -304,7 +352,7 @@ class _UpdateDataState extends State<UpdateData> {
                     path.doc("$regNo").set({
                       "regNo": regNo,
                       "count": count,
-                      "isComplete": false,
+                      "isComplete": isComplete,
                       "return": returnDate,
                       "status": statusList,
                     }),
@@ -312,6 +360,15 @@ class _UpdateDataState extends State<UpdateData> {
               }
           });
     }
+  }
+
+  int checkCompleteCount(int itemVal, itemList) {
+    int count = 0;
+    if (itemVal > 0) {
+      for (var value in itemList)
+        if (value != "uncut" && value != "cut") count++;
+    }
+    return count;
   }
 
   Future onSave() async {
@@ -326,7 +383,10 @@ class _UpdateDataState extends State<UpdateData> {
             kurtaVal == 0 &&
             pajamaVal == 0 &&
             achkanVal == 0 &&
-            othersVal == 0)) {
+            othersVal == 0 &&
+            jodJacketVal == 0 &&
+            blazerVal == 0 &&
+            safariVal == 0)) {
       SnackBar snackBar = SnackBar(
         content: Text("Entry format is not correct!"),
       );
@@ -357,11 +417,28 @@ class _UpdateDataState extends State<UpdateData> {
     var jacketPath = products.collection("jacket");
     var kurtaPath = products.collection("kurta");
     var pajamaPath = products.collection("pajama");
+    var jodJacketPath = products.collection("jodJacket");
+    var blazerPath = products.collection("blazer");
+    var safariPath = products.collection("safari");
     var otherPath = products.collection("others");
     int check = 0; //to check duplicity of register number
+    int completeCount = 0;
+    completeCount += checkCompleteCount(coatVal, coatList);
+    completeCount += checkCompleteCount(pentVal, pentList);
+    completeCount += checkCompleteCount(shirtVal, shirtList);
+    completeCount += checkCompleteCount(jacketVal, jacketList);
+    completeCount += checkCompleteCount(kurtaVal, kurtaList);
+    completeCount += checkCompleteCount(pajamaVal, pajamaList);
+    completeCount += checkCompleteCount(achkanVal, achkanList);
+    completeCount += checkCompleteCount(jodJacketVal, jodJacketList);
+    completeCount += checkCompleteCount(blazerVal, blazerList);
+    completeCount += checkCompleteCount(safariVal, safariList);
+    completeCount += checkCompleteCount(othersVal, othersList);
+    Map temp;
     await regPath.doc("$regNo").get().then((snapShot) => {
           if (snapShot.exists)
             {
+              temp = snapShot.data(),
               if (newRegNo == true)
                 {
                   check++,
@@ -379,8 +456,59 @@ class _UpdateDataState extends State<UpdateData> {
                     if (kurtaVal > 0) "kurta": kurtaVal,
                     if (pajamaVal > 0) "pajama": pajamaVal,
                     if (achkanVal > 0) "achkan": achkanVal,
+                    if (jodJacketVal > 0) "jodJacket": jodJacketVal,
+                    if (blazerVal > 0) "blazer": blazerVal,
+                    if (safariVal > 0) "safari": safariVal,
                     if (othersVal > 0) "others": othersVal,
-                    "isComplete": false
+                    if (coatVal <= 0 && temp.containsKey('coat'))
+                      "coat": FieldValue.delete(),
+                    if (pentVal <= 0 && temp.containsKey('pent'))
+                      "pent": FieldValue.delete(),
+                    if (shirtVal <= 0 && temp.containsKey('shirt'))
+                      "shirt": FieldValue.delete(),
+                    if (jacketVal <= 0 && temp.containsKey('jacket'))
+                      "jacket": FieldValue.delete(),
+                    if (kurtaVal <= 0 && temp.containsKey('kurta'))
+                      "kurta": FieldValue.delete(),
+                    if (pajamaVal <= 0 && temp.containsKey('pajama'))
+                      "pajama": FieldValue.delete(),
+                    if (achkanVal <= 0 && temp.containsKey('achkan'))
+                      "achkan": FieldValue.delete(),
+                    if (jodJacketVal <= 0 && temp.containsKey('jodJacket'))
+                      "others": FieldValue.delete(),
+                    if (blazerVal <= 0 && temp.containsKey('blazer'))
+                      "others": FieldValue.delete(),
+                    if (safariVal <= 0 && temp.containsKey('safari'))
+                      "others": FieldValue.delete(),
+                    if (othersVal <= 0 && temp.containsKey('others'))
+                      "others": FieldValue.delete(),
+                    "notCompleteItemCount": coatVal +
+                        pentVal +
+                        shirtVal +
+                        jacketVal +
+                        kurtaVal +
+                        pajamaVal +
+                        achkanVal +
+                        jodJacketVal +
+                        blazerVal +
+                        safariVal +
+                        othersVal -
+                        completeCount,
+                    "isComplete": delivered ||
+                        (coatVal +
+                                pentVal +
+                                shirtVal +
+                                jacketVal +
+                                kurtaVal +
+                                pajamaVal +
+                                achkanVal +
+                                jodJacketVal +
+                                blazerVal +
+                                safariVal +
+                                othersVal -
+                                completeCount) ==
+                            0,
+                    "delivered": delivered
                   }),
                 }
             }
@@ -397,8 +525,37 @@ class _UpdateDataState extends State<UpdateData> {
                 if (kurtaVal > 0) "kurta": kurtaVal,
                 if (pajamaVal > 0) "pajama": pajamaVal,
                 if (achkanVal > 0) "achkan": achkanVal,
+                if (jodJacketVal > 0) "jodJacket": jodJacketVal,
+                if (blazerVal > 0) "blazer": blazerVal,
+                if (safariVal > 0) "safari": safariVal,
                 if (othersVal > 0) "others": othersVal,
-                "isComplete": false
+                "notCompleteItemCount": coatVal +
+                    pentVal +
+                    shirtVal +
+                    jacketVal +
+                    kurtaVal +
+                    pajamaVal +
+                    achkanVal +
+                    jodJacketVal +
+                    blazerVal +
+                    safariVal +
+                    othersVal -
+                    completeCount,
+                "isComplete": delivered ||
+                    (coatVal +
+                            pentVal +
+                            shirtVal +
+                            jacketVal +
+                            kurtaVal +
+                            pajamaVal +
+                            achkanVal +
+                            jodJacketVal +
+                            blazerVal +
+                            safariVal +
+                            othersVal -
+                            completeCount) ==
+                        0,
+                "delivered": delivered
               })
             },
           if (snapShot.exists == false || newRegNo == false)
@@ -410,6 +567,9 @@ class _UpdateDataState extends State<UpdateData> {
               addProduct(newRegNo, kurtaPath, kurtaVal, kurtaList),
               addProduct(newRegNo, pajamaPath, pajamaVal, pajamaList),
               addProduct(newRegNo, achkanPath, achkanVal, achkanList),
+              addProduct(newRegNo, jodJacketPath, jodJacketVal, jodJacketList),
+              addProduct(newRegNo, blazerPath, blazerVal, blazerList),
+              addProduct(newRegNo, safariPath, safariVal, safariList),
               addProduct(newRegNo, otherPath, othersVal, othersList),
             },
           print("done")
@@ -498,10 +658,7 @@ class _UpdateDataState extends State<UpdateData> {
                       ),
                     ));
                 if (deleted == true) {
-                  Navigator.pop(
-                      context); //$$$issue here$$$ When it is deleted it need to go back to Day Data page but it is not going over there
-                  //$$$issue here2$$$ If we change reg no in edit for x to x+1 and on the same page just by changing value
-                  // on the same page then it delete the data of x+1 reg no.
+                  Navigator.pop(context);
                 }
               },
               child: Container(
@@ -561,8 +718,12 @@ class _UpdateDataState extends State<UpdateData> {
                                 child: Text(
                                   (branch == 0 ? "A " : "B ") + '$regNo',
                                   style: TextStyle(
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.bold),
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.bold,
+                                    color: branch == 0
+                                        ? Colors.deepPurple
+                                        : Colors.red[800],
+                                  ),
                                 ),
                               ),
                             ),
@@ -615,6 +776,49 @@ class _UpdateDataState extends State<UpdateData> {
                                     child: Icon(
                                       Icons.date_range,
                                     )),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                          border: Border(
+                              bottom:
+                                  BorderSide(width: 1, color: Colors.purple)),
+                        ),
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: Checkbox(
+                                value: delivered,
+                                activeColor: branch == 0
+                                    ? Colors.deepPurple
+                                    : Colors.red[800],
+                                onChanged: (bool value) {
+                                  change = true;
+                                  setState(() {
+                                    if (this.delivered == false) {
+                                      this.delivered = true;
+                                    } else {
+                                      this.delivered = false;
+                                    }
+                                  });
+                                },
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                padding: EdgeInsets.all(10),
+                                child: Text(
+                                    AppLocalizations.of(context).translate(
+                                        delivered
+                                            ? "delivered"
+                                            : "notDelivered"),
+                                    style: TextStyle(fontSize: 18)),
                               ),
                             ),
                           ],
@@ -1536,6 +1740,460 @@ class _UpdateDataState extends State<UpdateData> {
                                 ],
                               ),
                             ),
+                      jodJacketVal > 0
+                          ? Container(
+                              margin: EdgeInsets.only(top: 20),
+                              padding: EdgeInsets.only(bottom: 10),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                      bottom: BorderSide(
+                                          width: 1, color: Colors.purple))),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      buildSvgPicture(
+                                          'jodJacket', Colors.amber),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          AppLocalizations.of(context)
+                                              .translate("jodJacket"),
+                                          style: TextStyle(
+                                              fontSize: 23,
+                                              color: Colors.amber),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 40,
+                                      ),
+                                      UpdateValueButton(
+                                        icon: Icons.remove,
+                                        perform: () {
+                                          if (jodJacketVal > 1) {
+                                            change = true;
+                                            jodJacketVal--;
+                                            jodJacketList.removeLast();
+                                            setState(() {});
+                                          }
+                                        },
+                                      ),
+                                      Text(
+                                        jodJacketVal.toString(),
+                                        style: TextStyle(
+                                            fontSize: 25, color: Colors.amber),
+                                      ),
+                                      UpdateValueButton(
+                                        icon: Icons.add,
+                                        perform: () {
+                                          change = true;
+                                          jodJacketVal++;
+                                          jodJacketList.add('uncut');
+                                          setState(() {});
+                                        },
+                                      ),
+                                      SizedBox(width: 30),
+                                      GestureDetector(
+                                        onTap: () {
+                                          change = true;
+                                          jodJacketVal = 0;
+                                          jodJacketList.clear();
+                                          setState(() {});
+                                        },
+                                        child: Icon(
+                                          Icons.delete,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  for (int i = 0; i < jodJacketList.length; i++)
+                                    Container(
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Icon(Icons.arrow_right_alt),
+                                          ),
+                                          Container(
+                                            width: 200,
+                                            child: DropdownButton(
+                                                isExpanded: true,
+                                                style: TextStyle(
+                                                    fontSize: 20,
+                                                    color: Colors.black),
+                                                value: jodJacketList[i],
+                                                autofocus: true,
+                                                focusColor: Colors.amber,
+                                                items: <String>[
+                                                  'uncut',
+                                                  'cut',
+                                                  'complete',
+                                                ].map((String value) {
+                                                  return new DropdownMenuItem<
+                                                      String>(
+                                                    value: value,
+                                                    child: new Text(
+                                                        AppLocalizations.of(
+                                                                context)
+                                                            .translate(value)),
+                                                  );
+                                                }).toList(),
+                                                onChanged: (value) {
+                                                  if (jodJacketList[i] != value)
+                                                    change = true;
+                                                  jodJacketList[i] = value;
+                                                  setState(() {});
+                                                }),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            )
+                          : Container(
+                              margin: EdgeInsets.only(top: 20),
+                              padding: EdgeInsets.only(bottom: 10),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                      bottom: BorderSide(
+                                          width: 1, color: Colors.purple))),
+                              child: Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      change = true;
+                                      jodJacketVal = 1;
+                                      jodJacketList = ['uncut'];
+                                      setState(() {});
+                                    },
+                                    child: buildSvgPicture(
+                                        'jodJacket', Colors.black38),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      AppLocalizations.of(context)
+                                          .translate("jodJacket"),
+                                      style: TextStyle(
+                                          fontSize: 23, color: Colors.black38),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                      blazerVal > 0
+                          ? Container(
+                              margin: EdgeInsets.only(top: 20),
+                              padding: EdgeInsets.only(bottom: 10),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                      bottom: BorderSide(
+                                          width: 1, color: Colors.purple))),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      buildSvgPicture('blazer', Colors.amber),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          AppLocalizations.of(context)
+                                              .translate("blazer"),
+                                          style: TextStyle(
+                                              fontSize: 23,
+                                              color: Colors.amber),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 40,
+                                      ),
+                                      UpdateValueButton(
+                                        icon: Icons.remove,
+                                        perform: () {
+                                          if (blazerVal > 1) {
+                                            change = true;
+                                            blazerVal--;
+                                            blazerList.removeLast();
+                                            setState(() {});
+                                          }
+                                        },
+                                      ),
+                                      Text(
+                                        blazerVal.toString(),
+                                        style: TextStyle(
+                                            fontSize: 25, color: Colors.amber),
+                                      ),
+                                      UpdateValueButton(
+                                        icon: Icons.add,
+                                        perform: () {
+                                          change = true;
+                                          blazerVal++;
+                                          blazerList.add('uncut');
+                                          setState(() {});
+                                        },
+                                      ),
+                                      SizedBox(width: 30),
+                                      GestureDetector(
+                                        onTap: () {
+                                          change = true;
+                                          blazerVal = 0;
+                                          blazerList.clear();
+                                          setState(() {});
+                                        },
+                                        child: Icon(
+                                          Icons.delete,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  for (int i = 0; i < blazerList.length; i++)
+                                    Container(
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Icon(Icons.arrow_right_alt),
+                                          ),
+                                          Container(
+                                            width: 200,
+                                            child: DropdownButton(
+                                                isExpanded: true,
+                                                style: TextStyle(
+                                                    fontSize: 20,
+                                                    color: Colors.black),
+                                                value: blazerList[i],
+                                                autofocus: true,
+                                                focusColor: Colors.amber,
+                                                items: <String>[
+                                                  'uncut',
+                                                  'cut',
+                                                  'complete',
+                                                ].map((String value) {
+                                                  return new DropdownMenuItem<
+                                                      String>(
+                                                    value: value,
+                                                    child: new Text(
+                                                        AppLocalizations.of(
+                                                                context)
+                                                            .translate(value)),
+                                                  );
+                                                }).toList(),
+                                                onChanged: (value) {
+                                                  if (blazerList[i] != value)
+                                                    change = true;
+                                                  blazerList[i] = value;
+                                                  setState(() {});
+                                                }),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            )
+                          : Container(
+                              margin: EdgeInsets.only(top: 20),
+                              padding: EdgeInsets.only(bottom: 10),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                      bottom: BorderSide(
+                                          width: 1, color: Colors.purple))),
+                              child: Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      change = true;
+                                      blazerVal = 1;
+                                      blazerList = ['uncut'];
+                                      setState(() {});
+                                    },
+                                    child: buildSvgPicture(
+                                        'blazer', Colors.black38),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      AppLocalizations.of(context)
+                                          .translate("blazer"),
+                                      style: TextStyle(
+                                          fontSize: 23, color: Colors.black38),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                      safariVal > 0
+                          ? Container(
+                              margin: EdgeInsets.only(top: 20),
+                              padding: EdgeInsets.only(bottom: 10),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                      bottom: BorderSide(
+                                          width: 1, color: Colors.purple))),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      buildSvgPicture('safari', Colors.amber),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          AppLocalizations.of(context)
+                                              .translate("safari"),
+                                          style: TextStyle(
+                                              fontSize: 23,
+                                              color: Colors.amber),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 40,
+                                      ),
+                                      UpdateValueButton(
+                                        icon: Icons.remove,
+                                        perform: () {
+                                          if (safariVal > 1) {
+                                            change = true;
+                                            safariVal--;
+                                            safariList.removeLast();
+                                            setState(() {});
+                                          }
+                                        },
+                                      ),
+                                      Text(
+                                        safariVal.toString(),
+                                        style: TextStyle(
+                                            fontSize: 25, color: Colors.amber),
+                                      ),
+                                      UpdateValueButton(
+                                        icon: Icons.add,
+                                        perform: () {
+                                          change = true;
+                                          safariVal++;
+                                          safariList.add('uncut');
+                                          setState(() {});
+                                        },
+                                      ),
+                                      SizedBox(width: 30),
+                                      GestureDetector(
+                                        onTap: () {
+                                          change = true;
+                                          safariVal = 0;
+                                          safariList.clear();
+                                          setState(() {});
+                                        },
+                                        child: Icon(
+                                          Icons.delete,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  for (int i = 0; i < safariList.length; i++)
+                                    Container(
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Icon(Icons.arrow_right_alt),
+                                          ),
+                                          Container(
+                                            width: 200,
+                                            child: DropdownButton(
+                                                isExpanded: true,
+                                                style: TextStyle(
+                                                    fontSize: 20,
+                                                    color: Colors.black),
+                                                value: safariList[i],
+                                                autofocus: true,
+                                                focusColor: Colors.amber,
+                                                items: <String>[
+                                                  'uncut',
+                                                  'cut',
+                                                  'complete',
+                                                ].map((String value) {
+                                                  return new DropdownMenuItem<
+                                                      String>(
+                                                    value: value,
+                                                    child: new Text(
+                                                        AppLocalizations.of(
+                                                                context)
+                                                            .translate(value)),
+                                                  );
+                                                }).toList(),
+                                                onChanged: (value) {
+                                                  if (safariList[i] != value)
+                                                    change = true;
+                                                  safariList[i] = value;
+                                                  setState(() {});
+                                                }),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            )
+                          : Container(
+                              margin: EdgeInsets.only(top: 20),
+                              padding: EdgeInsets.only(bottom: 10),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                      bottom: BorderSide(
+                                          width: 1, color: Colors.purple))),
+                              child: Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      change = true;
+                                      safariVal = 1;
+                                      safariList = ['uncut'];
+                                      setState(() {});
+                                    },
+                                    child: buildSvgPicture(
+                                        'safari', Colors.black38),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      AppLocalizations.of(context)
+                                          .translate("safari"),
+                                      style: TextStyle(
+                                          fontSize: 23, color: Colors.black38),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                       achkanVal > 0
                           ? Container(
                               margin: EdgeInsets.only(top: 20),
@@ -1860,6 +2518,10 @@ class _UpdateDataState extends State<UpdateData> {
                   if (kurtaVal > 0) buildBottomItemBar('kurta', kurtaVal),
                   if (pajamaVal > 0) buildBottomItemBar('pajama', pajamaVal),
                   if (achkanVal > 0) buildBottomItemBar('achkan', achkanVal),
+                  if (jodJacketVal > 0)
+                    buildBottomItemBar('jodJacket', jodJacketVal),
+                  if (blazerVal > 0) buildBottomItemBar('blazer', blazerVal),
+                  if (safariVal > 0) buildBottomItemBar('safari', safariVal),
                   if (othersVal > 0) buildBottomItemBar('others', othersVal),
                 ],
               ),

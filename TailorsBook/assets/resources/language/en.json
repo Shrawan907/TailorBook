@@ -32,6 +32,8 @@
     "kurta"                 :   "KURTA",
     "pajama"                :   "PAJAMA",
     "achkan"                :   "ACHKAN",
+    "jodJacket"             :   "Jodhpuri Jacket",
+    "blazer"                :   "Blazer",    
     "safari"                :   "SAFARI",
     "others"                 :   "Others",
     "return_date"           :   "Return Date",
@@ -76,6 +78,9 @@
     "notice_delete"         :   "Press Delete to proceed.",
     "delete"                :   "DELETE",
     "cutting_register"      :   "Cutting Register",
-    "total"                 :   "Total"
-
+    "total"                 :   "Total",
+    "today"                 :   "TODAY",
+    "old"                   :   "OLD",
+    "delivered"             :   "Delivered",
+    "notDelivered"          :   "Not Delivered"
 }

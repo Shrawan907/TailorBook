@@ -32,6 +32,8 @@
     "kurta"                 :   "कुर्ता",
     "pajama"                :   "पजामा",
     "achkan"                :   "अचकन",
+    "jodJacket"             :   "जोधपुरी जैकेट",
+    "blazer"                :   "ब्लेजर",
     "safari"                :   "सफारी",
     "others"                 :   "अन्य",
     "return_date"           :   "डिलीवरी दिनाक",
@@ -64,8 +66,8 @@
     "choudhary_tailors"     :   "चौधरी टेलर्स",
     "sunindiashowroom"      :   "सन इंडिया शोरूम",
     "no_internet"           :   "इंटरनेट कनेक्शन नहीं मिल रहा है।",
-    "cut"                   :   "कटिंग हो गया",
-    "uncut"                 :   "कटिंग नहीं हुआ",
+    "cut"                   :   "कट गया",
+    "uncut"                 :   "नहीं कटा",
     "incorrent_format"      :   "कृपया सभी चयन धयान से भरे।",
     "requests"              :   "रिक्वेस्ट्स",
     "accept"                :   "अनुमति दे",
@@ -76,5 +78,9 @@
     "notice_delete"         :   "आगे बढ़ने के लिए \"हटाए\" दबाएं।",
     "delete"                :   "हटाए",
     "cutting_register"      :   "कटिंग रजिस्टर",
-    "total"                 :   "कुल"
+    "total"                 :   "कुल",
+    "today"                 :   "आज",
+    "old"                   :   "पुराना",
+    "delivered"             :   "डिलीवर हो गया",
+    "notDelivered"          :   "डिलीवर नहीं हुआ"
 }

@@ -27,21 +27,22 @@ class _RegisterNewDataState extends State<RegisterNewData> {
   _RegisterNewDataState({this.branch});
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
-  String showDate="";
+  String showDate = "";
   int regNo;
   var _controller = TextEditingController();
   bool dateSelected = false;
   bool update = false;
-  bool value1 = false,
-      value2 = false,
-      value3 = false,
-      value4 = false,
-      value5 = false,
-      value6 = false,
-      value7 = false,
-      value8 = false,
-      value9 = false,
-      value10 = false;
+  bool value1 = false, // coat
+      value2 = false, // pent
+      value3 = false, // shirt
+      value4 = false, // jacket
+      value5 = false, // kurta
+      value6 = false, // pajama
+      value7 = false, // achkan
+      value8 = false, // others
+      value9 = false, // safari
+      value10 = false, // blazer
+      value11 = false; // jod_jacket,
   int val1 = 0,
       val2 = 0,
       val3 = 0,
@@ -51,7 +52,8 @@ class _RegisterNewDataState extends State<RegisterNewData> {
       val7 = 0,
       val8 = 0,
       val9 = 0,
-      val10 = 0;
+      val10 = 0,
+      val11 = 0;
 
   _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
@@ -96,7 +98,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
     }
   }
 
-  snackBarFunc(String str){
+  snackBarFunc(String str) {
     SnackBar snackBar = SnackBar(
       content: Text(str),
     );
@@ -116,13 +118,28 @@ class _RegisterNewDataState extends State<RegisterNewData> {
             value5 == false &&
             value6 == false &&
             value7 == false &&
-            value8 == false) ||
-        showDate=="") {
+            value8 == false &&
+            value9 == false &&
+            value10 == false &&
+            value11 == false) ||
+        showDate == "") {
       snackBarFunc(AppLocalizations.of(context).translate("incorrent_format"));
       return;
     }
     final form = _formKey.currentState;
     if (form.validate()) {
+      int total = 0;
+      if (value1 == true) total += val1;
+      if (value2 == true) total += val2;
+      if (value3 == true) total += val3;
+      if (value4 == true) total += val4;
+      if (value5 == true) total += val5;
+      if (value6 == true) total += val6;
+      if (value7 == true) total += val7;
+      if (value8 == true) total += val8;
+      if (value9 == true) total += val9;
+      if (value10 == true) total += val10;
+      if (value11 == true) total += val11;
       form.save();
       var regPath = db
           .collection("company")
@@ -141,6 +158,9 @@ class _RegisterNewDataState extends State<RegisterNewData> {
       var kurtaPath = products.collection("kurta");
       var pajamaPath = products.collection("pajama");
       var otherPath = products.collection("others");
+      var blazerPath = products.collection("blazer");
+      var safariPath = products.collection("safari");
+      var jodJacketPath = products.collection("jodJacket");
       int check = 0; //to check duplicity of register number
       await regPath.doc("$regNo").get().then((snapShot) => {
             if (snapShot.exists)
@@ -162,6 +182,10 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                   if (value6) "pajama": val6,
                   if (value7) "achkan": val7,
                   if (value8) "others": val8,
+                  if (value9) "safari": val9,
+                  if (value10) "blazer": val10,
+                  if (value11) "jodJacket": val11,
+                  "notCompleteItemCount": total,
                   "isComplete": false
                 }),
                 addProduct(value1, coatPath, val1),
@@ -172,6 +196,9 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                 addProduct(value6, pajamaPath, val6),
                 addProduct(value7, achkanPath, val7),
                 addProduct(value8, otherPath, val8),
+                addProduct(value9, safariPath, val9),
+                addProduct(value10, blazerPath, val10),
+                addProduct(value11, jodJacketPath, val11),
                 print("done")
               }
           });
@@ -186,9 +213,10 @@ class _RegisterNewDataState extends State<RegisterNewData> {
           Navigator.pop(context, regNo.toString());
         });
       } else {
-        Toast.show(
-            AppLocalizations.of(context).translate("reg_no_exist"), context,    //change regNo_exist to reg_no_exist
-            duration: Toast.LENGTH_SHORT, gravity: Toast.CENTER);
+        Toast.show(AppLocalizations.of(context).translate("reg_no_exist"),
+            context, //change regNo_exist to reg_no_exist
+            duration: Toast.LENGTH_SHORT,
+            gravity: Toast.CENTER);
       }
     }
   }
@@ -202,38 +230,6 @@ class _RegisterNewDataState extends State<RegisterNewData> {
           AppLocalizations.of(context).translate("t_register") +
               (branch == 0 ? "A" : "B"),
         ),
-        actions: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(right: 30.0, top: 10, bottom: 10),
-            child: Container(
-              width: 120,
-              child: RaisedButton(
-                child: Text(
-                  update == true
-                      ? AppLocalizations.of(context).translate("update")
-                      : AppLocalizations.of(context).translate("new"),
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16),
-                ),
-                onPressed: () {
-                  setState(() {
-                    if (update == true) {
-                      update = false;
-                    } else {
-                      update = true;
-                    }
-                  });
-                },
-                // shape: CircleBorder(
-                //   side: BorderSide(color: Colors.blue),
-                // ),
-                color: Colors.black38,
-              ),
-            ),
-          ),
-        ],
       ),
       body: ListView(
         children: <Widget>[
@@ -287,7 +283,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                                   true, // to immediate execute validator
                               // as soon as user typed
                               child: TextFormField(
-                                controller: _controller,
+                                  controller: _controller,
                                   validator: (val) {
                                     if (val.trim().isEmpty)
                                       return AppLocalizations.of(context)
@@ -307,13 +303,14 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                                     labelStyle: TextStyle(fontSize: 15.0),
                                     hintText: AppLocalizations.of(context)
                                         .translate("reg_no_full"),
-                                      suffixIcon: IconButton(                 //$$$for clearing the issue of clear dur to digitsonly property
-                                          icon: Icon(Icons.clear),
-                                          onPressed: () {
-                                            regNo=null;
-                                            _controller.clear();
-                                            // print(regNo);
-                                          }),
+                                    suffixIcon: IconButton(
+                                        //$$$for clearing the issue of clear dur to digitsonly property
+                                        icon: Icon(Icons.clear),
+                                        onPressed: () {
+                                          regNo = null;
+                                          _controller.clear();
+                                          // print(regNo);
+                                        }),
                                   ),
                                   inputFormatters: [
                                     FilteringTextInputFormatter.digitsOnly
@@ -404,6 +401,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                               val1 = 1;
                             } else {
                               this.value1 = false;
+                              val1 = 0;
                             }
                           });
                         },
@@ -479,6 +477,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                                 val2 = 1;
                               } else {
                                 this.value2 = false;
+                                val2 = 0;
                               }
                             });
                           }),
@@ -553,6 +552,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                                 val3 = 1;
                               } else {
                                 this.value3 = false;
+                                val3 = 0;
                               }
                             });
                           }),
@@ -627,9 +627,86 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                                 val4 = 1;
                               } else {
                                 this.value4 = false;
+                                val4 = 0;
                               }
                             });
                           }),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Container(
+                        width: 30,
+                        child: SvgPicture.asset(
+                          'assets/images/jodJacket.svg',
+                          height: 30,
+                          width: 30,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                        child: Text(
+                      AppLocalizations.of(context).translate("jodJacket"),
+                      style: TextStyle(fontSize: 20),
+                    )),
+                    Expanded(
+                      child: value11 == true
+                          ? Container(
+                              child: Row(
+                                children: [
+                                  UpdateValueButton(
+                                    icon: Icons.remove,
+                                    perform: () {
+                                      setState(() {
+                                        if (val11 > 1) val11--;
+                                      });
+                                    },
+                                  ),
+                                  Container(
+                                    height: 30,
+                                    width: 40,
+                                    child: Center(
+                                      child: Text(
+                                        val11.toString(),
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ),
+                                  UpdateValueButton(
+                                    icon: Icons.add,
+                                    perform: () {
+                                      setState(() {
+                                        val11++;
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Container(),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: Checkbox(
+                        value: this.value11,
+                        onChanged: (bool value) {
+                          setState(() {
+                            if (this.value11 == false) {
+                              this.value11 = true;
+                              val11 = 1;
+                            } else {
+                              this.value11 = false;
+                              val11 = 0;
+                            }
+                          });
+                        },
+                      ),
                     ),
                   ],
                 ),
@@ -701,6 +778,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                                 val5 = 1;
                               } else {
                                 this.value5 = false;
+                                val5 = 0;
                               }
                             });
                           }),
@@ -775,9 +853,162 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                                 val6 = 1;
                               } else {
                                 this.value6 = false;
+                                val6 = 0;
                               }
                             });
                           }),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Container(
+                        width: 30,
+                        child: SvgPicture.asset(
+                          'assets/images/blazer.svg',
+                          height: 30,
+                          width: 30,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                        child: Text(
+                      AppLocalizations.of(context).translate("blazer"),
+                      style: TextStyle(fontSize: 20),
+                    )),
+                    Expanded(
+                      child: value10 == true
+                          ? Container(
+                              child: Row(
+                                children: [
+                                  UpdateValueButton(
+                                    icon: Icons.remove,
+                                    perform: () {
+                                      setState(() {
+                                        if (val10 > 1) val10--;
+                                      });
+                                    },
+                                  ),
+                                  Container(
+                                    height: 30,
+                                    width: 40,
+                                    child: Center(
+                                      child: Text(
+                                        val10.toString(),
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ),
+                                  UpdateValueButton(
+                                    icon: Icons.add,
+                                    perform: () {
+                                      setState(() {
+                                        val10++;
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Container(),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: Checkbox(
+                        value: this.value10,
+                        onChanged: (bool value) {
+                          setState(() {
+                            if (this.value10 == false) {
+                              this.value10 = true;
+                              val10 = 1;
+                            } else {
+                              this.value10 = false;
+                              val10 = 0;
+                            }
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Container(
+                        width: 30,
+                        child: SvgPicture.asset(
+                          'assets/images/safari.svg',
+                          height: 30,
+                          width: 30,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                        child: Text(
+                      AppLocalizations.of(context).translate("safari"),
+                      style: TextStyle(fontSize: 20),
+                    )),
+                    Expanded(
+                      child: value9 == true
+                          ? Container(
+                              child: Row(
+                                children: [
+                                  UpdateValueButton(
+                                    icon: Icons.remove,
+                                    perform: () {
+                                      setState(() {
+                                        if (val9 > 1) val9--;
+                                      });
+                                    },
+                                  ),
+                                  Container(
+                                    height: 30,
+                                    width: 40,
+                                    child: Center(
+                                      child: Text(
+                                        val9.toString(),
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ),
+                                  UpdateValueButton(
+                                    icon: Icons.add,
+                                    perform: () {
+                                      setState(() {
+                                        val9++;
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Container(),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: Checkbox(
+                        value: this.value9,
+                        onChanged: (bool value) {
+                          setState(() {
+                            if (this.value9 == false) {
+                              this.value9 = true;
+                              val9 = 1;
+                            } else {
+                              this.value9 = false;
+                              val9 = 0;
+                            }
+                          });
+                        },
+                      ),
                     ),
                   ],
                 ),
@@ -849,6 +1080,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                                 val7 = 1;
                               } else {
                                 this.value7 = false;
+                                val7 = 0;
                               }
                             });
                           }),
@@ -923,6 +1155,7 @@ class _RegisterNewDataState extends State<RegisterNewData> {
                                 val8 = 1;
                               } else {
                                 this.value8 = false;
+                                val8 = 0;
                               }
                             });
                           }),

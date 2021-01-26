@@ -71,7 +71,8 @@ class _DataTodayState extends State<DataToday> {
       backgroundColor: Colors.black12,
       drawer: NavDrawer(),
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).translate("t_return_today")),
+        title: Text(AppLocalizations.of(context)
+            .translate(today ? "t_return_today" : "old")),
         actions: <Widget>[
           Padding(
             padding: EdgeInsets.only(right: 30.0),
@@ -130,13 +131,14 @@ class _DataTodayState extends State<DataToday> {
                     onPressed: () async {
                       if (today == false) {
                         today = true;
+                        setState(() {});
                         await fetchData();
                         setState(() {});
                       }
                     },
                     child: Center(
                       child: Text(
-                        'TODAY',
+                        AppLocalizations.of(context).translate("today"),
                         style: TextStyle(
                             fontSize: today ? 18 : 15,
                             color: today ? Colors.white : Colors.black45),
@@ -150,13 +152,14 @@ class _DataTodayState extends State<DataToday> {
                     onPressed: () async {
                       if (today == true) {
                         today = false;
+                        setState(() {});
                         await fetchData();
                         setState(() {});
                       }
                     },
                     child: Center(
                       child: Text(
-                        "OLD",
+                        AppLocalizations.of(context).translate("old"),
                         style: TextStyle(
                             fontSize: today ? 15 : 18,
                             color: today ? Colors.black45 : Colors.white),

@@ -34,6 +34,9 @@ List jacketR = [];
 List kurtaR = [];
 List pajamaR = [];
 List achkanR = [];
+List jodJacketR = [];
+List blazerR = [];
+List safariR = [];
 List othersR = [];
 List assignedData = [];
 List completedData = [];
@@ -57,7 +60,7 @@ Future<List> fetchTodayData(DateTime date) async {
           {
             'regNo': temp['regNo'],
             'isComplete': temp['isComplete'],
-            'coat': temp['coat']
+            'coat': temp['coat'] != null ? temp['coat'] : temp['blazer']
           }
         ]);
       }
@@ -77,7 +80,7 @@ Future<List> fetchTodayData(DateTime date) async {
           {
             'regNo': temp['regNo'],
             'isComplete': temp['isComplete'],
-            'coat': temp['coat']
+            'coat': temp['coat'] != null ? temp['coat'] : temp['blazer']
           }
         ]);
       }
@@ -277,11 +280,14 @@ Future<Map> fetchDetail(int regNo, int branch) async {
       .snapshots()
       .listen((QuerySnapshot querySnapshot) {
     var temp = querySnapshot.docs.first.data();
-    //print(temp);
+    print(temp);
     info["branch"] = branch;
     info["regNo"] = temp["regNo"];
     info["isComplete"] = temp["isComplete"];
     info["returnDate"] = temp["returnDate"].toDate();
+    if (temp.containsKey('delivered')) {
+      info["delivered"] = temp['delivered'];
+    }
     see(path, temp, "coat", regNo);
     see(path, temp, "pent", regNo);
     see(path, temp, "shirt", regNo);
@@ -289,6 +295,9 @@ Future<Map> fetchDetail(int regNo, int branch) async {
     see(path, temp, "kurta", regNo);
     see(path, temp, "pajama", regNo);
     see(path, temp, "achkan", regNo);
+    see(path, temp, "jodJacket", regNo);
+    see(path, temp, "blazer", regNo);
+    see(path, temp, "safari", regNo);
     see(path, temp, "others", regNo);
   });
   await Future.delayed(Duration(seconds: 2));
@@ -636,6 +645,12 @@ void cleanCuttingRegister(String item) {
     pajamaR.clear();
   else if (item == "achkan")
     achkanR.clear();
+  else if (item == "jodJacket")
+    jodJacketR.clear();
+  else if (item == "blazer")
+    blazerR.clear();
+  else if (item == "safari")
+    safariR.clear();
   else if (item == "others") othersR.clear();
 }
 
@@ -684,6 +699,24 @@ Future getCuttingRegister(String item) async {
       achkanR = [...(await fetchCuttingRegister(item))];
     }
     return achkanR;
+  } else if (item == "jodJacket") {
+    if (jodJacketR == null || jodJacketR.isEmpty) {
+      jodJacketR.clear();
+      jodJacketR = [...(await fetchCuttingRegister(item))];
+    }
+    return jodJacketR;
+  } else if (item == "blazer") {
+    if (blazerR == null || blazerR.isEmpty) {
+      blazerR.clear();
+      blazerR = [...(await fetchCuttingRegister(item))];
+    }
+    return blazerR;
+  } else if (item == "safari") {
+    if (safariR == null || safariR.isEmpty) {
+      safariR.clear();
+      safariR = [...(await fetchCuttingRegister(item))];
+    }
+    return safariR;
   } else if (item == "others") {
     if (othersR == null || othersR.isEmpty) {
       othersR.clear();
@@ -710,7 +743,7 @@ void updateCuttingRegister(int regNo, String item, int branch, int count) {
     var pk = pentR.where((element) => element['regNo'] == regNo).first;
     if (pk['count'] == count) {
       print(pk);
-      coatR.remove(pk);
+      pentR.remove(pk);
     } else {
       print(pk);
       (pentR.where((element) => element['regNo'] == regNo).first)['count'] =
@@ -721,7 +754,7 @@ void updateCuttingRegister(int regNo, String item, int branch, int count) {
     var pk = shirtR.where((element) => element['regNo'] == regNo).first;
     if (pk['count'] == count) {
       print(pk);
-      coatR.remove(pk);
+      shirtR.remove(pk);
     } else {
       print(pk);
       (shirtR.where((element) => element['regNo'] == regNo).first)['count'] =
@@ -732,7 +765,7 @@ void updateCuttingRegister(int regNo, String item, int branch, int count) {
     var pk = jacketR.where((element) => element['regNo'] == regNo).first;
     if (pk['count'] == count) {
       print(pk);
-      coatR.remove(pk);
+      jacketR.remove(pk);
     } else {
       print(pk);
       (jacketR.where((element) => element['regNo'] == regNo).first)['count'] =
@@ -743,7 +776,7 @@ void updateCuttingRegister(int regNo, String item, int branch, int count) {
     var pk = kurtaR.where((element) => element['regNo'] == regNo).first;
     if (pk['count'] == count) {
       print(pk);
-      coatR.remove(pk);
+      kurtaR.remove(pk);
     } else {
       print(pk);
       (kurtaR.where((element) => element['regNo'] == regNo).first)['count'] =
@@ -754,7 +787,7 @@ void updateCuttingRegister(int regNo, String item, int branch, int count) {
     var pk = pajamaR.where((element) => element['regNo'] == regNo).first;
     if (pk['count'] == count) {
       print(pk);
-      coatR.remove(pk);
+      pajamaR.remove(pk);
     } else {
       print(pk);
       (pajamaR.where((element) => element['regNo'] == regNo).first)['count'] =
@@ -765,18 +798,52 @@ void updateCuttingRegister(int regNo, String item, int branch, int count) {
     var pk = achkanR.where((element) => element['regNo'] == regNo).first;
     if (pk['count'] == count) {
       print(pk);
-      coatR.remove(pk);
+      achkanR.remove(pk);
     } else {
       print(pk);
       (achkanR.where((element) => element['regNo'] == regNo).first)['count'] =
           pk['count'] - count;
       print(achkanR.where((element) => element['regNo'] == regNo).first);
     }
-  } else if (item == "others") {
-    var pk = achkanR.where((element) => element['regNo'] == regNo).first;
+  } else if (item == "jodJacket") {
+    var pk = jodJacketR.where((element) => element['regNo'] == regNo).first;
     if (pk['count'] == count) {
       print(pk);
-      coatR.remove(pk);
+      jodJacketR.remove(pk);
+    } else {
+      print(pk);
+      (jodJacketR
+          .where((element) => element['regNo'] == regNo)
+          .first)['count'] = pk['count'] - count;
+      print(jodJacketR.where((element) => element['regNo'] == regNo).first);
+    }
+  } else if (item == "blazer") {
+    var pk = blazerR.where((element) => element['regNo'] == regNo).first;
+    if (pk['count'] == count) {
+      print(pk);
+      blazerR.remove(pk);
+    } else {
+      print(pk);
+      (blazerR.where((element) => element['regNo'] == regNo).first)['count'] =
+          pk['count'] - count;
+      print(blazerR.where((element) => element['regNo'] == regNo).first);
+    }
+  } else if (item == "safari") {
+    var pk = safariR.where((element) => element['regNo'] == regNo).first;
+    if (pk['count'] == count) {
+      print(pk);
+      safariR.remove(pk);
+    } else {
+      print(pk);
+      (safariR.where((element) => element['regNo'] == regNo).first)['count'] =
+          pk['count'] - count;
+      print(safariR.where((element) => element['regNo'] == regNo).first);
+    }
+  } else if (item == "others") {
+    var pk = othersR.where((element) => element['regNo'] == regNo).first;
+    if (pk['count'] == count) {
+      print(pk);
+      othersR.remove(pk);
     } else {
       print(pk);
       (othersR.where((element) => element['regNo'] == regNo).first)['count'] =
@@ -833,6 +900,9 @@ Future deleteDataOf(int regNo, int branch) async {
   var jacketPath = products.collection("jacket");
   var kurtaPath = products.collection("kurta");
   var pajamaPath = products.collection("pajama");
+  var jodJacketPath = products.collection("jodJacket");
+  var blazerPath = products.collection("blazer");
+  var safariPath = products.collection("safari");
   var othersPath = products.collection("others");
 
   coatPath.doc('$regNo').get().then((snapShot) => {
@@ -855,6 +925,15 @@ Future deleteDataOf(int regNo, int branch) async {
       });
   achkanPath.doc('$regNo').get().then((snapShot) => {
         if (snapShot.exists) {achkanPath.doc('$regNo').delete()}
+      });
+  jodJacketPath.doc('$regNo').get().then((snapShot) => {
+        if (snapShot.exists) {jodJacketPath.doc('$regNo').delete()}
+      });
+  blazerPath.doc('$regNo').get().then((snapShot) => {
+        if (snapShot.exists) {blazerPath.doc('$regNo').delete()}
+      });
+  safariPath.doc('$regNo').get().then((snapShot) => {
+        if (snapShot.exists) {safariPath.doc('$regNo').delete()}
       });
   othersPath.doc('$regNo').get().then((snapShot) => {
         if (snapShot.exists) {othersPath.doc('$regNo').delete()}
@@ -979,11 +1058,30 @@ Future<bool> getCheck(int branch, int regNo, String item, int count) async {
 Future assignWork(List items, String phoneNo) async {
   var path = db.collection('company/team/members');
   var subPath = path.doc(phoneNo).collection('assigned');
+  var itemPath;
+  int tempCount = 0;
   path.doc(phoneNo).get().then((snapShot) => {
         if (snapShot.exists)
           {
             items.forEach((data) => {
+                  tempCount = 0,
                   print("${data['branch']}_${data['regNo']}_${data['type']}"),
+                  db
+                      .collection('company')
+                      .doc(data['branch'] == 0 ? 'branchA' : 'branchB')
+                      .collection('products/products')
+                      .doc('${data["type"]}')
+                      .get()
+                      .then((snapShot) => {
+                            if (snapShot.exists)
+                              {
+                                if (snapShot.data().containsKey('status'))
+                                  {
+                                    snapShot.data().update('status',
+                                        (elements) => {elements.forEach})
+                                  }
+                              }
+                          }),
                   subPath
                       .doc("${data['branch']}_${data['regNo']}_${data['type']}")
                       .get()
@@ -1020,15 +1118,45 @@ Future assignWork(List items, String phoneNo) async {
 }
 
 //to update completed work by team member
-
 Future completeWork(int regNo, String phone, String item, int branch, int count,
     int totalCount) async {
   var path = db.collection('company/team/members');
   var subPath = path.doc(phone).collection('completed');
+  var subPath2 = path.doc(phone).collection('assigned');
+  var regPath = db
+      .collection('company')
+      .doc(branch == 0 ? "branchA" : "branchB")
+      .collection('register');
+  var temp;
+  var itemPath = db
+      .collection("company")
+      .doc(branch == 0 ? "branchA" : "branchB")
+      .collection("products/products/$item");
+  String name = "";
+
+  // delete from assigned and update in completed data of team member
   path.doc(phone).get().then((snapShot) => {
         if (snapShot.exists)
           {
-            print("$branch" + "_" + "$regNo" + "_" + "$item"),
+            if (snapShot.data().containsKey('name'))
+              name = (snapShot.data())['name'],
+            // make change in assigned part
+            if (count == totalCount)
+              {
+                subPath2
+                    .doc("$branch" + "_" + "$regNo" + "_" + "$item")
+                    .delete(),
+              }
+            else if (count < totalCount)
+              {
+                subPath2
+                    .doc("$branch" + "_" + "$regNo" + "_" + "$item")
+                    .update({'count': totalCount - count}),
+              }
+            else
+              print("Okay lets check completeWork code again...."),
+
+            // make change in completed part
             subPath
                 .doc("$branch" + "_" + "$regNo" + "_" + "$item")
                 .get()
@@ -1053,55 +1181,55 @@ Future completeWork(int regNo, String phone, String item, int branch, int count,
                     }),
           }
         else
-          {
-            print('No user with phoneNo: {$phone} Exists'),
-          }
-      });
-  // delete from assigned
-  var subPath2 = path.doc(phone).collection('assigned');
-  path.doc(phone).get().then((snapShot) => {
-        if (snapShot.exists)
-          {
-            if (count == totalCount)
-              {
-                subPath2
-                    .doc("$branch" + "_" + "$regNo" + "_" + "$item")
-                    .delete(),
-              }
-            else if (count < totalCount)
-              {
-                subPath2
-                    .doc("$branch" + "_" + "$regNo" + "_" + "$item")
-                    .update({'count': totalCount - count}),
-              }
-            else
-              print("Okay lets check completeWork code again....")
-          }
-        else
           {print("snapShot doesn't exists!")}
       });
+
   //update work completed to the register
-  var temp;
-  var itemPath = db
-      .collection("company")
-      .doc(branch == 0 ? "branchA" : "branchB")
-      .collection("products/products/$item");
   itemPath.doc("$regNo").get().then((snapShot) => {
         if (snapShot.exists)
           {
             temp = snapShot.data()['status'],
-            updateCuttingRegister(regNo, item, branch, count),
+            // update notCompleteItemCount
+            regPath.doc('$regNo').update({
+              'notCompleteItemCount': FieldValue.increment(-count),
+            }),
           }
       });
 
   await Future.delayed(Duration(seconds: 2));
+
+  // check and update complete status of register Number
+  regPath.doc('$regNo').get().then((element) => {
+        if (element.data().containsKey('notCompleteItemCount') &&
+            (element.data())['notCompleteItemCount'] == 0)
+          {
+            regPath.doc('$regNo').update({'isComplete': true}),
+          }
+      });
+
+  // update items in products folder
   if (temp != null) {
     int r = 0;
     for (int i = 0; i < temp.length && r < count; i++) {
-      // if (temp[i] == 'cut') {
-      temp[i] = 'complete';
-      r++;
-      // }
+      if (temp[i] == name) {
+        temp[i] = '#' +
+            name; // # shows that this item is complete , followed by name who made this item
+        r++;
+      }
+    }
+    for (int i = 0; i < temp.length && r < count; i++) {
+      if (temp[i] == 'cut') {
+        temp[i] = '#' +
+            name; // # shows that this item is complete , followed by name who made this item
+        r++;
+      }
+    }
+    for (int i = 0; i < temp.length && r < count; i++) {
+      if (temp[i] == 'uncut') {
+        temp[i] = '#' +
+            name; // # shows that this item is complete , followed by name who made this item
+        r++;
+      }
     }
     itemPath.doc("$regNo").update({"status": temp});
   }
