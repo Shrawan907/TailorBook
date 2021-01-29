@@ -697,7 +697,9 @@ class RegCardBox extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: isComplete ? Icon(Icons.check) : Container(),
+              child: isComplete
+                  ? Icon(Icons.check, color: Colors.amber)
+                  : Container(),
             ),
             Expanded(
               child: Text(

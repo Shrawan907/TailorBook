@@ -195,50 +195,61 @@ class _SearchResultState extends State<SearchResult> {
     if ((info[key]).containsKey('count')) {
       count = info[key]['count'];
     }
-    return Container(
-      margin: EdgeInsets.only(top: 20),
-      padding: EdgeInsets.only(bottom: 10),
-      decoration: BoxDecoration(
-          border: Border(bottom: BorderSide(width: 1, color: Colors.amber))),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              SvgPicture.asset(
-                'assets/images/$key.svg',
-                height: 25,
-                width: 25,
-                color: Colors.amber,
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text(
-                AppLocalizations.of(context).translate("$key") + " ( $count )",
-                style: TextStyle(fontSize: 25, color: Colors.amber),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          for (int i = 0; i < count; i++)
+    try {
+      return Container(
+        margin: EdgeInsets.only(top: 20),
+        padding: EdgeInsets.only(bottom: 10),
+        decoration: BoxDecoration(
+            border: Border(bottom: BorderSide(width: 1, color: Colors.amber))),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
             Row(
               children: [
-                Expanded(
-                  child: Icon(Icons.arrow_right_alt),
+                SvgPicture.asset(
+                  'assets/images/$key.svg',
+                  height: 25,
+                  width: 25,
+                  color: Colors.amber,
                 ),
-                Expanded(
-                    child: Text(
-                        AppLocalizations.of(context)
-                            .translate(info["$key"]["status"][i]),
-                        style: TextStyle(fontSize: 20))),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  AppLocalizations.of(context).translate("$key") +
+                      " ( $count )",
+                  style: TextStyle(fontSize: 25, color: Colors.amber),
+                ),
               ],
             ),
-        ],
-      ),
-    );
+            SizedBox(
+              height: 10,
+            ),
+            for (int i = 0; i < count; i++)
+              Row(
+                children: [
+                  Expanded(
+                    child: Icon(Icons.arrow_right_alt),
+                  ),
+                  Expanded(
+                      child: Text(
+                          (info['$key']['status'][i] == 'cut' ||
+                                  info['$key']['status'][i] == 'uncut' ||
+                                  info['$key']['status'][i] == 'complete')
+                              ? AppLocalizations.of(context)
+                                  .translate(info["$key"]["status"][i])
+                              : info["$key"]["status"][i],
+                          style: TextStyle(fontSize: 20))),
+                ],
+              ),
+          ],
+        ),
+      );
+    } catch (err) {
+      return Container(
+        child: Text("null data find!"),
+      );
+    }
   }
 }

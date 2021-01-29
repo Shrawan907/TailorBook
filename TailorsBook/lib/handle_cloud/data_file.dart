@@ -1,15 +1,5 @@
 import 'dart:async';
-import 'dart:collection';
-import 'dart:io';
-
-import 'package:TailorsBook/screens/book_screen.dart';
-import 'package:TailorsBook/screens/data_today.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:TailorsBook/handle_cloud/login.dart';
-import 'package:easy_localization/easy_localization.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 DateTime timestamp = DateTime.now();
@@ -117,22 +107,15 @@ Future<List> todaydata() async {
 // return tommorow data
 Future<List> tommdata() async {
   if (tommData.isEmpty || tommData == null) {
-    tommData.clear();
-    print("empty");
     tommData = [...(await fetchTodayData(timestamp.add(Duration(days: 1))))];
     return tommData;
   }
-  print(tommData);
-  print(tommData.isEmpty);
-  print(tommData.length);
   return tommData;
 }
 
 // return overmorrow data
 Future<List> overmdata() async {
   if (overmData.isEmpty || overmData == null) {
-    overmData.clear();
-    print("empty");
     overmData = [...(await fetchTodayData(timestamp.add(Duration(days: 2))))];
     return overmData;
   }
@@ -151,6 +134,7 @@ Future fetchOldData() async {
       DateTime dt = temp["returnDate"].toDate();
       print(dt.difference(timestamp).inDays);
       if (dt.difference(timestamp).inDays < 0 &&
+          temp != null &&
           temp.containsKey('isComplete') &&
           temp['isComplete'] == false) {
         tempData[0].addAll([
@@ -185,7 +169,6 @@ Future fetchOldData() async {
     });
   });
   await Future.delayed(Duration(seconds: 2));
-  print('hello');
   return tempData;
 }
 
@@ -216,7 +199,9 @@ Future<List> fetchRegisterData(int branch) async {
     querySnapshot.docs.forEach((element) {
       temp = element.data();
       print(temp);
-      tempData.addAll([temp]);
+      if (temp.containsKey('returnDate') &&
+          ((timestamp).difference(temp['returnDate'].toDate()).inDays < 240))
+        tempData.addAll([temp]);
     });
   });
   await Future.delayed(Duration(seconds: 2));
@@ -309,7 +294,9 @@ Future<List> fetchRequestData() async {
   List tempData = [];
   var requestPath = db.collection("company/requests/requests");
   db.collection("company").doc("requests").get().then((element) => {
-        if (element.data().containsKey("total") && element.data()["total"] > 0)
+        if (element.data() != null &&
+            element.data().containsKey("total") &&
+            element.data()["total"] > 0)
           {
             requestCount = element.data()["total"],
             requestPath.snapshots().listen((QuerySnapshot querySnapshot) {
@@ -1138,7 +1125,7 @@ Future completeWork(int regNo, String phone, String item, int branch, int count,
   path.doc(phone).get().then((snapShot) => {
         if (snapShot.exists)
           {
-            if (snapShot.data().containsKey('name'))
+            if (snapShot != null && snapShot.data().containsKey('name'))
               name = (snapShot.data())['name'],
             // make change in assigned part
             if (count == totalCount)
@@ -1200,7 +1187,8 @@ Future completeWork(int regNo, String phone, String item, int branch, int count,
 
   // check and update complete status of register Number
   regPath.doc('$regNo').get().then((element) => {
-        if (element.data().containsKey('notCompleteItemCount') &&
+        if (element.data() != null &&
+            element.data().containsKey('notCompleteItemCount') &&
             (element.data())['notCompleteItemCount'] == 0)
           {
             regPath.doc('$regNo').update({'isComplete': true}),

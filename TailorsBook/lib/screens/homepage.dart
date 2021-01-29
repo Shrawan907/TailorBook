@@ -1,7 +1,6 @@
 import 'package:TailorsBook/handle_cloud/data_file.dart';
 import 'package:TailorsBook/locale/app_localization.dart';
 import 'package:TailorsBook/screens/cut_home.dart';
-import 'package:TailorsBook/test_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:TailorsBook/screens/data_today.dart';

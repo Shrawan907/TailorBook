@@ -1,16 +1,9 @@
 import 'dart:async';
-import 'package:TailorsBook/common/buttons.dart';
 import 'package:TailorsBook/locale/app_localization.dart';
-import 'package:TailorsBook/screens/signin.dart';
 import 'package:flutter/material.dart';
-import 'package:TailorsBook/common/nav_drower.dart';
 import 'package:TailorsBook/common/cardBox.dart';
 import 'package:TailorsBook/handle_cloud/data_file.dart';
-import 'package:TailorsBook/screens/register_new.dart';
-import 'package:TailorsBook/screens/on_working.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 List cuttingRegister = [];
 List duplicateRegister = [];

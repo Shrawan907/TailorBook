@@ -82,5 +82,6 @@
     "today"                 :   "TODAY",
     "old"                   :   "OLD",
     "delivered"             :   "Delivered",
-    "notDelivered"          :   "Not Delivered"
+    "notDelivered"          :   "Not Delivered",
+    "assigned"              :   "on machine"
 }

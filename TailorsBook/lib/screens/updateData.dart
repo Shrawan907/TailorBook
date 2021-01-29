@@ -1,22 +1,13 @@
 import 'dart:async';
 import 'package:TailorsBook/common/buttons.dart';
 import 'package:TailorsBook/locale/app_localization.dart';
-import 'package:TailorsBook/screens/signin.dart';
-import 'package:TailorsBook/screens/updateData.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:TailorsBook/common/nav_drower.dart';
-import 'package:TailorsBook/common/cardBox.dart';
 import 'package:TailorsBook/handle_cloud/data_file.dart';
-import 'package:TailorsBook/screens/register_new.dart';
-import 'package:TailorsBook/screens/on_working.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:toast/toast.dart';
 
-import '../locale/app_localization.dart';
-import '../locale/app_localization.dart';
 import '../locale/app_localization.dart';
 
 DateTime bookingDate = DateTime.now();
@@ -903,9 +894,7 @@ class _UpdateDataState extends State<UpdateData> {
                                     Container(
                                       child: Row(
                                         children: [
-                                          Expanded(
-                                            child: Icon(Icons.arrow_right_alt),
-                                          ),
+                                          buildMark(coatList[i]),
                                           Container(
                                             width: 200,
                                             child: DropdownButton(
@@ -913,12 +902,14 @@ class _UpdateDataState extends State<UpdateData> {
                                                 style: TextStyle(
                                                     fontSize: 20,
                                                     color: Colors.black),
-                                                value: coatList[i],
+                                                value:
+                                                    dropDownValue(coatList[i]),
                                                 autofocus: true,
                                                 focusColor: Colors.amber,
                                                 items: <String>[
                                                   'uncut',
                                                   'cut',
+                                                  'assigned',
                                                   'complete',
                                                 ].map((String value) {
                                                   return new DropdownMenuItem<
@@ -1055,9 +1046,7 @@ class _UpdateDataState extends State<UpdateData> {
                                     Container(
                                       child: Row(
                                         children: [
-                                          Expanded(
-                                            child: Icon(Icons.arrow_right_alt),
-                                          ),
+                                          buildMark(pentList[i]),
                                           Container(
                                             width: 200,
                                             child: DropdownButton(
@@ -1065,12 +1054,14 @@ class _UpdateDataState extends State<UpdateData> {
                                                 style: TextStyle(
                                                     fontSize: 20,
                                                     color: Colors.black),
-                                                value: pentList[i],
+                                                value:
+                                                    dropDownValue(pentList[i]),
                                                 autofocus: true,
                                                 focusColor: Colors.amber,
                                                 items: <String>[
                                                   'uncut',
                                                   'cut',
+                                                  'assigned',
                                                   'complete',
                                                 ].map((String value) {
                                                   return new DropdownMenuItem<
@@ -1207,9 +1198,7 @@ class _UpdateDataState extends State<UpdateData> {
                                     Container(
                                       child: Row(
                                         children: [
-                                          Expanded(
-                                            child: Icon(Icons.arrow_right_alt),
-                                          ),
+                                          buildMark(shirtList[i]),
                                           Container(
                                             width: 200,
                                             child: DropdownButton(
@@ -1217,12 +1206,14 @@ class _UpdateDataState extends State<UpdateData> {
                                                 style: TextStyle(
                                                     fontSize: 20,
                                                     color: Colors.black),
-                                                value: shirtList[i],
+                                                value:
+                                                    dropDownValue(shirtList[i]),
                                                 autofocus: true,
                                                 focusColor: Colors.amber,
                                                 items: <String>[
                                                   'uncut',
                                                   'cut',
+                                                  'assigned',
                                                   'complete',
                                                 ].map((String value) {
                                                   return new DropdownMenuItem<
@@ -1359,9 +1350,7 @@ class _UpdateDataState extends State<UpdateData> {
                                     Container(
                                       child: Row(
                                         children: [
-                                          Expanded(
-                                            child: Icon(Icons.arrow_right_alt),
-                                          ),
+                                          buildMark(jacketList[i]),
                                           Container(
                                             width: 200,
                                             child: DropdownButton(
@@ -1369,12 +1358,14 @@ class _UpdateDataState extends State<UpdateData> {
                                                 style: TextStyle(
                                                     fontSize: 20,
                                                     color: Colors.black),
-                                                value: jacketList[i],
+                                                value: dropDownValue(
+                                                    jacketList[i]),
                                                 autofocus: true,
                                                 focusColor: Colors.amber,
                                                 items: <String>[
                                                   'uncut',
                                                   'cut',
+                                                  'assigned',
                                                   'complete',
                                                 ].map((String value) {
                                                   return new DropdownMenuItem<
@@ -1511,9 +1502,7 @@ class _UpdateDataState extends State<UpdateData> {
                                     Container(
                                       child: Row(
                                         children: [
-                                          Expanded(
-                                            child: Icon(Icons.arrow_right_alt),
-                                          ),
+                                          buildMark(kurtaList[i]),
                                           Container(
                                             width: 200,
                                             child: DropdownButton(
@@ -1521,12 +1510,14 @@ class _UpdateDataState extends State<UpdateData> {
                                                 style: TextStyle(
                                                     fontSize: 20,
                                                     color: Colors.black),
-                                                value: kurtaList[i],
+                                                value:
+                                                    dropDownValue(kurtaList[i]),
                                                 autofocus: true,
                                                 focusColor: Colors.amber,
                                                 items: <String>[
                                                   'uncut',
                                                   'cut',
+                                                  'assigned',
                                                   'complete',
                                                 ].map((String value) {
                                                   return new DropdownMenuItem<
@@ -1665,9 +1656,7 @@ class _UpdateDataState extends State<UpdateData> {
                                     Container(
                                       child: Row(
                                         children: [
-                                          Expanded(
-                                            child: Icon(Icons.arrow_right_alt),
-                                          ),
+                                          buildMark(pajamaList[i]),
                                           Container(
                                             width: 200,
                                             child: DropdownButton(
@@ -1675,12 +1664,14 @@ class _UpdateDataState extends State<UpdateData> {
                                                 style: TextStyle(
                                                     fontSize: 20,
                                                     color: Colors.black),
-                                                value: pajamaList[i],
+                                                value: dropDownValue(
+                                                    pajamaList[i]),
                                                 autofocus: true,
                                                 focusColor: Colors.amber,
                                                 items: <String>[
                                                   'uncut',
                                                   'cut',
+                                                  'assigned',
                                                   'complete',
                                                 ].map((String value) {
                                                   return new DropdownMenuItem<
@@ -1819,9 +1810,7 @@ class _UpdateDataState extends State<UpdateData> {
                                     Container(
                                       child: Row(
                                         children: [
-                                          Expanded(
-                                            child: Icon(Icons.arrow_right_alt),
-                                          ),
+                                          buildMark(jodJacketList[i]),
                                           Container(
                                             width: 200,
                                             child: DropdownButton(
@@ -1829,12 +1818,14 @@ class _UpdateDataState extends State<UpdateData> {
                                                 style: TextStyle(
                                                     fontSize: 20,
                                                     color: Colors.black),
-                                                value: jodJacketList[i],
+                                                value: dropDownValue(
+                                                    jodJacketList[i]),
                                                 autofocus: true,
                                                 focusColor: Colors.amber,
                                                 items: <String>[
                                                   'uncut',
                                                   'cut',
+                                                  'assigned',
                                                   'complete',
                                                 ].map((String value) {
                                                   return new DropdownMenuItem<
@@ -1970,9 +1961,7 @@ class _UpdateDataState extends State<UpdateData> {
                                     Container(
                                       child: Row(
                                         children: [
-                                          Expanded(
-                                            child: Icon(Icons.arrow_right_alt),
-                                          ),
+                                          buildMark(blazerList[i]),
                                           Container(
                                             width: 200,
                                             child: DropdownButton(
@@ -1980,12 +1969,14 @@ class _UpdateDataState extends State<UpdateData> {
                                                 style: TextStyle(
                                                     fontSize: 20,
                                                     color: Colors.black),
-                                                value: blazerList[i],
+                                                value: dropDownValue(
+                                                    blazerList[i]),
                                                 autofocus: true,
                                                 focusColor: Colors.amber,
                                                 items: <String>[
                                                   'uncut',
                                                   'cut',
+                                                  'assigned',
                                                   'complete',
                                                 ].map((String value) {
                                                   return new DropdownMenuItem<
@@ -2121,9 +2112,7 @@ class _UpdateDataState extends State<UpdateData> {
                                     Container(
                                       child: Row(
                                         children: [
-                                          Expanded(
-                                            child: Icon(Icons.arrow_right_alt),
-                                          ),
+                                          buildMark(safariList[i]),
                                           Container(
                                             width: 200,
                                             child: DropdownButton(
@@ -2131,12 +2120,14 @@ class _UpdateDataState extends State<UpdateData> {
                                                 style: TextStyle(
                                                     fontSize: 20,
                                                     color: Colors.black),
-                                                value: safariList[i],
+                                                value: dropDownValue(
+                                                    safariList[i]),
                                                 autofocus: true,
                                                 focusColor: Colors.amber,
                                                 items: <String>[
                                                   'uncut',
                                                   'cut',
+                                                  'assigned',
                                                   'complete',
                                                 ].map((String value) {
                                                   return new DropdownMenuItem<
@@ -2272,9 +2263,7 @@ class _UpdateDataState extends State<UpdateData> {
                                     Container(
                                       child: Row(
                                         children: [
-                                          Expanded(
-                                            child: Icon(Icons.arrow_right_alt),
-                                          ),
+                                          buildMark(achkanList[i]),
                                           Container(
                                             width: 200,
                                             child: DropdownButton(
@@ -2282,12 +2271,14 @@ class _UpdateDataState extends State<UpdateData> {
                                                 style: TextStyle(
                                                     fontSize: 20,
                                                     color: Colors.black),
-                                                value: achkanList[i],
+                                                value: dropDownValue(
+                                                    achkanList[i]),
                                                 autofocus: true,
                                                 focusColor: Colors.amber,
                                                 items: <String>[
                                                   'uncut',
                                                   'cut',
+                                                  'assigned',
                                                   'complete',
                                                 ].map((String value) {
                                                   return new DropdownMenuItem<
@@ -2424,9 +2415,7 @@ class _UpdateDataState extends State<UpdateData> {
                                     Container(
                                       child: Row(
                                         children: [
-                                          Expanded(
-                                            child: Icon(Icons.arrow_right_alt),
-                                          ),
+                                          buildMark(othersList[i]),
                                           Container(
                                             width: 200,
                                             child: DropdownButton(
@@ -2434,12 +2423,14 @@ class _UpdateDataState extends State<UpdateData> {
                                                 style: TextStyle(
                                                     fontSize: 20,
                                                     color: Colors.black),
-                                                value: othersList[i],
+                                                value: dropDownValue(
+                                                    othersList[i]),
                                                 autofocus: true,
                                                 focusColor: Colors.amber,
                                                 items: <String>[
                                                   'uncut',
                                                   'cut',
+                                                  'assigned',
                                                   'complete',
                                                 ].map((String value) {
                                                   return new DropdownMenuItem<
@@ -2553,6 +2544,38 @@ class _UpdateDataState extends State<UpdateData> {
       height: 25,
       width: 25,
       color: color,
+    );
+  }
+
+  String dropDownValue(String value) {
+    if (value == 'cut' ||
+        value == 'uncut' ||
+        value == 'complete' ||
+        value == 'assigned')
+      return value;
+    else if (value.startsWith('#'))
+      return 'complete';
+    else
+      return 'assigned';
+  }
+
+  Widget buildMark(String value) {
+    if (value != 'cut' &&
+        value != 'uncut' &&
+        value != 'complete' &&
+        value != 'assigned')
+      return Expanded(
+        child: Container(
+          child: Center(
+            child: Text(
+              value,
+              style: TextStyle(color: Colors.blue),
+            ),
+          ),
+        ),
+      );
+    return Expanded(
+      child: Icon(Icons.arrow_right_alt),
     );
   }
 }

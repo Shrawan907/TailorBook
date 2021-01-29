@@ -82,5 +82,6 @@
     "today"                 :   "आज",
     "old"                   :   "पुराना",
     "delivered"             :   "डिलीवर हो गया",
-    "notDelivered"          :   "डिलीवर नहीं हुआ"
+    "notDelivered"          :   "डिलीवर नहीं हुआ",
+    "assigned"              :   "मशीन पर है"
 }

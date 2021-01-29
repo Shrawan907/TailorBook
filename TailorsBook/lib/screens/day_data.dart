@@ -53,20 +53,20 @@ class _DayDataState extends State<DayData> {
 
   Future fetchTomData() async {
     displayData.clear();
-    displayData.addAll(await tommdata());
+    displayData = [...(await tommdata())];
     print(displayData);
     listSize = displayData[0].length + displayData[1].length;
   }
 
   Future fetchOverData() async {
     displayData.clear();
-    displayData.addAll(await overmdata());
+    displayData = [...(await overmdata())];
     listSize = displayData[0].length + displayData[1].length;
   }
 
   Future fetchData() async {
     displayData.clear();
-    displayData.addAll(await fetchTodayData(selectedDate));
+    displayData = [...(await fetchTodayData(selectedDate))];
     listSize = displayData[0].length + displayData[1].length;
   }
 

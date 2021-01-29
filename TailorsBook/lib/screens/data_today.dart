@@ -1,18 +1,14 @@
 import 'dart:async';
 import 'package:TailorsBook/locale/app_localization.dart';
-import 'package:TailorsBook/screens/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:TailorsBook/common/nav_drower.dart';
 import 'package:TailorsBook/common/cardBox.dart';
 import 'package:TailorsBook/handle_cloud/data_file.dart';
 import 'package:TailorsBook/screens/register_new.dart';
-import 'package:TailorsBook/screens/on_working.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:TailorsBook/screens/book_screen.dart';
 import 'package:TailorsBook/test_conn.dart';
-import 'package:connectivity/connectivity.dart';
 
-List displayData = [];
+List displayData = [[], []];
 
 DateTime date = DateTime.now();
 int branch = 0;
@@ -31,12 +27,13 @@ class _DataTodayState extends State<DataToday> {
     initalData();
   }
 
-  void initalData() async {
+  Future initalData() async {
     await fetchData();
     setState(() {});
   }
 
   Future fetchData() async {
+    displayData = [[], []];
     if (today == true)
       displayData = [...(await todaydata())];
     else {
@@ -74,6 +71,17 @@ class _DataTodayState extends State<DataToday> {
         title: Text(AppLocalizations.of(context)
             .translate(today ? "t_return_today" : "old")),
         actions: <Widget>[
+          Center(
+            child: Text(
+              (displayData == null)
+                  ? '0'
+                  : (displayData[0].length + displayData[1].length).toString(),
+              style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic),
+            ),
+          ),
           Padding(
             padding: EdgeInsets.only(right: 30.0),
             child: RaisedButton(
@@ -186,7 +194,6 @@ class _DataTodayState extends State<DataToday> {
                     else
                       clearOldData();
                     await fetchData();
-                    print(displayData.isEmpty);
                     setState(() {});
                   } catch (err) {
                     print("Refresh Bar Error: " + err);
@@ -195,7 +202,9 @@ class _DataTodayState extends State<DataToday> {
                 child: today
                     ? Container(
                         child: ListView.builder(
-                          itemCount: displayData.isEmpty
+                          itemCount: (displayData == null ||
+                                  displayData.isEmpty ||
+                                  displayData[branch].isEmpty)
                               ? 0
                               : displayData[branch].length,
                           itemBuilder: (context, index) {
@@ -210,7 +219,9 @@ class _DataTodayState extends State<DataToday> {
                       )
                     : Container(
                         child: ListView.builder(
-                          itemCount: displayData.isEmpty
+                          itemCount: (displayData == null ||
+                                  displayData.isEmpty ||
+                                  displayData[branch].isEmpty)
                               ? 0
                               : displayData[branch].length,
                           itemBuilder: (context, index) {

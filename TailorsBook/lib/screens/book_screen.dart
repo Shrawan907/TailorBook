@@ -121,7 +121,6 @@ class _BookScreenState extends State<BookScreen> {
               child: //register.isNotEmpty ?
                   RefreshIndicator(
                 onRefresh: () async {
-                  print("Register Length:  ${register.length}");
                   try {
                     cleanRegister(this.branch);
                     await fetchData();
